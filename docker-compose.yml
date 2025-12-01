@@ -14,7 +14,7 @@ services:
     volumes:
       - db_data:/var/lib/mysql
     ports:
-      - "3306:3306"
+      - "3307:3306"
     networks:
       - gociss_network
     command: --default-authentication-plugin=mysql_native_password
@@ -43,8 +43,6 @@ services:
       - wp_uploads:/var/www/html/wp-content/uploads
       # Монтируем плагины для установки плагинов через админку
       - wp_plugins:/var/www/html/wp-content/plugins
-      # Монтируем wp-config для сохранения настроек (создастся автоматически)
-      - wp_config:/var/www/html/wp-config.php
     networks:
       - gociss_network
     extra_hosts:
@@ -73,8 +71,6 @@ volumes:
   wp_uploads:
     driver: local
   wp_plugins:
-    driver: local
-  wp_config:
     driver: local
 
 networks:

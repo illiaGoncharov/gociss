@@ -9,12 +9,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$advantages_title    = get_field( 'gociss_advantages_title' );
-$advantages_subtitle = get_field( 'gociss_advantages_subtitle' );
-$advantages_items    = get_field( 'gociss_advantages_items' );
+$advantages_title    = function_exists( 'get_field' ) ? get_field( 'gociss_advantages_title' ) : '';
+$advantages_subtitle = function_exists( 'get_field' ) ? get_field( 'gociss_advantages_subtitle' ) : '';
+$advantages_items    = function_exists( 'get_field' ) ? get_field( 'gociss_advantages_items' ) : '';
 
-if ( ! $advantages_items ) {
-	return;
+// Заглушки
+if ( ! $advantages_title ) {
+	$advantages_title = 'Наши конкурентные преимущества';
+}
+if ( ! $advantages_subtitle ) {
+	$advantages_subtitle = 'Почему клиенты выбирают именно нас для решения задач сертификации';
 }
 ?>
 
@@ -29,7 +33,8 @@ if ( ! $advantages_items ) {
 		<?php endif; ?>
 
 		<div class="advantages__grid">
-			<?php foreach ( $advantages_items as $advantage ) : ?>
+			<?php if ( $advantages_items && is_array( $advantages_items ) && count( $advantages_items ) > 0 ) : ?>
+				<?php foreach ( $advantages_items as $advantage ) : ?>
 				<div class="advantages__item">
 					<?php if ( ! empty( $advantage['icon'] ) ) : ?>
 						<div class="advantages__icon">
@@ -50,7 +55,26 @@ if ( ! $advantages_items ) {
 						<p class="advantages__text"><?php echo esc_html( $advantage['text'] ); ?></p>
 					<?php endif; ?>
 				</div>
-			<?php endforeach; ?>
+				<?php endforeach; ?>
+			<?php else : ?>
+				<!-- Заглушки преимуществ -->
+				<div class="advantages__item">
+					<div class="advantages__icon">🏢</div>
+					<p class="advantages__text">Наличие государственной аккредитации (Росаккредитация)</p>
+				</div>
+				<div class="advantages__item">
+					<div class="advantages__icon">📖</div>
+					<p class="advantages__text">Законность оформляемых заключений и сертификатов СМК</p>
+				</div>
+				<div class="advantages__item">
+					<div class="advantages__icon">✅</div>
+					<p class="advantages__text">Стабильно высокое качество работ по подтверждению ИСО</p>
+				</div>
+				<div class="advantages__item">
+					<div class="advantages__icon">🔍</div>
+					<p class="advantages__text">Объективность и достоверность предоставляемых сведений</p>
+				</div>
+			<?php endif; ?>
 		</div>
 	</div>
 </section>

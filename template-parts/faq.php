@@ -9,12 +9,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$faq_title    = get_field( 'gociss_faq_title' );
-$faq_subtitle = get_field( 'gociss_faq_subtitle' );
-$faq_items    = get_field( 'gociss_faq_items' );
+$faq_title    = function_exists( 'get_field' ) ? get_field( 'gociss_faq_title' ) : '';
+$faq_subtitle = function_exists( 'get_field' ) ? get_field( 'gociss_faq_subtitle' ) : '';
+$faq_items    = function_exists( 'get_field' ) ? get_field( 'gociss_faq_items' ) : '';
 
-if ( ! $faq_items ) {
-	return;
+// Заглушки
+if ( ! $faq_title ) {
+	$faq_title = 'Часто задаваемые вопросы';
+}
+if ( ! $faq_subtitle ) {
+	$faq_subtitle = 'Ответы на самые популярные вопросы о сертификации';
 }
 ?>
 
@@ -29,9 +33,10 @@ if ( ! $faq_items ) {
 		<?php endif; ?>
 
 		<div class="faq__list">
-			<?php
-			$index = 0;
-			foreach ( $faq_items as $faq_item ) :
+			<?php if ( $faq_items && is_array( $faq_items ) && count( $faq_items ) > 0 ) : ?>
+				<?php
+				$index = 0;
+				foreach ( $faq_items as $faq_item ) :
 				$index++;
 				$is_open = ( 1 === $index ) ? 'is-open' : '';
 				?>
@@ -44,7 +49,28 @@ if ( ! $faq_items ) {
 						<?php echo wp_kses_post( $faq_item['answer'] ); ?>
 					</div>
 				</div>
-			<?php endforeach; ?>
+				<?php endforeach; ?>
+			<?php else : ?>
+				<!-- Заглушки FAQ -->
+				<div class="faq__item is-open">
+					<button class="faq__question" aria-expanded="true">
+						<span class="faq__question-text">Сколько времени занимает получение сертификата ISO 9001?</span>
+						<span class="faq__icon">▼</span>
+					</button>
+					<div class="faq__answer">
+						<p>Стандартный срок получения сертификата ISO 9001 составляет от 30 до 45 рабочих дней с момента подачи полного пакета документов.</p>
+					</div>
+				</div>
+				<div class="faq__item">
+					<button class="faq__question" aria-expanded="false">
+						<span class="faq__question-text">Какие документы необходимы для сертификации продукции?</span>
+						<span class="faq__icon">▼</span>
+					</button>
+					<div class="faq__answer">
+						<p>Для сертификации продукции необходимы техническая документация, протоколы испытаний и другие документы в зависимости от типа продукции.</p>
+					</div>
+				</div>
+			<?php endif; ?>
 		</div>
 	</div>
 </section>

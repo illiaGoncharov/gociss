@@ -35,8 +35,8 @@ if ( ! $experts_query->have_posts() ) {
 				<?php
 				while ( $experts_query->have_posts() ) {
 					$experts_query->the_post();
-					$position    = get_field( 'gociss_expert_position' );
-					$experience  = get_field( 'gociss_expert_experience' );
+					$position    = function_exists( 'get_field' ) ? get_field( 'gociss_expert_position' ) : '';
+					$experience  = function_exists( 'get_field' ) ? get_field( 'gociss_expert_experience' ) : '';
 					?>
 					<div class="experts__item">
 						<?php if ( has_post_thumbnail() ) : ?>

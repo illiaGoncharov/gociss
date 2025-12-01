@@ -50,10 +50,13 @@ function gociss_register_acf_fields() {
 				),
 				array(
 					'key'               => 'field_gociss_hero_image',
-					'label'             => 'Изображение',
+					'label'             => 'Изображение сертификатов',
 					'name'              => 'gociss_hero_image',
 					'type'              => 'image',
+					'instructions'      => 'Загрузите изображение с сертификатами для Hero секции. Рекомендуемый размер: 600x400px',
 					'return_format'     => 'array',
+					'preview_size'      => 'medium',
+					'library'           => 'all',
 				),
 				array(
 					'key'               => 'field_gociss_hero_btn_primary',

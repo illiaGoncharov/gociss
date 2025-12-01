@@ -9,16 +9,24 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$hero_label        = get_field( 'gociss_hero_label' );
-$hero_title        = get_field( 'gociss_hero_title' );
-$hero_description  = get_field( 'gociss_hero_description' );
-$hero_image        = get_field( 'gociss_hero_image' );
-$hero_btn_primary = get_field( 'gociss_hero_btn_primary' );
-$hero_btn_secondary = get_field( 'gociss_hero_btn_secondary' );
-$hero_stats        = get_field( 'gociss_hero_stats' );
+// Проверяем наличие ACF перед использованием
+$hero_label        = function_exists( 'get_field' ) ? get_field( 'gociss_hero_label' ) : '';
+$hero_title        = function_exists( 'get_field' ) ? get_field( 'gociss_hero_title' ) : '';
+$hero_description  = function_exists( 'get_field' ) ? get_field( 'gociss_hero_description' ) : '';
+$hero_image        = function_exists( 'get_field' ) ? get_field( 'gociss_hero_image' ) : '';
+$hero_btn_primary = function_exists( 'get_field' ) ? get_field( 'gociss_hero_btn_primary' ) : '';
+$hero_btn_secondary = function_exists( 'get_field' ) ? get_field( 'gociss_hero_btn_secondary' ) : '';
+$hero_stats        = function_exists( 'get_field' ) ? get_field( 'gociss_hero_stats' ) : '';
 
+// Заглушки, если ACF поля не заполнены
 if ( ! $hero_title ) {
-	return;
+	$hero_title = 'Профессиональная сертификация для вашего бизнеса';
+}
+if ( ! $hero_description ) {
+	$hero_description = 'Помогаем компаниям получить международные и национальные сертификаты качества. Работаем с 1997 года, 5000+ успешных проектов, аккредитованные эксперты.';
+}
+if ( ! $hero_label ) {
+	$hero_label = 'Аккредитованный орган по сертификации';
 }
 ?>
 
@@ -41,16 +49,20 @@ if ( ! $hero_title ) {
 						<a href="<?php echo esc_url( $hero_btn_primary['url'] ); ?>" class="btn btn--primary">
 							<?php echo esc_html( $hero_btn_primary['text'] ); ?>
 						</a>
+					<?php else : ?>
+						<a href="#form" class="btn btn--primary">Бесплатная консультация</a>
 					<?php endif; ?>
 
 					<?php if ( $hero_btn_secondary && ! empty( $hero_btn_secondary['text'] ) ) : ?>
 						<a href="<?php echo esc_url( $hero_btn_secondary['url'] ); ?>" class="btn btn--secondary">
 							<?php echo esc_html( $hero_btn_secondary['text'] ); ?>
 						</a>
+					<?php else : ?>
+						<a href="#calculator" class="btn btn--secondary">Рассчитать стоимость</a>
 					<?php endif; ?>
 				</div>
 
-				<?php if ( $hero_stats ) : ?>
+				<?php if ( $hero_stats && is_array( $hero_stats ) && count( $hero_stats ) > 0 ) : ?>
 					<div class="hero__stats">
 						<?php foreach ( $hero_stats as $stat ) : ?>
 							<div class="hero__stat">
@@ -59,11 +71,26 @@ if ( ! $hero_title ) {
 							</div>
 						<?php endforeach; ?>
 					</div>
+				<?php else : ?>
+					<div class="hero__stats">
+						<div class="hero__stat">
+							<span class="hero__stat-number">5000+</span>
+							<span class="hero__stat-label">Выданных сертификатов</span>
+						</div>
+						<div class="hero__stat">
+							<span class="hero__stat-number">15+</span>
+							<span class="hero__stat-label">Лет на рынке</span>
+						</div>
+						<div class="hero__stat">
+							<span class="hero__stat-number">1200+</span>
+							<span class="hero__stat-label">Клиентов</span>
+						</div>
+					</div>
 				<?php endif; ?>
 			</div>
 
-			<?php if ( $hero_image ) : ?>
-				<div class="hero__image">
+			<div class="hero__image">
+				<?php if ( $hero_image ) : ?>
 					<?php
 					echo wp_get_attachment_image(
 						$hero_image['ID'],
@@ -75,8 +102,16 @@ if ( ! $hero_title ) {
 						)
 					);
 					?>
-				</div>
-			<?php endif; ?>
+				<?php else : ?>
+					<!-- Placeholder для изображения (загрузите через ACF) -->
+					<div class="hero__placeholder">
+						<div class="hero__placeholder-inner">
+							<span class="hero__placeholder-icon">🖼️</span>
+							<span class="hero__placeholder-text">Изображение сертификатов<br><small>Загрузите через ACF</small></span>
+						</div>
+					</div>
+				<?php endif; ?>
+			</div>
 		</div>
 	</div>
 </section>

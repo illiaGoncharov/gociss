@@ -9,12 +9,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$services_title    = get_field( 'gociss_services_title' );
-$services_subtitle = get_field( 'gociss_services_subtitle' );
-$services_items    = get_field( 'gociss_services_items' );
+$services_title    = function_exists( 'get_field' ) ? get_field( 'gociss_services_title' ) : '';
+$services_subtitle = function_exists( 'get_field' ) ? get_field( 'gociss_services_subtitle' ) : '';
+$services_items    = function_exists( 'get_field' ) ? get_field( 'gociss_services_items' ) : '';
 
-if ( ! $services_items ) {
-	return;
+// Заглушки
+if ( ! $services_title ) {
+	$services_title = 'Ключевые направления';
+}
+if ( ! $services_subtitle ) {
+	$services_subtitle = 'Полный спектр сертификационных услуг для различных отраслей и стандартов качества';
 }
 ?>
 
@@ -29,7 +33,8 @@ if ( ! $services_items ) {
 		<?php endif; ?>
 
 		<div class="services__grid">
-			<?php foreach ( $services_items as $service ) : ?>
+			<?php if ( $services_items && is_array( $services_items ) && count( $services_items ) > 0 ) : ?>
+				<?php foreach ( $services_items as $service ) : ?>
 				<div class="services__item">
 					<?php if ( ! empty( $service['icon'] ) ) : ?>
 						<div class="services__icon">
@@ -60,7 +65,28 @@ if ( ! $services_items ) {
 						</a>
 					<?php endif; ?>
 				</div>
-			<?php endforeach; ?>
+				<?php endforeach; ?>
+			<?php else : ?>
+				<!-- Заглушки услуг -->
+				<div class="services__item">
+					<div class="services__icon">📄</div>
+					<h3 class="services__item-title">Сертификация ISO</h3>
+					<p class="services__item-description">ISO 9001 ISO 14001 ISO 45001 ISO 27001 и другие</p>
+					<a href="#" class="services__item-link">Подробнее →</a>
+				</div>
+				<div class="services__item">
+					<div class="services__icon">⭐</div>
+					<h3 class="services__item-title">Оценка опыта и деловой репутации</h3>
+					<p class="services__item-description">Экспертная оценка квалификации для участников государственных и коммерческих тендеров</p>
+					<a href="#" class="services__item-link">Подробнее →</a>
+				</div>
+				<div class="services__item">
+					<div class="services__icon">📦</div>
+					<h3 class="services__item-title">Сертификация продукции ТР ТС/ ЕАЭС</h3>
+					<p class="services__item-description">Обязательная сертификация и декларирование соответствия техническим регламентам ЕАЭС</p>
+					<a href="#" class="services__item-link">Подробнее →</a>
+				</div>
+			<?php endif; ?>
 		</div>
 
 		<div class="services__footer">
