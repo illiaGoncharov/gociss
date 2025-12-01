@@ -1,0 +1,85 @@
+version: '3.8'
+
+services:
+  # База данных MySQL
+  db:
+    image: mysql:8.0
+    container_name: gociss_db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: gociss_db
+      MYSQL_USER: gociss_user
+      MYSQL_PASSWORD: gociss_password
+      MYSQL_ROOT_PASSWORD: root_password
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - gociss_network
+    command: --default-authentication-plugin=mysql_native_password
+
+  # WordPress
+  wordpress:
+    image: wordpress:latest
+    container_name: gociss_wordpress
+    restart: unless-stopped
+    depends_on:
+      - db
+    ports:
+      - "8080:80"
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: gociss_user
+      WORDPRESS_DB_PASSWORD: gociss_password
+      WORDPRESS_DB_NAME: gociss_db
+      WORDPRESS_DEBUG: 1
+      WORDPRESS_DEBUG_LOG: 1
+      WORDPRESS_DEBUG_DISPLAY: 0
+    volumes:
+      # Монтируем тему (мы уже в папке темы)
+      - .:/var/www/html/wp-content/themes/gociss-theme
+      # Монтируем uploads для сохранения загруженных файлов
+      - wp_uploads:/var/www/html/wp-content/uploads
+      # Монтируем плагины для установки плагинов через админку
+      - wp_plugins:/var/www/html/wp-content/plugins
+      # Монтируем wp-config для сохранения настроек (создастся автоматически)
+      - wp_config:/var/www/html/wp-config.php
+    networks:
+      - gociss_network
+    extra_hosts:
+      - "gociss.local:127.0.0.1"
+
+  # phpMyAdmin для управления БД (опционально)
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: gociss_phpmyadmin
+    restart: unless-stopped
+    depends_on:
+      - db
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: root_password
+      UPLOAD_LIMIT: 64M
+    networks:
+      - gociss_network
+
+volumes:
+  db_data:
+    driver: local
+  wp_uploads:
+    driver: local
+  wp_plugins:
+    driver: local
+  wp_config:
+    driver: local
+
+networks:
+  gociss_network:
+    driver: bridge
+
+
+

@@ -1,0 +1,33 @@
+name: Deploy to Beget
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy theme to Beget
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup FTP
+        uses: SamKirkland/FTP-Deploy-Action@4.3.0
+        with:
+          server: ${{ secrets.BEGET_FTP_HOST }}
+          username: ${{ secrets.BEGET_FTP_USER }}
+          password: ${{ secrets.BEGET_FTP_PASSWORD }}
+          local-dir: ./wp-content/themes/gociss-theme/
+          server-dir: /wp-content/themes/gociss-theme/
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            **/.DS_Store
+            **/Thumbs.db
+
+
+

@@ -1,0 +1,74 @@
+name: Code Quality
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  phpcs:
+    name: PHP CodeSniffer
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.0'
+          extensions: mbstring, xml, curl
+
+      - name: Install PHP CodeSniffer
+        run: |
+          composer global require squizlabs/php_codesniffer
+          composer global require wp-coding-standards/wpcs
+
+      - name: Run PHPCS
+        run: |
+          phpcs --standard=phpcs.xml wp-content/themes/gociss-theme/
+
+  eslint:
+    name: ESLint
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run ESLint
+        run: npm run lint:js
+
+  stylelint:
+    name: Stylelint
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Stylelint
+        run: npm run lint:css
+
+
+

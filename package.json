@@ -1,0 +1,21 @@
+{
+  "name": "gociss-theme",
+  "version": "1.0.0",
+  "description": "WordPress тема для ГоЦИСС",
+  "scripts": {
+    "lint:js": "eslint wp-content/themes/gociss-theme/assets/js/**/*.js",
+    "lint:css": "stylelint wp-content/themes/gociss-theme/assets/css/**/*.css",
+    "lint": "npm run lint:js && npm run lint:css"
+  },
+  "devDependencies": {
+    "eslint": "^8.50.0",
+    "stylelint": "^15.10.0",
+    "stylelint-config-standard": "^34.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
+
+
+

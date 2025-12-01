@@ -1,0 +1,66 @@
+# WordPress (только для локальной разработки, не коммитим)
+wp-config.php
+wp-content/uploads/
+wp-content/upgrade/
+wp-content/backup-db/
+wp-content/advanced-cache.php
+wp-content/wp-cache-config.php
+wp-content/cache/
+wp-content/debug.log
+
+# Темы (исключаем все кроме нашей)
+wp-content/themes/*
+!wp-content/themes/gociss-theme/
+
+# Плагины (исключаем все - устанавливаются через Docker)
+wp-content/plugins/*
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+
+# Composer
+vendor/
+composer.lock
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Логи
+*.log
+
+# Временные файлы
+*.tmp
+*.temp
+
+# Docker
+.env
+.env.local
+docker-compose.override.yml
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# WordPress core (не коммитим сам WordPress)
+wordpress/
+wp-admin/
+wp-includes/
+wp-*.php
+xmlrpc.php
+license.txt
+readme.html

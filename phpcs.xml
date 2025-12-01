@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<ruleset name="Gociss Theme">
+	<description>PHP CodeSniffer configuration for Gociss WordPress theme</description>
+
+	<!-- Путь к файлам для проверки -->
+	<file>wp-content/themes/gociss-theme</file>
+
+	<!-- Исключаем папки -->
+	<exclude-pattern>*/node_modules/*</exclude-pattern>
+	<exclude-pattern>*/vendor/*</exclude-pattern>
+
+	<!-- Используем WordPress Coding Standards -->
+	<rule ref="WordPress">
+		<!-- Игнорируем некоторые правила для совместимости -->
+		<exclude name="WordPress.Files.FileName.InvalidClassFileName"/>
+		<exclude name="WordPress.NamingConventions.PrefixAllGlobals"/>
+	</rule>
+
+	<!-- Дополнительные правила -->
+	<rule ref="WordPress-Extra">
+		<exclude name="WordPress.WhiteSpace.ControlStructureSpacing"/>
+	</rule>
+
+	<!-- Настройки отступов -->
+	<arg name="tab-width" value="4"/>
+
+	<!-- Цветной вывод -->
+	<arg value="colors"/>
+
+	<!-- Предупреждения вместо ошибок для некоторых правил -->
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array" value="gociss"/>
+		</properties>
+	</rule>
+</ruleset>
+
+
+
