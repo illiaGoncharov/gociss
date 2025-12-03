@@ -100,5 +100,3 @@ function gociss_register_expert_acf_fields() {
 }
 add_action( 'acf/init', 'gociss_register_expert_acf_fields' );
 
-
-

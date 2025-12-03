@@ -63,5 +63,3 @@ function gociss_handle_contact_form() {
 add_action( 'wp_ajax_gociss_contact_form', 'gociss_handle_contact_form' );
 add_action( 'wp_ajax_nopriv_gociss_contact_form', 'gociss_handle_contact_form' );
 
-
-

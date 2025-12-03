@@ -24,4 +24,3 @@ require_once GOCISS_THEME_PATH . '/inc/acf-fields.php';
 require_once GOCISS_THEME_PATH . '/inc/custom-post-types.php';
 require_once GOCISS_THEME_PATH . '/inc/form-handler.php';
 require_once GOCISS_THEME_PATH . '/inc/create-front-page.php';
-

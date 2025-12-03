@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Регистрация ACF групп полей
- * 
+ *
  * Примечание: Этот файл содержит JSON-структуру полей ACF.
  * После активации ACF плагина, поля нужно будет экспортировать
  * из админки и заменить этот код на актуальный.
@@ -302,8 +302,66 @@ function gociss_register_acf_fields() {
 			),
 		)
 	);
+
+	// Группа полей для настроек футера
+	acf_add_local_field_group(
+		array(
+			'key'                   => 'group_gociss_footer',
+			'title'                 => 'Настройки футера',
+			'fields'                => array(
+				array(
+					'key'               => 'field_gociss_footer_logo',
+					'label'             => 'Логотип футера',
+					'name'              => 'gociss_footer_logo',
+					'type'              => 'image',
+					'return_format'     => 'url',
+					'preview_size'      => 'medium',
+				),
+				array(
+					'key'               => 'field_gociss_footer_cert_image',
+					'label'             => 'Изображение сертификата',
+					'name'              => 'gociss_footer_cert_image',
+					'type'              => 'image',
+					'return_format'     => 'url',
+					'preview_size'      => 'medium',
+				),
+				array(
+					'key'               => 'field_gociss_footer_cert_text',
+					'label'             => 'Текст сертификата',
+					'name'              => 'gociss_footer_cert_text',
+					'type'              => 'textarea',
+					'rows'              => 3,
+					'placeholder'       => 'RA.RU.13CM43',
+				),
+			),
+			'location'              => array(
+				array(
+					array(
+						'param'    => 'options_page',
+						'operator' => '==',
+						'value'    => 'acf-options',
+					),
+				),
+			),
+		)
+	);
 }
 add_action( 'acf/init', 'gociss_register_acf_fields' );
 
-
+/**
+ * Регистрация страницы настроек ACF
+ */
+function gociss_add_options_page() {
+	if ( function_exists( 'acf_add_options_page' ) ) {
+		acf_add_options_page(
+			array(
+				'page_title' => 'Настройки темы',
+				'menu_title' => 'Настройки темы',
+				'menu_slug'  => 'acf-options',
+				'capability' => 'edit_posts',
+			)
+		);
+	}
+}
+add_action( 'acf/init', 'gociss_add_options_page' );
 

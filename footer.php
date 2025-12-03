@@ -14,23 +14,165 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 	<footer id="colophon" class="site-footer">
 		<div class="container">
-			<div class="site-footer__content">
-				<div class="site-footer__info">
-					<p class="site-footer__copyright">
-						&copy; <?php echo esc_html( date( 'Y' ) ); ?> <?php bloginfo( 'name' ); ?>. Все права защищены.
-					</p>
+			<div class="site-footer__main">
+				<!-- Колонка 1: Логотип и описание -->
+				<div class="site-footer__column site-footer__column--logo">
+					<div class="site-footer__logo">
+						<?php
+						$footer_logo = function_exists( 'get_field' ) ? get_field( 'gociss_footer_logo', 'option' ) : '';
+						$logo_url = $footer_logo ? esc_url( $footer_logo ) : esc_url( get_template_directory_uri() . '/assets/images/logo[white].svg' );
+						?>
+						<img src="<?php echo $logo_url; ?>" alt="<?php bloginfo( 'name' ); ?>" class="site-footer__logo-img">
+					</div>
+					<p class="site-footer__description">Профессиональные<br>сертификационные услуги для<br>бизнеса. Более 15 лет опыта на<br>рынке.</p>
+					<div class="site-footer__certifications">
+						<?php
+						$cert_image = function_exists( 'get_field' ) ? get_field( 'gociss_footer_cert_image', 'option' ) : '';
+						
+						if ( $cert_image ) {
+							?>
+							<div class="site-footer__certification">
+								<img src="<?php echo esc_url( $cert_image ); ?>" alt="Сертификат" class="site-footer__certification-img">
+							</div>
+							<?php
+						} else {
+							// Fallback значение по умолчанию
+							?>
+							<div class="site-footer__certification">
+								<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/iso[color].png' ); ?>" alt="Сертификат" class="site-footer__certification-img">
+							</div>
+							<?php
+						}
+						?>
+					</div>
 				</div>
 
-				<?php
-				wp_nav_menu(
-					array(
-						'theme_location' => 'footer',
-						'menu_id'        => 'footer-menu',
-						'container'      => false,
-						'depth'          => 1,
-					)
-				);
-				?>
+				<!-- Колонка 2: Услуги -->
+				<div class="site-footer__column site-footer__column--services">
+					<h3 class="site-footer__column-title">Услуги</h3>
+					<?php
+					wp_nav_menu(
+						array(
+							'theme_location' => 'footer-services',
+							'menu_id'        => 'footer-services-menu',
+							'container'      => false,
+							'menu_class'     => 'site-footer__menu',
+							'depth'          => 1,
+							'fallback_cb'    => function() {
+								?>
+								<ul class="site-footer__menu">
+									<li><a href="#iso-certification">Сертификация ISO</a></li>
+									<li><a href="#experience">Опыт и репутация</a></li>
+									<li><a href="#product-certification">Сертификация продукции</a></li>
+									<li><a href="#personnel-certification">Сертификация персонала</a></li>
+									<li><a href="#voluntary-certification">Добровольная сертификация</a></li>
+									<li><a href="#training">Учебный центр</a></li>
+									<li><a href="#all-services">Все услуги</a></li>
+								</ul>
+								<?php
+							},
+						)
+					);
+					?>
+				</div>
+
+				<!-- Колонка 3: Информация -->
+				<div class="site-footer__column site-footer__column--info">
+					<h3 class="site-footer__column-title">Информация</h3>
+					<?php
+					wp_nav_menu(
+						array(
+							'theme_location' => 'footer-info',
+							'menu_id'        => 'footer-info-menu',
+							'container'      => false,
+							'menu_class'     => 'site-footer__menu',
+							'depth'          => 1,
+							'fallback_cb'    => function() {
+								?>
+								<ul class="site-footer__menu">
+									<li><a href="#registers">Реестры</a></li>
+									<li><a href="#news">Новости</a></li>
+									<li><a href="#articles">Статьи</a></li>
+									<li><a href="#gosts">ГОСТы</a></li>
+									<li><a href="#faq">Вопрос-ответ</a></li>
+								</ul>
+								<?php
+							},
+						)
+					);
+					?>
+				</div>
+
+				<!-- Колонка 4: Компания -->
+				<div class="site-footer__column site-footer__column--company">
+					<h3 class="site-footer__column-title">Компания</h3>
+					<?php
+					wp_nav_menu(
+						array(
+							'theme_location' => 'footer-company',
+							'menu_id'        => 'footer-company-menu',
+							'container'      => false,
+							'menu_class'     => 'site-footer__menu',
+							'depth'          => 1,
+							'fallback_cb'    => function() {
+								?>
+								<ul class="site-footer__menu">
+									<li><a href="#about">О компании</a></li>
+									<li><a href="#accreditation">Аккредитация</a></li>
+									<li><a href="#vacancies">Вакансии</a></li>
+									<li><a href="#sitemap">Карта сайта</a></li>
+								</ul>
+								<?php
+							},
+						)
+					);
+					?>
+				</div>
+
+				<!-- Колонка 5: Контакты -->
+				<div class="site-footer__column site-footer__column--contacts">
+					<h3 class="site-footer__column-title">РАБОТАЕМ ПО ВСЕЙ РОССИИ</h3>
+					<div class="site-footer__contact-item">
+						<span class="site-footer__contact-label">Адрес головного офиса</span>
+						<div class="site-footer__contact-value">
+							<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/ui_pin[grey].svg' ); ?>" alt="" class="site-footer__contact-icon">
+							<span>Санкт-Петербург, ул. Парковая, 4, лит Д, оф 255</span>
+						</div>
+					</div>
+					<div class="site-footer__contact-item">
+						<div class="site-footer__contact-value">
+							<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/ui_phone[grey].svg' ); ?>" alt="" class="site-footer__contact-icon">
+							<a href="tel:+78005510236" class="site-footer__contact-link">+7 (800) 551-02-36</a>
+						</div>
+					</div>
+					<div class="site-footer__contact-item">
+						<div class="site-footer__contact-value">
+							<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/ui_letter[grey].svg' ); ?>" alt="" class="site-footer__contact-icon">
+							<a href="mailto:info@gociss.ru" class="site-footer__contact-link">info@gociss.ru</a>
+						</div>
+					</div>
+					<div class="site-footer__social">
+						<a href="#" class="site-footer__social-link" aria-label="Telegram">
+							<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/social_tg.svg' ); ?>" alt="Telegram">
+						</a>
+						<a href="#" class="site-footer__social-link" aria-label="WhatsApp">
+							<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/social_wu.svg' ); ?>" alt="WhatsApp">
+						</a>
+					</div>
+				</div>
+			</div>
+
+			<!-- Нижняя часть футера -->
+			<div class="site-footer__bottom">
+				<div class="site-footer__bottom-content">
+					<p class="site-footer__copyright">&copy; <?php echo esc_html( date( 'Y' ) ); ?></p>
+					<p class="site-footer__legal">Материалы, размещенные на сайте, носят информационный характер и ни при каких условиях не являются публичной офертой, определяемой положениями ст. 437 Гражданского кодекса РФ</p>
+					<div class="site-footer__legal-links">
+						<a href="#privacy" class="site-footer__legal-link">Политика конфиденциальности</a>
+						<a href="#agreement" class="site-footer__legal-link">Пользовательское соглашение</a>
+						<a href="#cookies" class="site-footer__legal-link">Согласие на использование файлов cookie</a>
+					</div>
+				</div>
 			</div>
 		</div>
 	</footer><!-- #colophon -->
