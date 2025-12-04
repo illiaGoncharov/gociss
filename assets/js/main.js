@@ -15,6 +15,7 @@
 		initNewsSlider();
 		initSearch();
 		initMobileMenu();
+		initServicesMenu();
 	});
 
 	/**
@@ -368,14 +369,16 @@
 		}
 
 		// Открытие меню
-		toggleButton.addEventListener('click', function() {
+		toggleButton.addEventListener('click', function(e) {
 			mobileMenu.classList.add('is-open');
+			toggleButton.classList.add('is-active');
 			document.body.style.overflow = 'hidden';
 		});
 
 		// Закрытие меню
 		function closeMobileMenu() {
 			mobileMenu.classList.remove('is-open');
+			toggleButton.classList.remove('is-active');
 			document.body.style.overflow = '';
 		}
 
@@ -402,5 +405,47 @@
 			});
 		});
 	}
-})();
 
+	/**
+	 * Инициализация выдвижного меню услуг на мобильных
+	 */
+	function initServicesMenu() {
+		const servicesMenu = document.querySelector('.header-services');
+		const toggleButton = document.querySelector('.header-services__toggle');
+
+		if (!servicesMenu || !toggleButton) {
+			return;
+		}
+
+		// Переключаем состояние меню при клике на кнопку
+		toggleButton.addEventListener('click', function(e) {
+			e.preventDefault();
+			servicesMenu.classList.toggle('is-collapsed');
+		});
+
+		// На десктопе меню всегда развернуто
+		function handleResize() {
+			if (window.innerWidth > 768) {
+				servicesMenu.classList.remove('is-collapsed');
+			} else if (!servicesMenu.hasAttribute('data-user-interaction')) {
+				servicesMenu.classList.add('is-collapsed');
+				servicesMenu.setAttribute('data-user-interaction', 'false');
+			}
+		}
+
+		// Отмечаем взаимодействие пользователя
+		toggleButton.addEventListener('click', function() {
+			servicesMenu.setAttribute('data-user-interaction', 'true');
+		}, { once: false });
+
+		// Проверяем при загрузке
+		handleResize();
+
+		// Проверяем при изменении размера окна
+		let resizeTimer;
+		window.addEventListener('resize', function() {
+			clearTimeout(resizeTimer);
+			resizeTimer = setTimeout(handleResize, 250);
+		});
+	}
+})();

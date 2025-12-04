@@ -33,29 +33,29 @@ if ( ! defined( 'ABSPATH' ) ) {
 						<?php if ( has_custom_logo() ) : ?>
 							<?php the_custom_logo(); ?>
 						<?php else : ?>
-							<a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="site-logo">
-								<div class="site-logo__icon">
-									<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-										<circle cx="24" cy="24" r="24" fill="#1e3a5f"/>
-										<text x="24" y="28" text-anchor="middle" fill="white" font-size="12" font-weight="bold">ГЦ</text>
-									</svg>
-								</div>
-								<div class="site-logo__text-wrap">
-									<span class="site-logo__text">ГоЦИСС</span>
-									<span class="site-logo__tagline">Головной центр испытаний,<br>сертификации и стандартизации</span>
-								</div>
-							</a>
+						<a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="site-logo">
+							<div class="site-logo__icon">
+								<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<circle cx="24" cy="24" r="24" fill="#1e3a5f"/>
+									<text x="24" y="28" text-anchor="middle" fill="white" font-size="12" font-weight="bold">ГЦ</text>
+								</svg>
+							</div>
+							<div class="site-logo__text-wrap">
+								<span class="site-logo__text">ГоЦИСС</span>
+								<span class="site-logo__tagline">Головной центр испытаний,<br>сертификации и стандартизации</span>
+							</div>
+						</a>
 						<?php endif; ?>
 					</div>
 
-					<!-- Локация -->
-					<div class="header-top__location">
-						<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/ui_pin[blue].svg' ); ?>" alt="" class="location-icon" width="16" height="16">
-						<div class="location-content">
-							<span class="location-text">Санкт-Петербург</span>
-							<span class="location-note">Работаем по всей России</span>
-						</div>
+				<!-- Локация -->
+				<div class="header-top__location">
+					<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/ui_pin[blue].svg' ); ?>" alt="" class="location-icon" width="16" height="16">
+					<div class="location-content">
+						<span class="location-text">Санкт-Петербург</span>
+						<span class="location-note">Работаем по всей России</span>
 					</div>
+				</div>
 
 					<!-- Главное меню -->
 					<nav class="header-top__nav">
@@ -83,19 +83,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 						?>
 					</nav>
 
-					<!-- Контакты и кнопка -->
-					<div class="header-top__contacts">
-						<div class="header-top__phone-wrap">
-							<button class="header-top__search" aria-label="<?php esc_attr_e( 'Поиск', 'gociss' ); ?>" type="button">
-								<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/ui_zoom[blue].svg' ); ?>" alt="<?php esc_attr_e( 'Поиск', 'gociss' ); ?>" width="24" height="24">
-							</button>
-							<div>
-								<a href="tel:+78005510236" class="header-top__phone">+7 (800) 551-02-36</a>
-								<a href="mailto:info@gociss.ru" class="header-top__email-text">info@gociss.ru</a>
-							</div>
+				<!-- Контакты и кнопка -->
+				<div class="header-top__contacts">
+					<div class="header-top__phone-wrap">
+						<button class="header-top__search" aria-label="<?php esc_attr_e( 'Поиск', 'gociss' ); ?>" type="button">
+							<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/ui_zoom[blue].svg' ); ?>" alt="<?php esc_attr_e( 'Поиск', 'gociss' ); ?>" width="24" height="24">
+						</button>
+						<div>
+							<a href="tel:+78005510236" class="header-top__phone">+7 (800) 551-02-36</a>
+							<a href="mailto:info@gociss.ru" class="header-top__email-text">info@gociss.ru</a>
 						</div>
-						<a href="#callback" class="btn btn--primary">Заказать звонок</a>
 					</div>
+					<a href="#callback" class="btn btn--primary">Заказать звонок</a>
+				</div>
 
 					<!-- Кнопка мобильного меню -->
 					<button class="header-mobile-toggle" aria-label="<?php esc_attr_e( 'Меню', 'gociss' ); ?>" type="button">
@@ -111,8 +111,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 		</div>
 
 		<!-- Меню услуг (тёмно-синий фон) -->
-		<div class="header-services">
+		<div class="header-services is-collapsed">
 			<div class="container">
+				<!-- Кнопка для открытия/закрытия меню на мобильных -->
+				<button class="header-services__toggle" aria-label="<?php esc_attr_e( 'Показать меню услуг', 'gociss' ); ?>" type="button">
+					<span class="header-services__toggle-text">
+						<span class="header-services__text">Все услуги</span>
+					</span>
+					<span class="header-services__toggle-icon"></span>
+				</button>
 				<nav class="header-services__nav">
 					<a href="#services" class="header-services__item header-services__item--all">
 						<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/ui_ham[white].svg' ); ?>" alt="" class="header-services__icon" width="16" height="16">
@@ -153,6 +160,27 @@ if ( ! defined( 'ABSPATH' ) ) {
 				<button class="header-mobile-menu__close" aria-label="<?php esc_attr_e( 'Закрыть меню', 'gociss' ); ?>" type="button">
 					<span class="header-mobile-menu__close-icon"></span>
 				</button>
+				
+				<!-- Логотип в мобильном меню -->
+				<div class="header-mobile-menu__logo">
+					<?php if ( has_custom_logo() ) : ?>
+						<?php the_custom_logo(); ?>
+					<?php else : ?>
+					<a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="site-logo">
+						<div class="site-logo__icon">
+							<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<circle cx="24" cy="24" r="24" fill="#1e3a5f"/>
+								<text x="24" y="28" text-anchor="middle" fill="white" font-size="12" font-weight="bold">ГЦ</text>
+							</svg>
+						</div>
+						<div class="site-logo__text-wrap">
+							<span class="site-logo__text">ГоЦИСС</span>
+							<span class="site-logo__tagline">Головной центр испытаний,<br>сертификации и стандартизации</span>
+						</div>
+					</a>
+					<?php endif; ?>
+				</div>
+				
 				<nav class="header-mobile-menu__nav">
 					<?php
 					if ( has_nav_menu( 'primary' ) ) {
