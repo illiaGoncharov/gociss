@@ -3,7 +3,7 @@
 	<description>PHP CodeSniffer configuration for Gociss WordPress theme</description>
 
 	<!-- Путь к файлам для проверки -->
-	<file>wp-content/themes/gociss-theme</file>
+	<file>.</file>
 
 	<!-- Исключаем папки -->
 	<exclude-pattern>*/node_modules/*</exclude-pattern>

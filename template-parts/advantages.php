@@ -39,7 +39,7 @@ if ( ! $advantages_subtitle ) {
 				foreach ( $advantages_items as $advantage ) :
 				?>
 				<div class="advantages__item">
-					<div class="advantages__icon">
+						<div class="advantages__icon">
 						<?php if ( ! empty( $advantage['icon'] ) && ! empty( $advantage['icon']['ID'] ) ) : ?>
 							<?php
 							echo wp_get_attachment_image(
@@ -54,7 +54,7 @@ if ( ! $advantages_subtitle ) {
 						<?php else : ?>
 							<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/advantages/' . $icon_index . '.svg' ); ?>" alt="">
 						<?php endif; ?>
-					</div>
+						</div>
 
 					<?php if ( ! empty( $advantage['text'] ) ) : ?>
 						<p class="advantages__text"><?php echo esc_html( $advantage['text'] ); ?></p>

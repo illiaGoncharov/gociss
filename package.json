@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "WordPress тема для ГоЦИСС",
   "scripts": {
-    "lint:js": "eslint wp-content/themes/gociss-theme/assets/js/**/*.js",
-    "lint:css": "stylelint wp-content/themes/gociss-theme/assets/css/**/*.css",
+    "lint:js": "eslint assets/js/**/*.js",
+    "lint:css": "stylelint assets/css/**/*.css",
     "lint": "npm run lint:js && npm run lint:css"
   },
   "devDependencies": {

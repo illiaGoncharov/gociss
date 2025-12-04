@@ -51,43 +51,43 @@ $has_posts = $news_query->have_posts();
 			</button>
 
 			<div class="news__track">
-				<div class="news__grid">
+		<div class="news__grid">
 					<?php if ( $has_posts ) : ?>
-						<?php
-						while ( $news_query->have_posts() ) {
-							$news_query->the_post();
-							?>
-							<article class="news__item">
+			<?php
+			while ( $news_query->have_posts() ) {
+				$news_query->the_post();
+				?>
+				<article class="news__item">
 								<div class="news__image">
-									<?php if ( has_post_thumbnail() ) : ?>
-										<a href="<?php the_permalink(); ?>">
-											<?php the_post_thumbnail( 'gociss-news' ); ?>
-										</a>
+					<?php if ( has_post_thumbnail() ) : ?>
+							<a href="<?php the_permalink(); ?>">
+								<?php the_post_thumbnail( 'gociss-news' ); ?>
+							</a>
 									<?php else : ?>
 										<a href="<?php the_permalink(); ?>">
 											<div class="news__image-placeholder"></div>
 										</a>
 									<?php endif; ?>
-								</div>
+						</div>
 
-								<div class="news__content">
-									<time class="news__date" datetime="<?php echo esc_attr( get_the_date( 'c' ) ); ?>">
+					<div class="news__content">
+						<time class="news__date" datetime="<?php echo esc_attr( get_the_date( 'c' ) ); ?>">
 										<?php echo esc_html( get_the_date( 'j F Y' ) ); ?>
-									</time>
+						</time>
 
 									<h3 class="news__item-title">
-										<a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
-									</h3>
+							<a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+						</h3>
 
 									<p class="news__excerpt"><?php echo esc_html( wp_trim_words( get_the_excerpt(), 15, '...' ) ); ?></p>
 
-									<a href="<?php the_permalink(); ?>" class="news__link">Читать далее →</a>
-								</div>
-							</article>
-							<?php
-						}
-						wp_reset_postdata();
-						?>
+						<a href="<?php the_permalink(); ?>" class="news__link">Читать далее →</a>
+					</div>
+				</article>
+				<?php
+			}
+			wp_reset_postdata();
+			?>
 					<?php else : ?>
 						<!-- Заглушки новостей -->
 						<article class="news__item">

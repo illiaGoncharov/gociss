@@ -40,7 +40,7 @@ if ( ! $experts_subtitle ) {
 			</button>
 
 			<div class="experts__track">
-				<div class="experts__grid">
+			<div class="experts__grid">
 					<?php if ( $experts_items && is_array( $experts_items ) && count( $experts_items ) > 0 ) : ?>
 						<?php foreach ( $experts_items as $expert ) : ?>
 							<div class="experts__item">
@@ -65,8 +65,8 @@ if ( ! $experts_subtitle ) {
 					<?php else : ?>
 						<!-- Заглушки экспертов -->
 						<?php for ( $i = 1; $i <= 5; $i++ ) : ?>
-							<div class="experts__item">
-								<div class="experts__photo">
+					<div class="experts__item">
+							<div class="experts__photo">
 									<div class="experts__photo-placeholder"></div>
 								</div>
 								<h3 class="experts__name">Мышеловский Сергей Вячеславович</h3>
@@ -74,8 +74,8 @@ if ( ! $experts_subtitle ) {
 								<p class="experts__experience">12 лет опыта, более 500 проектов ISO 9001, 14001, 45001</p>
 							</div>
 						<?php endfor; ?>
-					<?php endif; ?>
-				</div>
+						<?php endif; ?>
+					</div>
 			</div>
 
 			<button class="experts__nav experts__nav--next" aria-label="Следующий">
