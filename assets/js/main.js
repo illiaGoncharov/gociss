@@ -12,6 +12,7 @@
 		initFAQ();
 		initForm();
 		initExpertsSlider();
+		initNewsSlider();
 		initSearch();
 		initMobileMenu();
 	});
@@ -28,30 +29,46 @@
 
 		faqItems.forEach(function(item) {
 			const question = item.querySelector('.faq__question');
+			const answer = item.querySelector('.faq__answer');
 
-			if (!question) {
+			if (!question || !answer) {
 				return;
 			}
 
 			question.addEventListener('click', function() {
-				const isOpen = item.classList.contains('is-open');
+				const wasOpen = item.classList.contains('is-open');
 
 				// Закрываем все элементы
 				faqItems.forEach(function(otherItem) {
-					otherItem.classList.remove('is-open');
+					const otherAnswer = otherItem.querySelector('.faq__answer');
 					const otherQuestion = otherItem.querySelector('.faq__question');
+
+					otherItem.classList.remove('is-open');
+					if (otherAnswer) {
+						otherAnswer.style.maxHeight = null;
+					}
 					if (otherQuestion) {
 						otherQuestion.setAttribute('aria-expanded', 'false');
 					}
 				});
 
 				// Открываем текущий, если он был закрыт
-				if (!isOpen) {
+				if (!wasOpen) {
 					item.classList.add('is-open');
 					question.setAttribute('aria-expanded', 'true');
+					answer.style.maxHeight = answer.scrollHeight + 'px';
 				}
 			});
 		});
+
+		// Инициализация: открываем первый элемент
+		const firstOpen = document.querySelector('.faq__item.is-open');
+		if (firstOpen) {
+			const firstAnswer = firstOpen.querySelector('.faq__answer');
+			if (firstAnswer) {
+				firstAnswer.style.maxHeight = firstAnswer.scrollHeight + 'px';
+			}
+		}
 	}
 
 	/**
@@ -116,18 +133,45 @@
 		const prevBtn = slider.querySelector('.experts__nav--prev');
 		const nextBtn = slider.querySelector('.experts__nav--next');
 		const grid = slider.querySelector('.experts__grid');
+		const track = slider.querySelector('.experts__track');
 
-		if (!prevBtn || !nextBtn || !grid) {
+		if (!prevBtn || !nextBtn || !grid || !track) {
 			return;
 		}
 
 		let currentIndex = 0;
 		const items = grid.querySelectorAll('.experts__item');
-		const itemsPerView = 4;
+		const totalItems = items.length;
+
+		// Определяем количество видимых элементов в зависимости от ширины экрана
+		function getItemsPerView() {
+			if (window.innerWidth <= 480) return 1;
+			if (window.innerWidth <= 768) return 2;
+			if (window.innerWidth <= 1024) return 3;
+			return 4;
+		}
+
+		function getItemWidth() {
+			if (items.length === 0) return 0;
+			const item = items[0];
+			const style = window.getComputedStyle(item);
+			const gap = 24; // gap между элементами
+			return item.offsetWidth + gap;
+		}
 
 		function updateSlider() {
-			const translateX = -currentIndex * (100 / itemsPerView);
-			grid.style.transform = `translateX(${translateX}%)`;
+			const itemWidth = getItemWidth();
+			const translateX = -currentIndex * itemWidth;
+			grid.style.transform = `translateX(${translateX}px)`;
+			updateButtons();
+		}
+
+		function updateButtons() {
+			const itemsPerView = getItemsPerView();
+			const maxIndex = Math.max(0, totalItems - itemsPerView);
+
+			prevBtn.disabled = currentIndex <= 0;
+			nextBtn.disabled = currentIndex >= maxIndex;
 		}
 
 		prevBtn.addEventListener('click', function() {
@@ -138,12 +182,114 @@
 		});
 
 		nextBtn.addEventListener('click', function() {
-			const maxIndex = Math.max(0, items.length - itemsPerView);
+			const itemsPerView = getItemsPerView();
+			const maxIndex = Math.max(0, totalItems - itemsPerView);
 			if (currentIndex < maxIndex) {
 				currentIndex++;
 				updateSlider();
 			}
 		});
+
+		// Обновляем при изменении размера окна
+		let resizeTimeout;
+		window.addEventListener('resize', function() {
+			clearTimeout(resizeTimeout);
+			resizeTimeout = setTimeout(function() {
+				const itemsPerView = getItemsPerView();
+				const maxIndex = Math.max(0, totalItems - itemsPerView);
+				if (currentIndex > maxIndex) {
+					currentIndex = maxIndex;
+				}
+				updateSlider();
+			}, 100);
+		});
+
+		// Инициализация
+		updateButtons();
+	}
+
+	/**
+	 * Инициализация слайдера новостей
+	 */
+	function initNewsSlider() {
+		const slider = document.querySelector('.news__slider');
+
+		if (!slider) {
+			return;
+		}
+
+		const prevBtn = slider.querySelector('.news__nav--prev');
+		const nextBtn = slider.querySelector('.news__nav--next');
+		const grid = slider.querySelector('.news__grid');
+		const track = slider.querySelector('.news__track');
+
+		if (!prevBtn || !nextBtn || !grid || !track) {
+			return;
+		}
+
+		let currentIndex = 0;
+		const items = grid.querySelectorAll('.news__item');
+		const totalItems = items.length;
+
+		function getItemsPerView() {
+			if (window.innerWidth <= 480) return 1;
+			if (window.innerWidth <= 768) return 2;
+			if (window.innerWidth <= 1024) return 3;
+			return 4;
+		}
+
+		function getItemWidth() {
+			if (items.length === 0) return 0;
+			const item = items[0];
+			const gap = 24;
+			return item.offsetWidth + gap;
+		}
+
+		function updateSlider() {
+			const itemWidth = getItemWidth();
+			const translateX = -currentIndex * itemWidth;
+			grid.style.transform = `translateX(${translateX}px)`;
+			updateButtons();
+		}
+
+		function updateButtons() {
+			const itemsPerView = getItemsPerView();
+			const maxIndex = Math.max(0, totalItems - itemsPerView);
+
+			prevBtn.disabled = currentIndex <= 0;
+			nextBtn.disabled = currentIndex >= maxIndex;
+		}
+
+		prevBtn.addEventListener('click', function() {
+			if (currentIndex > 0) {
+				currentIndex--;
+				updateSlider();
+			}
+		});
+
+		nextBtn.addEventListener('click', function() {
+			const itemsPerView = getItemsPerView();
+			const maxIndex = Math.max(0, totalItems - itemsPerView);
+			if (currentIndex < maxIndex) {
+				currentIndex++;
+				updateSlider();
+			}
+		});
+
+		let resizeTimeout;
+		window.addEventListener('resize', function() {
+			clearTimeout(resizeTimeout);
+			resizeTimeout = setTimeout(function() {
+				const itemsPerView = getItemsPerView();
+				const maxIndex = Math.max(0, totalItems - itemsPerView);
+				if (currentIndex > maxIndex) {
+					currentIndex = maxIndex;
+				}
+				updateSlider();
+			}, 100);
+		});
+
+		updateButtons();
 	}
 
 	/**

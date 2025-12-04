@@ -250,6 +250,77 @@ function gociss_register_acf_fields() {
 		)
 	);
 
+	// Группа полей для секции Эксперты
+	acf_add_local_field_group(
+		array(
+			'key'                   => 'group_gociss_experts',
+			'title'                 => 'Секция Эксперты',
+			'fields'                => array(
+				array(
+					'key'               => 'field_gociss_experts_title',
+					'label'             => 'Заголовок',
+					'name'              => 'gociss_experts_title',
+					'type'              => 'text',
+					'default_value'     => 'Наши ведущие эксперты',
+				),
+				array(
+					'key'               => 'field_gociss_experts_subtitle',
+					'label'             => 'Подзаголовок',
+					'name'              => 'gociss_experts_subtitle',
+					'type'              => 'textarea',
+					'default_value'     => 'Команда профессионалов с международной аккредитацией и многолетним опытом',
+				),
+				array(
+					'key'               => 'field_gociss_experts_items',
+					'label'             => 'Эксперты',
+					'name'              => 'gociss_experts_items',
+					'type'              => 'repeater',
+					'layout'            => 'block',
+					'button_label'      => 'Добавить эксперта',
+					'sub_fields'        => array(
+						array(
+							'key'           => 'field_gociss_experts_photo',
+							'label'         => 'Фото',
+							'name'          => 'photo',
+							'type'          => 'image',
+							'return_format' => 'array',
+							'preview_size'  => 'medium',
+							'instructions'  => 'Рекомендуемый размер: 320x320px',
+						),
+						array(
+							'key'   => 'field_gociss_experts_name',
+							'label' => 'ФИО',
+							'name'  => 'name',
+							'type'  => 'text',
+						),
+						array(
+							'key'   => 'field_gociss_experts_position',
+							'label' => 'Должность',
+							'name'  => 'position',
+							'type'  => 'text',
+						),
+						array(
+							'key'   => 'field_gociss_experts_experience',
+							'label' => 'Опыт/Описание',
+							'name'  => 'experience',
+							'type'  => 'textarea',
+							'rows'  => 2,
+						),
+					),
+				),
+			),
+			'location'              => array(
+				array(
+					array(
+						'param'    => 'page_template',
+						'operator' => '==',
+						'value'    => 'page-front.php',
+					),
+				),
+			),
+		)
+	);
+
 	// Группа полей для секции FAQ
 	acf_add_local_field_group(
 		array(
@@ -303,6 +374,383 @@ function gociss_register_acf_fields() {
 		)
 	);
 
+	// Группа полей для секции Новости
+	acf_add_local_field_group(
+		array(
+			'key'                   => 'group_gociss_news',
+			'title'                 => 'Секция Новости',
+			'fields'                => array(
+				array(
+					'key'               => 'field_gociss_news_title',
+					'label'             => 'Заголовок',
+					'name'              => 'gociss_news_title',
+					'type'              => 'text',
+					'default_value'     => 'Новости и статьи',
+				),
+				array(
+					'key'               => 'field_gociss_news_subtitle',
+					'label'             => 'Подзаголовок',
+					'name'              => 'gociss_news_subtitle',
+					'type'              => 'textarea',
+					'default_value'     => 'Актуальная информация о сертификации и изменениях в законодательстве',
+				),
+			),
+			'location'              => array(
+				array(
+					array(
+						'param'    => 'page_template',
+						'operator' => '==',
+						'value'    => 'page-front.php',
+					),
+				),
+			),
+			'menu_order'            => 7,
+		)
+	);
+
+	// Группа полей для секции География (карта России)
+	acf_add_local_field_group(
+		array(
+			'key'                   => 'group_gociss_geography',
+			'title'                 => 'Секция География (карта России)',
+			'fields'                => array(
+				array(
+					'key'               => 'field_gociss_geo_title',
+					'label'             => 'Заголовок',
+					'name'              => 'gociss_geo_title',
+					'type'              => 'text',
+					'default_value'     => 'РАБОТАЕМ ПО ВСЕЙ РОССИИ',
+				),
+				array(
+					'key'               => 'field_gociss_geo_btn',
+					'label'             => 'Кнопка',
+					'name'              => 'gociss_geo_btn',
+					'type'              => 'group',
+					'sub_fields'        => array(
+						array(
+							'key'   => 'field_gociss_geo_btn_text',
+							'label' => 'Текст',
+							'name'  => 'text',
+							'type'  => 'text',
+							'default_value' => 'ПОЗВОНИТЬ НАМ',
+						),
+						array(
+							'key'   => 'field_gociss_geo_btn_url',
+							'label' => 'Ссылка',
+							'name'  => 'url',
+							'type'  => 'url',
+							'default_value' => 'tel:+74951234567',
+						),
+					),
+				),
+				array(
+					'key'               => 'field_gociss_geo_map',
+					'label'             => 'Карта России',
+					'name'              => 'gociss_geo_map',
+					'type'              => 'image',
+					'instructions'      => 'Загрузите изображение карты России. Рекомендуемый размер: 800x500px',
+					'return_format'     => 'array',
+					'preview_size'      => 'medium',
+					'library'           => 'all',
+				),
+			),
+			'location'              => array(
+				array(
+					array(
+						'param'    => 'page_template',
+						'operator' => '==',
+						'value'    => 'page-front.php',
+					),
+				),
+			),
+			'menu_order'            => 8,
+		)
+	);
+
+	// Группа полей для секции Форма
+	acf_add_local_field_group(
+		array(
+			'key'                   => 'group_gociss_form',
+			'title'                 => 'Секция Форма обратной связи',
+			'fields'                => array(
+				array(
+					'key'               => 'field_gociss_form_label',
+					'label'             => 'Метка',
+					'name'              => 'gociss_form_label',
+					'type'              => 'text',
+					'default_value'     => 'Связаться с нами',
+				),
+				array(
+					'key'               => 'field_gociss_form_title',
+					'label'             => 'Заголовок',
+					'name'              => 'gociss_form_title',
+					'type'              => 'text',
+					'default_value'     => 'Оставить заявку',
+				),
+				array(
+					'key'               => 'field_gociss_form_description',
+					'label'             => 'Описание',
+					'name'              => 'gociss_form_description',
+					'type'              => 'textarea',
+					'default_value'     => 'Заполните форму, и наш эксперт свяжется с вами в течение 30 минут',
+				),
+				array(
+					'key'               => 'field_gociss_form_shortcode',
+					'label'             => 'Шорткод Contact Form 7',
+					'name'              => 'gociss_form_shortcode',
+					'type'              => 'text',
+					'instructions'      => 'Вставьте шорткод формы Contact Form 7, например: [contact-form-7 id="274d127" title="Контактная Форма Главная"]',
+					'default_value'     => '[contact-form-7 id="274d127" title="Контактная Форма Главная"]',
+				),
+			),
+			'location'              => array(
+				array(
+					array(
+						'param'    => 'page_template',
+						'operator' => '==',
+						'value'    => 'page-front.php',
+					),
+				),
+			),
+			'menu_order'            => 10,
+		)
+	);
+
+	// Группа полей для секции CTA
+	acf_add_local_field_group(
+		array(
+			'key'                   => 'group_gociss_cta',
+			'title'                 => 'Секция CTA (Призыв к действию)',
+			'fields'                => array(
+				array(
+					'key'               => 'field_gociss_cta_label',
+					'label'             => 'Метка',
+					'name'              => 'gociss_cta_label',
+					'type'              => 'text',
+					'default_value'     => 'Начните прямо сейчас',
+				),
+				array(
+					'key'               => 'field_gociss_cta_title',
+					'label'             => 'Заголовок',
+					'name'              => 'gociss_cta_title',
+					'type'              => 'text',
+					'default_value'     => 'Готовы начать сертификацию?',
+				),
+				array(
+					'key'               => 'field_gociss_cta_description',
+					'label'             => 'Описание',
+					'name'              => 'gociss_cta_description',
+					'type'              => 'textarea',
+					'default_value'     => 'Получите бесплатную консультацию эксперта и узнайте точные сроки и стоимость сертификации для вашего продукта',
+				),
+				array(
+					'key'               => 'field_gociss_cta_btn_primary',
+					'label'             => 'Кнопка с рамкой',
+					'name'              => 'gociss_cta_btn_primary',
+					'type'              => 'group',
+					'sub_fields'        => array(
+						array(
+							'key'   => 'field_gociss_cta_btn_primary_text',
+							'label' => 'Текст',
+							'name'  => 'text',
+							'type'  => 'text',
+							'default_value' => 'Получить консультацию',
+						),
+						array(
+							'key'   => 'field_gociss_cta_btn_primary_url',
+							'label' => 'Ссылка',
+							'name'  => 'url',
+							'type'  => 'url',
+						),
+					),
+				),
+				array(
+					'key'               => 'field_gociss_cta_btn_secondary',
+					'label'             => 'Кнопка залитая',
+					'name'              => 'gociss_cta_btn_secondary',
+					'type'              => 'group',
+					'sub_fields'        => array(
+						array(
+							'key'   => 'field_gociss_cta_btn_secondary_text',
+							'label' => 'Текст',
+							'name'  => 'text',
+							'type'  => 'text',
+							'default_value' => 'Заказать обратный звонок',
+						),
+						array(
+							'key'   => 'field_gociss_cta_btn_secondary_url',
+							'label' => 'Ссылка',
+							'name'  => 'url',
+							'type'  => 'url',
+						),
+					),
+				),
+			),
+			'location'              => array(
+				array(
+					array(
+						'param'    => 'page_template',
+						'operator' => '==',
+						'value'    => 'page-front.php',
+					),
+				),
+			),
+		)
+	);
+
+	// Группа полей для секции Партнёры
+	acf_add_local_field_group(
+		array(
+			'key'                   => 'group_gociss_partners',
+			'title'                 => 'Секция Партнёры и ресурсы',
+			'fields'                => array(
+				array(
+					'key'               => 'field_gociss_partners_actions',
+					'label'             => 'Быстрые действия',
+					'name'              => 'gociss_partners_actions',
+					'type'              => 'repeater',
+					'layout'            => 'block',
+					'button_label'      => 'Добавить действие',
+					'max'               => 5,
+					'min'               => 3,
+					'sub_fields'        => array(
+						array(
+							'key'           => 'field_gociss_partners_action_icon',
+							'label'         => 'Иконка',
+							'name'          => 'icon_image',
+							'type'          => 'image',
+							'return_format' => 'array',
+							'preview_size'  => 'thumbnail',
+							'instructions'  => 'Рекомендуемый размер: 48x48px, формат SVG или PNG. Если не загружено, будет использована иконка из папки pre-footer',
+						),
+						array(
+							'key'           => 'field_gociss_partners_action_icon_file',
+							'label'         => 'Имя файла иконки (если не загружено)',
+							'name'          => 'icon',
+							'type'          => 'text',
+							'instructions'  => 'Имя файла из папки pre-footer (например: zay_w.png.png, oper_w.png.png, phone_w.png.png)',
+							'default_value' => 'zay_w.png.png',
+						),
+						array(
+							'key'           => 'field_gociss_partners_action_title',
+							'label'         => 'Название',
+							'name'          => 'title',
+							'type'          => 'text',
+							'required'      => 0,
+							'default_value' => 'Заявка на почту',
+						),
+						array(
+							'key'           => 'field_gociss_partners_action_url',
+							'label'         => 'Ссылка',
+							'name'          => 'url',
+							'type'          => 'text',
+							'required'      => 0,
+							'instructions'  => 'Можно использовать: http://, https://, mailto:, tel:',
+							'default_value' => 'mailto:info@gociss.ru',
+							'placeholder'   => 'mailto:info@gociss.ru или tel:+74951234567',
+						),
+					),
+					'default_value'     => array(
+						array(
+							'icon'  => 'zay_w.png.png',
+							'title' => 'Заявка на почту',
+							'url'   => 'mailto:info@gociss.ru',
+						),
+						array(
+							'icon'  => 'oper_w.png.png',
+							'title' => 'Консультация',
+							'url'   => '#form',
+						),
+						array(
+							'icon'  => 'phone_w.png.png',
+							'title' => 'Звонок',
+							'url'   => 'tel:+74951234567',
+						),
+					),
+				),
+				array(
+					'key'               => 'field_gociss_partners_items',
+					'label'             => 'Партнёры/Ресурсы',
+					'name'              => 'gociss_partners_items',
+					'type'              => 'repeater',
+					'layout'            => 'block',
+					'button_label'      => 'Добавить партнёра',
+					'sub_fields'        => array(
+						array(
+							'key'           => 'field_gociss_partners_item_image',
+							'label'         => 'Изображение',
+							'name'          => 'image',
+							'type'          => 'image',
+							'return_format' => 'array',
+							'preview_size'  => 'medium',
+							'instructions'  => 'Загрузите изображение карточки партнёра. Рекомендуемый размер: 300x80px',
+						),
+						array(
+							'key'           => 'field_gociss_partners_item_title',
+							'label'         => 'Название',
+							'name'          => 'title',
+							'type'          => 'text',
+							'required'      => 0,
+							'default_value' => 'Партнёр',
+						),
+						array(
+							'key'           => 'field_gociss_partners_item_url',
+							'label'         => 'Ссылка',
+							'name'          => 'url',
+							'type'          => 'url',
+							'required'      => 0,
+							'default_value' => 'https://',
+						),
+					),
+					'default_value'     => array(
+						array(
+							'title' => 'Правительство РФ',
+							'url'   => 'https://government.ru/',
+						),
+						array(
+							'title' => 'Министерство экономического развития РФ',
+							'url'   => 'https://www.economy.gov.ru/',
+						),
+						array(
+							'title' => 'Федеральная служба по аккредитации',
+							'url'   => 'https://fsa.gov.ru/',
+						),
+						array(
+							'title' => 'ЕИС закупки',
+							'url'   => 'https://zakupki.gov.ru/',
+						),
+						array(
+							'title' => 'МИНПРОМТОРГ',
+							'url'   => 'https://minpromtorg.gov.ru/',
+						),
+						array(
+							'title' => 'РОССТАНДАРТ',
+							'url'   => 'https://www.rst.gov.ru/',
+						),
+						array(
+							'title' => 'ГОСУСЛУГИ',
+							'url'   => 'https://www.gosuslugi.ru/',
+						),
+						array(
+							'title' => 'ЧЕСТНЫЙ ЗНАК',
+							'url'   => 'https://chestnyznak.ru/',
+						),
+					),
+				),
+			),
+			'location'              => array(
+				array(
+					array(
+						'param'    => 'page_template',
+						'operator' => '==',
+						'value'    => 'page-front.php',
+					),
+				),
+			),
+			'menu_order'            => 12,
+		)
+	);
+
 	// Группа полей для настроек футера
 	acf_add_local_field_group(
 		array(
@@ -347,6 +795,50 @@ function gociss_register_acf_fields() {
 	);
 }
 add_action( 'acf/init', 'gociss_register_acf_fields' );
+
+/**
+ * Кастомная валидация для поля ссылки действий (принимает tel: и mailto:)
+ */
+function gociss_validate_action_url( $valid, $value, $field, $input ) {
+	// Применяем только к полю действий (проверяем родительское поле)
+	if ( strpos( $input, 'gociss_partners_actions' ) === false ) {
+		return $valid;
+	}
+
+	// Пропускаем, если поле пустое (не required)
+	if ( empty( $value ) ) {
+		return $valid;
+	}
+
+	// Проверяем, что это валидный URL, mailto: или tel:
+	if ( filter_var( $value, FILTER_VALIDATE_URL ) !== false ) {
+		return $valid;
+	}
+
+	if ( preg_match( '/^mailto:/i', $value ) ) {
+		$email = str_replace( 'mailto:', '', $value );
+		if ( filter_var( $email, FILTER_VALIDATE_EMAIL ) !== false ) {
+			return $valid;
+		}
+	}
+
+	if ( preg_match( '/^tel:/i', $value ) ) {
+		return $valid;
+	}
+
+	// Если это якорная ссылка
+	if ( preg_match( '/^#/', $value ) ) {
+		return $valid;
+	}
+
+	// Если дошли сюда и valid был true, возвращаем ошибку
+	if ( $valid === true ) {
+		return __( 'Значение должно быть допустимым URL, mailto: или tel:', 'gociss' );
+	}
+
+	return $valid;
+}
+add_filter( 'acf/validate_value/name=url', 'gociss_validate_action_url', 10, 4 );
 
 /**
  * Регистрация страницы настроек ACF

@@ -34,45 +34,73 @@ if ( ! $advantages_subtitle ) {
 
 		<div class="advantages__grid">
 			<?php if ( $advantages_items && is_array( $advantages_items ) && count( $advantages_items ) > 0 ) : ?>
-				<?php foreach ( $advantages_items as $advantage ) : ?>
+				<?php
+				$icon_index = 1;
+				foreach ( $advantages_items as $advantage ) :
+				?>
 				<div class="advantages__item">
-					<?php if ( ! empty( $advantage['icon'] ) ) : ?>
-						<div class="advantages__icon">
+					<div class="advantages__icon">
+						<?php if ( ! empty( $advantage['icon'] ) && ! empty( $advantage['icon']['ID'] ) ) : ?>
 							<?php
 							echo wp_get_attachment_image(
 								$advantage['icon']['ID'],
 								'thumbnail',
 								false,
 								array(
-									'alt' => esc_attr( $advantage['icon']['alt'] ),
+									'alt' => esc_attr( $advantage['icon']['alt'] ?? '' ),
 								)
 							);
 							?>
-						</div>
-					<?php endif; ?>
+						<?php else : ?>
+							<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/advantages/' . $icon_index . '.svg' ); ?>" alt="">
+						<?php endif; ?>
+					</div>
 
 					<?php if ( ! empty( $advantage['text'] ) ) : ?>
 						<p class="advantages__text"><?php echo esc_html( $advantage['text'] ); ?></p>
 					<?php endif; ?>
 				</div>
-				<?php endforeach; ?>
+				<?php
+				$icon_index++;
+				endforeach;
+				?>
 			<?php else : ?>
 				<!-- Заглушки преимуществ -->
 				<div class="advantages__item">
-					<div class="advantages__icon">🏢</div>
+					<div class="advantages__icon">
+						<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/advantages/1.svg' ); ?>" alt="">
+					</div>
 					<p class="advantages__text">Наличие государственной аккредитации (Росаккредитация)</p>
 				</div>
 				<div class="advantages__item">
-					<div class="advantages__icon">📖</div>
+					<div class="advantages__icon">
+						<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/advantages/2.svg' ); ?>" alt="">
+					</div>
 					<p class="advantages__text">Законность оформляемых заключений и сертификатов СМК</p>
 				</div>
 				<div class="advantages__item">
-					<div class="advantages__icon">✅</div>
+					<div class="advantages__icon">
+						<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/advantages/3.svg' ); ?>" alt="">
+					</div>
 					<p class="advantages__text">Стабильно высокое качество работ по подтверждению ИСО</p>
 				</div>
 				<div class="advantages__item">
-					<div class="advantages__icon">🔍</div>
+					<div class="advantages__icon">
+						<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/advantages/4.svg' ); ?>" alt="">
+					</div>
 					<p class="advantages__text">Объективность и достоверность предоставляемых сведений</p>
+				</div>
+				<div class="advantages__item">
+					<div class="advantages__icon">
+						<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/advantages/5.svg' ); ?>" alt="">
+					</div>
+					<p class="advantages__text">Отсутствие посредников и переплат за оказываемые услуги</p>
+				</div>
+				<div class="advantages__item">
+					<div class="advantages__icon">
+						<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/advantages/6.svg' ); ?>" alt="">
+					</div>
+					<p class="advantages__text">Оперативная доставка документов по всем субъектам РФ</p>
 				</div>
 			<?php endif; ?>
 		</div>
