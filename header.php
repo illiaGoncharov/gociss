@@ -160,7 +160,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 				<button class="header-mobile-menu__close" aria-label="<?php esc_attr_e( 'Закрыть меню', 'gociss' ); ?>" type="button">
 					<span class="header-mobile-menu__close-icon"></span>
 				</button>
-				
+
 				<!-- Логотип в мобильном меню -->
 				<div class="header-mobile-menu__logo">
 					<?php if ( has_custom_logo() ) : ?>
@@ -180,7 +180,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 					</a>
 					<?php endif; ?>
 				</div>
-				
+
 				<nav class="header-mobile-menu__nav">
 					<?php
 					if ( has_nav_menu( 'primary' ) ) {
@@ -205,7 +205,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 					}
 					?>
 				</nav>
-				
+
 				<!-- Меню услуг в мобильном меню -->
 				<div class="header-mobile-menu__services">
 					<h3 class="header-mobile-menu__services-title">Услуги</h3>
@@ -240,7 +240,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 						</a>
 					</nav>
 				</div>
-				
+
 				<div class="header-mobile-menu__contacts">
 					<a href="tel:+78005510236" class="header-mobile-menu__phone">+7 (800) 551-02-36</a>
 					<a href="mailto:info@gociss.ru" class="header-mobile-menu__email">info@gociss.ru</a>

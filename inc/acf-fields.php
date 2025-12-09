@@ -10,6 +10,24 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * Путь для сохранения JSON полей ACF
+ */
+function gociss_acf_json_save_point( $path ) {
+	return get_stylesheet_directory() . '/acf-json';
+}
+add_filter( 'acf/settings/save_json', 'gociss_acf_json_save_point' );
+
+/**
+ * Путь для загрузки JSON полей ACF
+ */
+function gociss_acf_json_load_point( $paths ) {
+	unset( $paths[0] );
+	$paths[] = get_stylesheet_directory() . '/acf-json';
+	return $paths;
+}
+add_filter( 'acf/settings/load_json', 'gociss_acf_json_load_point' );
+
+/**
  * Регистрация ACF групп полей
  *
  * Примечание: Этот файл содержит JSON-структуру полей ACF.
@@ -798,19 +816,23 @@ function gociss_register_acf_fields() {
 	// ГРУППЫ ПОЛЕЙ ДЛЯ ШАБЛОНА "СТРАНИЦА УСЛУГИ" (page-service.php)
 	// ======================================================================
 
-	// Hero секция страницы услуги
+	// Hero секция страницы услуги (баннер + описание + поинты)
 	acf_add_local_field_group(
 		array(
 			'key'                   => 'group_gociss_service_hero',
 			'title'                 => 'Услуга: Hero секция',
 			'fields'                => array(
+				// Баннер на всю ширину
 				array(
-					'key'               => 'field_gociss_service_label',
-					'label'             => 'Метка (над заголовком)',
-					'name'              => 'gociss_service_label',
-					'type'              => 'text',
-					'instructions'      => 'Например: "Сертификация систем менеджмента"',
+					'key'               => 'field_gociss_service_banner',
+					'label'             => 'Баннер (фото на всю ширину)',
+					'name'              => 'gociss_service_banner',
+					'type'              => 'image',
+					'instructions'      => 'Большое фото для баннера сверху. Рекомендуемый размер: 1920x500px',
+					'return_format'     => 'array',
+					'preview_size'      => 'large',
 				),
+				// Заголовок услуги
 				array(
 					'key'               => 'field_gociss_service_title',
 					'label'             => 'Заголовок услуги',
@@ -818,6 +840,7 @@ function gociss_register_acf_fields() {
 					'type'              => 'text',
 					'instructions'      => 'Если не заполнено, используется название страницы',
 				),
+				// Описание услуги (несколько абзацев)
 				array(
 					'key'               => 'field_gociss_service_description',
 					'label'             => 'Описание услуги',
@@ -825,39 +848,208 @@ function gociss_register_acf_fields() {
 					'type'              => 'wysiwyg',
 					'toolbar'           => 'basic',
 					'media_upload'      => 0,
+					'instructions'      => 'Текст описания, который отображается слева от картинки сертификата',
 				),
+				// Текст кнопки консультации
 				array(
-					'key'               => 'field_gociss_service_image',
-					'label'             => 'Изображение',
-					'name'              => 'gociss_service_image',
+					'key'               => 'field_gociss_service_btn_text',
+					'label'             => 'Текст кнопки',
+					'name'              => 'gociss_service_btn_text',
+					'type'              => 'text',
+					'default_value'     => 'Бесплатная консультация',
+					'instructions'      => 'Кнопка ведёт на форму обратной связи (#form)',
+				),
+				// Изображение сертификата с поинтами
+				array(
+					'key'               => 'field_gociss_service_cert_image',
+					'label'             => 'Изображение сертификата с поинтами',
+					'name'              => 'gociss_service_cert_image',
 					'type'              => 'image',
-					'instructions'      => 'Изображение сертификата или услуги. Рекомендуемый размер: 600x400px',
+					'instructions'      => 'Картинка сертификата с нумерованными метками. Рекомендуемый размер: 400x550px',
 					'return_format'     => 'array',
 					'preview_size'      => 'medium',
 				),
+				// Поинт 1
 				array(
-					'key'               => 'field_gociss_service_advantages',
-					'label'             => 'Преимущества услуги',
-					'name'              => 'gociss_service_advantages',
-					'type'              => 'repeater',
-					'layout'            => 'block',
-					'button_label'      => 'Добавить преимущество',
-					'max'               => 6,
-					'sub_fields'        => array(
+					'key'          => 'field_gociss_service_point_1',
+					'label'        => 'Пункт 1',
+					'name'         => 'gociss_service_point_1',
+					'type'         => 'group',
+					'layout'       => 'block',
+					'sub_fields'   => array(
 						array(
-							'key'           => 'field_gociss_service_adv_icon',
-							'label'         => 'Иконка',
-							'name'          => 'icon',
-							'type'          => 'image',
-							'return_format' => 'array',
-							'preview_size'  => 'thumbnail',
-							'instructions'  => 'SVG или PNG, 24x24px',
+							'key'   => 'field_gociss_service_point_1_title',
+							'label' => 'Заголовок',
+							'name'  => 'title',
+							'type'  => 'text',
 						),
 						array(
-							'key'   => 'field_gociss_service_adv_text',
-							'label' => 'Текст преимущества',
-							'name'  => 'text',
+							'key'   => 'field_gociss_service_point_1_desc',
+							'label' => 'Описание',
+							'name'  => 'description',
+							'type'  => 'textarea',
+							'rows'  => 2,
+						),
+					),
+				),
+				// Поинт 2
+				array(
+					'key'          => 'field_gociss_service_point_2',
+					'label'        => 'Пункт 2',
+					'name'         => 'gociss_service_point_2',
+					'type'         => 'group',
+					'layout'       => 'block',
+					'sub_fields'   => array(
+						array(
+							'key'   => 'field_gociss_service_point_2_title',
+							'label' => 'Заголовок',
+							'name'  => 'title',
 							'type'  => 'text',
+						),
+						array(
+							'key'   => 'field_gociss_service_point_2_desc',
+							'label' => 'Описание',
+							'name'  => 'description',
+							'type'  => 'textarea',
+							'rows'  => 2,
+						),
+					),
+				),
+				// Поинт 3
+				array(
+					'key'          => 'field_gociss_service_point_3',
+					'label'        => 'Пункт 3',
+					'name'         => 'gociss_service_point_3',
+					'type'         => 'group',
+					'layout'       => 'block',
+					'sub_fields'   => array(
+						array(
+							'key'   => 'field_gociss_service_point_3_title',
+							'label' => 'Заголовок',
+							'name'  => 'title',
+							'type'  => 'text',
+						),
+						array(
+							'key'   => 'field_gociss_service_point_3_desc',
+							'label' => 'Описание',
+							'name'  => 'description',
+							'type'  => 'textarea',
+							'rows'  => 2,
+						),
+					),
+				),
+				// Поинт 4
+				array(
+					'key'          => 'field_gociss_service_point_4',
+					'label'        => 'Пункт 4',
+					'name'         => 'gociss_service_point_4',
+					'type'         => 'group',
+					'layout'       => 'block',
+					'sub_fields'   => array(
+						array(
+							'key'   => 'field_gociss_service_point_4_title',
+							'label' => 'Заголовок',
+							'name'  => 'title',
+							'type'  => 'text',
+						),
+						array(
+							'key'   => 'field_gociss_service_point_4_desc',
+							'label' => 'Описание',
+							'name'  => 'description',
+							'type'  => 'textarea',
+							'rows'  => 2,
+						),
+					),
+				),
+				// Поинт 5 (опционально)
+				array(
+					'key'          => 'field_gociss_service_point_5',
+					'label'        => 'Пункт 5 (опционально)',
+					'name'         => 'gociss_service_point_5',
+					'type'         => 'group',
+					'layout'       => 'block',
+					'sub_fields'   => array(
+						array(
+							'key'   => 'field_gociss_service_point_5_title',
+							'label' => 'Заголовок',
+							'name'  => 'title',
+							'type'  => 'text',
+						),
+						array(
+							'key'   => 'field_gociss_service_point_5_desc',
+							'label' => 'Описание',
+							'name'  => 'description',
+							'type'  => 'textarea',
+							'rows'  => 2,
+						),
+					),
+				),
+				// Поинт 6 (опционально)
+				array(
+					'key'          => 'field_gociss_service_point_6',
+					'label'        => 'Пункт 6 (опционально)',
+					'name'         => 'gociss_service_point_6',
+					'type'         => 'group',
+					'layout'       => 'block',
+					'sub_fields'   => array(
+						array(
+							'key'   => 'field_gociss_service_point_6_title',
+							'label' => 'Заголовок',
+							'name'  => 'title',
+							'type'  => 'text',
+						),
+						array(
+							'key'   => 'field_gociss_service_point_6_desc',
+							'label' => 'Описание',
+							'name'  => 'description',
+							'type'  => 'textarea',
+							'rows'  => 2,
+						),
+					),
+				),
+				// Поинт 7 (опционально)
+				array(
+					'key'          => 'field_gociss_service_point_7',
+					'label'        => 'Пункт 7 (опционально)',
+					'name'         => 'gociss_service_point_7',
+					'type'         => 'group',
+					'layout'       => 'block',
+					'sub_fields'   => array(
+						array(
+							'key'   => 'field_gociss_service_point_7_title',
+							'label' => 'Заголовок',
+							'name'  => 'title',
+							'type'  => 'text',
+						),
+						array(
+							'key'   => 'field_gociss_service_point_7_desc',
+							'label' => 'Описание',
+							'name'  => 'description',
+							'type'  => 'textarea',
+							'rows'  => 2,
+						),
+					),
+				),
+				// Поинт 8 (опционально)
+				array(
+					'key'          => 'field_gociss_service_point_8',
+					'label'        => 'Пункт 8 (опционально)',
+					'name'         => 'gociss_service_point_8',
+					'type'         => 'group',
+					'layout'       => 'block',
+					'sub_fields'   => array(
+						array(
+							'key'   => 'field_gociss_service_point_8_title',
+							'label' => 'Заголовок',
+							'name'  => 'title',
+							'type'  => 'text',
+						),
+						array(
+							'key'   => 'field_gociss_service_point_8_desc',
+							'label' => 'Описание',
+							'name'  => 'description',
+							'type'  => 'textarea',
+							'rows'  => 2,
 						),
 					),
 				),
@@ -894,19 +1086,18 @@ function gociss_register_acf_fields() {
 					'name'              => 'gociss_service_pricing_subtitle',
 					'type'              => 'textarea',
 					'rows'              => 2,
-					'default_value'     => 'Все цены указаны для одного юридического лица/ИП',
+					'default_value'     => 'Выберите подходящий вариант сертификации',
 				),
+				// Карточка 1
 				array(
-					'key'               => 'field_gociss_service_pricing_items',
-					'label'             => 'Ценовые карточки',
-					'name'              => 'gociss_service_pricing_items',
-					'type'              => 'repeater',
-					'layout'            => 'block',
-					'button_label'      => 'Добавить карточку',
-					'max'               => 6,
-					'sub_fields'        => array(
+					'key'          => 'field_gociss_service_pricing_card_1',
+					'label'        => 'Карточка 1',
+					'name'         => 'gociss_service_pricing_card_1',
+					'type'         => 'group',
+					'layout'       => 'block',
+					'sub_fields'   => array(
 						array(
-							'key'           => 'field_gociss_service_pricing_icon',
+							'key'           => 'field_gociss_service_pricing_card_1_icon',
 							'label'         => 'Иконка',
 							'name'          => 'icon',
 							'type'          => 'image',
@@ -914,34 +1105,190 @@ function gociss_register_acf_fields() {
 							'preview_size'  => 'thumbnail',
 						),
 						array(
-							'key'   => 'field_gociss_service_pricing_item_title',
+							'key'   => 'field_gociss_service_pricing_card_1_title',
 							'label' => 'Название',
 							'name'  => 'title',
 							'type'  => 'text',
 						),
 						array(
-							'key'   => 'field_gociss_service_pricing_item_desc',
+							'key'   => 'field_gociss_service_pricing_card_1_desc',
 							'label' => 'Описание',
 							'name'  => 'description',
 							'type'  => 'textarea',
 							'rows'  => 2,
 						),
 						array(
-							'key'   => 'field_gociss_service_pricing_item_price',
-							'label' => 'Цена',
-							'name'  => 'price',
-							'type'  => 'text',
+							'key'          => 'field_gociss_service_pricing_card_1_price',
+							'label'        => 'Цена',
+							'name'         => 'price',
+							'type'         => 'text',
 							'instructions' => 'Например: "от 15 000 ₽" или "Бесплатно"',
 						),
 						array(
-							'key'           => 'field_gociss_service_pricing_item_btn_text',
+							'key'           => 'field_gociss_service_pricing_card_1_btn_text',
 							'label'         => 'Текст кнопки',
 							'name'          => 'button_text',
 							'type'          => 'text',
 							'default_value' => 'Заказать',
 						),
 						array(
-							'key'           => 'field_gociss_service_pricing_item_btn_url',
+							'key'           => 'field_gociss_service_pricing_card_1_btn_url',
+							'label'         => 'Ссылка кнопки',
+							'name'          => 'button_url',
+							'type'          => 'text',
+							'default_value' => '#form',
+						),
+					),
+				),
+				// Карточка 2
+				array(
+					'key'          => 'field_gociss_service_pricing_card_2',
+					'label'        => 'Карточка 2',
+					'name'         => 'gociss_service_pricing_card_2',
+					'type'         => 'group',
+					'layout'       => 'block',
+					'sub_fields'   => array(
+						array(
+							'key'           => 'field_gociss_service_pricing_card_2_icon',
+							'label'         => 'Иконка',
+							'name'          => 'icon',
+							'type'          => 'image',
+							'return_format' => 'array',
+							'preview_size'  => 'thumbnail',
+						),
+						array(
+							'key'   => 'field_gociss_service_pricing_card_2_title',
+							'label' => 'Название',
+							'name'  => 'title',
+							'type'  => 'text',
+						),
+						array(
+							'key'   => 'field_gociss_service_pricing_card_2_desc',
+							'label' => 'Описание',
+							'name'  => 'description',
+							'type'  => 'textarea',
+							'rows'  => 2,
+						),
+						array(
+							'key'          => 'field_gociss_service_pricing_card_2_price',
+							'label'        => 'Цена',
+							'name'         => 'price',
+							'type'         => 'text',
+							'instructions' => 'Например: "от 15 000 ₽" или "Бесплатно"',
+						),
+						array(
+							'key'           => 'field_gociss_service_pricing_card_2_btn_text',
+							'label'         => 'Текст кнопки',
+							'name'          => 'button_text',
+							'type'          => 'text',
+							'default_value' => 'Заказать',
+						),
+						array(
+							'key'           => 'field_gociss_service_pricing_card_2_btn_url',
+							'label'         => 'Ссылка кнопки',
+							'name'          => 'button_url',
+							'type'          => 'text',
+							'default_value' => '#form',
+						),
+					),
+				),
+				// Карточка 3
+				array(
+					'key'          => 'field_gociss_service_pricing_card_3',
+					'label'        => 'Карточка 3',
+					'name'         => 'gociss_service_pricing_card_3',
+					'type'         => 'group',
+					'layout'       => 'block',
+					'sub_fields'   => array(
+						array(
+							'key'           => 'field_gociss_service_pricing_card_3_icon',
+							'label'         => 'Иконка',
+							'name'          => 'icon',
+							'type'          => 'image',
+							'return_format' => 'array',
+							'preview_size'  => 'thumbnail',
+						),
+						array(
+							'key'   => 'field_gociss_service_pricing_card_3_title',
+							'label' => 'Название',
+							'name'  => 'title',
+							'type'  => 'text',
+						),
+						array(
+							'key'   => 'field_gociss_service_pricing_card_3_desc',
+							'label' => 'Описание',
+							'name'  => 'description',
+							'type'  => 'textarea',
+							'rows'  => 2,
+						),
+						array(
+							'key'          => 'field_gociss_service_pricing_card_3_price',
+							'label'        => 'Цена',
+							'name'         => 'price',
+							'type'         => 'text',
+							'instructions' => 'Например: "от 15 000 ₽" или "Бесплатно"',
+						),
+						array(
+							'key'           => 'field_gociss_service_pricing_card_3_btn_text',
+							'label'         => 'Текст кнопки',
+							'name'          => 'button_text',
+							'type'          => 'text',
+							'default_value' => 'Заказать',
+						),
+						array(
+							'key'           => 'field_gociss_service_pricing_card_3_btn_url',
+							'label'         => 'Ссылка кнопки',
+							'name'          => 'button_url',
+							'type'          => 'text',
+							'default_value' => '#form',
+						),
+					),
+				),
+				// Карточка 4
+				array(
+					'key'          => 'field_gociss_service_pricing_card_4',
+					'label'        => 'Карточка 4',
+					'name'         => 'gociss_service_pricing_card_4',
+					'type'         => 'group',
+					'layout'       => 'block',
+					'sub_fields'   => array(
+						array(
+							'key'           => 'field_gociss_service_pricing_card_4_icon',
+							'label'         => 'Иконка',
+							'name'          => 'icon',
+							'type'          => 'image',
+							'return_format' => 'array',
+							'preview_size'  => 'thumbnail',
+						),
+						array(
+							'key'   => 'field_gociss_service_pricing_card_4_title',
+							'label' => 'Название',
+							'name'  => 'title',
+							'type'  => 'text',
+						),
+						array(
+							'key'   => 'field_gociss_service_pricing_card_4_desc',
+							'label' => 'Описание',
+							'name'  => 'description',
+							'type'  => 'textarea',
+							'rows'  => 2,
+						),
+						array(
+							'key'          => 'field_gociss_service_pricing_card_4_price',
+							'label'        => 'Цена',
+							'name'         => 'price',
+							'type'         => 'text',
+							'instructions' => 'Например: "от 15 000 ₽" или "Бесплатно"',
+						),
+						array(
+							'key'           => 'field_gociss_service_pricing_card_4_btn_text',
+							'label'         => 'Текст кнопки',
+							'name'          => 'button_text',
+							'type'          => 'text',
+							'default_value' => 'Заказать',
+						),
+						array(
+							'key'           => 'field_gociss_service_pricing_card_4_btn_url',
 							'label'         => 'Ссылка кнопки',
 							'name'          => 'button_url',
 							'type'          => 'text',
@@ -982,33 +1329,241 @@ function gociss_register_acf_fields() {
 					'name'              => 'gociss_service_process_subtitle',
 					'type'              => 'textarea',
 					'rows'              => 2,
-					'default_value'     => 'Простой путь к сертификации вашей продукции',
+					'default_value'     => 'Полная схема сертификации в 8 этапов',
 				),
+				// Шаг 1
 				array(
-					'key'               => 'field_gociss_service_process_steps',
-					'label'             => 'Шаги процесса',
-					'name'              => 'gociss_service_process_steps',
-					'type'              => 'repeater',
-					'layout'            => 'block',
-					'button_label'      => 'Добавить шаг',
-					'max'               => 8,
-					'sub_fields'        => array(
+					'key'        => 'field_gociss_service_process_step_1',
+					'label'      => 'Шаг 1',
+					'name'       => 'gociss_service_process_step_1',
+					'type'       => 'group',
+					'layout'     => 'block',
+					'sub_fields' => array(
 						array(
-							'key'           => 'field_gociss_service_process_step_icon',
+							'key'           => 'field_gociss_service_process_step_1_icon',
 							'label'         => 'Иконка',
 							'name'          => 'icon',
 							'type'          => 'image',
 							'return_format' => 'array',
-							'preview_size'  => 'thumbnail',
 						),
 						array(
-							'key'   => 'field_gociss_service_process_step_title',
-							'label' => 'Название шага',
+							'key'   => 'field_gociss_service_process_step_1_title',
+							'label' => 'Название',
 							'name'  => 'title',
 							'type'  => 'text',
 						),
 						array(
-							'key'   => 'field_gociss_service_process_step_desc',
+							'key'  => 'field_gociss_service_process_step_1_desc',
+							'label' => 'Описание',
+							'name'  => 'description',
+							'type'  => 'textarea',
+							'rows'  => 2,
+						),
+					),
+				),
+				// Шаг 2
+				array(
+					'key'        => 'field_gociss_service_process_step_2',
+					'label'      => 'Шаг 2',
+					'name'       => 'gociss_service_process_step_2',
+					'type'       => 'group',
+					'layout'     => 'block',
+					'sub_fields' => array(
+						array(
+							'key'           => 'field_gociss_service_process_step_2_icon',
+							'label'         => 'Иконка',
+							'name'          => 'icon',
+							'type'          => 'image',
+							'return_format' => 'array',
+						),
+						array(
+							'key'   => 'field_gociss_service_process_step_2_title',
+							'label' => 'Название',
+							'name'  => 'title',
+							'type'  => 'text',
+						),
+						array(
+							'key'  => 'field_gociss_service_process_step_2_desc',
+							'label' => 'Описание',
+							'name'  => 'description',
+							'type'  => 'textarea',
+							'rows'  => 2,
+						),
+					),
+				),
+				// Шаг 3
+				array(
+					'key'        => 'field_gociss_service_process_step_3',
+					'label'      => 'Шаг 3',
+					'name'       => 'gociss_service_process_step_3',
+					'type'       => 'group',
+					'layout'     => 'block',
+					'sub_fields' => array(
+						array(
+							'key'           => 'field_gociss_service_process_step_3_icon',
+							'label'         => 'Иконка',
+							'name'          => 'icon',
+							'type'          => 'image',
+							'return_format' => 'array',
+						),
+						array(
+							'key'   => 'field_gociss_service_process_step_3_title',
+							'label' => 'Название',
+							'name'  => 'title',
+							'type'  => 'text',
+						),
+						array(
+							'key'  => 'field_gociss_service_process_step_3_desc',
+							'label' => 'Описание',
+							'name'  => 'description',
+							'type'  => 'textarea',
+							'rows'  => 2,
+						),
+					),
+				),
+				// Шаг 4
+				array(
+					'key'        => 'field_gociss_service_process_step_4',
+					'label'      => 'Шаг 4',
+					'name'       => 'gociss_service_process_step_4',
+					'type'       => 'group',
+					'layout'     => 'block',
+					'sub_fields' => array(
+						array(
+							'key'           => 'field_gociss_service_process_step_4_icon',
+							'label'         => 'Иконка',
+							'name'          => 'icon',
+							'type'          => 'image',
+							'return_format' => 'array',
+						),
+						array(
+							'key'   => 'field_gociss_service_process_step_4_title',
+							'label' => 'Название',
+							'name'  => 'title',
+							'type'  => 'text',
+						),
+						array(
+							'key'  => 'field_gociss_service_process_step_4_desc',
+							'label' => 'Описание',
+							'name'  => 'description',
+							'type'  => 'textarea',
+							'rows'  => 2,
+						),
+					),
+				),
+				// Шаг 5
+				array(
+					'key'        => 'field_gociss_service_process_step_5',
+					'label'      => 'Шаг 5',
+					'name'       => 'gociss_service_process_step_5',
+					'type'       => 'group',
+					'layout'     => 'block',
+					'sub_fields' => array(
+						array(
+							'key'           => 'field_gociss_service_process_step_5_icon',
+							'label'         => 'Иконка',
+							'name'          => 'icon',
+							'type'          => 'image',
+							'return_format' => 'array',
+						),
+						array(
+							'key'   => 'field_gociss_service_process_step_5_title',
+							'label' => 'Название',
+							'name'  => 'title',
+							'type'  => 'text',
+						),
+						array(
+							'key'  => 'field_gociss_service_process_step_5_desc',
+							'label' => 'Описание',
+							'name'  => 'description',
+							'type'  => 'textarea',
+							'rows'  => 2,
+						),
+					),
+				),
+				// Шаг 6
+				array(
+					'key'        => 'field_gociss_service_process_step_6',
+					'label'      => 'Шаг 6',
+					'name'       => 'gociss_service_process_step_6',
+					'type'       => 'group',
+					'layout'     => 'block',
+					'sub_fields' => array(
+						array(
+							'key'           => 'field_gociss_service_process_step_6_icon',
+							'label'         => 'Иконка',
+							'name'          => 'icon',
+							'type'          => 'image',
+							'return_format' => 'array',
+						),
+						array(
+							'key'   => 'field_gociss_service_process_step_6_title',
+							'label' => 'Название',
+							'name'  => 'title',
+							'type'  => 'text',
+						),
+						array(
+							'key'  => 'field_gociss_service_process_step_6_desc',
+							'label' => 'Описание',
+							'name'  => 'description',
+							'type'  => 'textarea',
+							'rows'  => 2,
+						),
+					),
+				),
+				// Шаг 7
+				array(
+					'key'        => 'field_gociss_service_process_step_7',
+					'label'      => 'Шаг 7',
+					'name'       => 'gociss_service_process_step_7',
+					'type'       => 'group',
+					'layout'     => 'block',
+					'sub_fields' => array(
+						array(
+							'key'           => 'field_gociss_service_process_step_7_icon',
+							'label'         => 'Иконка',
+							'name'          => 'icon',
+							'type'          => 'image',
+							'return_format' => 'array',
+						),
+						array(
+							'key'   => 'field_gociss_service_process_step_7_title',
+							'label' => 'Название',
+							'name'  => 'title',
+							'type'  => 'text',
+						),
+						array(
+							'key'  => 'field_gociss_service_process_step_7_desc',
+							'label' => 'Описание',
+							'name'  => 'description',
+							'type'  => 'textarea',
+							'rows'  => 2,
+						),
+					),
+				),
+				// Шаг 8
+				array(
+					'key'        => 'field_gociss_service_process_step_8',
+					'label'      => 'Шаг 8',
+					'name'       => 'gociss_service_process_step_8',
+					'type'       => 'group',
+					'layout'     => 'block',
+					'sub_fields' => array(
+						array(
+							'key'           => 'field_gociss_service_process_step_8_icon',
+							'label'         => 'Иконка',
+							'name'          => 'icon',
+							'type'          => 'image',
+							'return_format' => 'array',
+						),
+						array(
+							'key'   => 'field_gociss_service_process_step_8_title',
+							'label' => 'Название',
+							'name'  => 'title',
+							'type'  => 'text',
+						),
+						array(
+							'key'  => 'field_gociss_service_process_step_8_desc',
 							'label' => 'Описание',
 							'name'  => 'description',
 							'type'  => 'textarea',
@@ -1049,42 +1604,209 @@ function gociss_register_acf_fields() {
 					'name'              => 'gociss_service_certs_subtitle',
 					'type'              => 'textarea',
 					'rows'              => 2,
+					'default_value'     => 'Образцы сертификатов ISO 45001 различных типов',
 				),
+				// Карточка 1
 				array(
-					'key'               => 'field_gociss_service_certs_items',
-					'label'             => 'Сертификаты',
-					'name'              => 'gociss_service_certs_items',
-					'type'              => 'repeater',
-					'layout'            => 'block',
-					'button_label'      => 'Добавить сертификат',
-					'max'               => 5,
-					'sub_fields'        => array(
+					'key'        => 'field_gociss_service_cert_card_1',
+					'label'      => 'Сертификат 1',
+					'name'       => 'gociss_service_cert_card_1',
+					'type'       => 'group',
+					'layout'     => 'block',
+					'sub_fields' => array(
 						array(
-							'key'           => 'field_gociss_service_certs_item_image',
+							'key'           => 'field_gociss_service_cert_card_1_image',
 							'label'         => 'Изображение',
 							'name'          => 'image',
 							'type'          => 'image',
 							'return_format' => 'array',
-							'preview_size'  => 'medium',
-							'instructions'  => 'Загрузите изображение сертификата',
 						),
 						array(
-							'key'   => 'field_gociss_service_certs_item_caption',
-							'label' => 'Подпись',
-							'name'  => 'caption',
+							'key'          => 'field_gociss_service_cert_card_1_badge_text',
+							'label'        => 'Текст бейджа',
+							'name'         => 'badge_text',
+							'type'         => 'text',
+							'placeholder'  => 'Добровольная сертификация',
+						),
+						array(
+							'key'          => 'field_gociss_service_cert_card_1_badge_color',
+							'label'        => 'Цвет бейджа',
+							'name'         => 'badge_color',
+							'type'         => 'color_picker',
+							'default_value' => '#0052CC',
+						),
+						array(
+							'key'   => 'field_gociss_service_cert_card_1_title',
+							'label' => 'Заголовок',
+							'name'  => 'title',
 							'type'  => 'text',
-							'instructions' => 'Например: "Образец 2023"',
+						),
+						array(
+							'key'  => 'field_gociss_service_cert_card_1_desc',
+							'label' => 'Описание',
+							'name'  => 'description',
+							'type'  => 'textarea',
+							'rows'  => 2,
+						),
+						array(
+							'key'   => 'field_gociss_service_cert_card_1_price',
+							'label' => 'Цена',
+							'name'  => 'price',
+							'type'  => 'text',
+							'placeholder' => '15 000 ₽',
 						),
 					),
 				),
+				// Карточка 2
 				array(
-					'key'               => 'field_gociss_service_certs_description',
-					'label'             => 'Описание (справа)',
-					'name'              => 'gociss_service_certs_description',
-					'type'              => 'wysiwyg',
-					'toolbar'           => 'basic',
-					'media_upload'      => 0,
-					'instructions'      => 'Текст с описанием, что должен содержать сертификат',
+					'key'        => 'field_gociss_service_cert_card_2',
+					'label'      => 'Сертификат 2',
+					'name'       => 'gociss_service_cert_card_2',
+					'type'       => 'group',
+					'layout'     => 'block',
+					'sub_fields' => array(
+						array(
+							'key'           => 'field_gociss_service_cert_card_2_image',
+							'label'         => 'Изображение',
+							'name'          => 'image',
+							'type'          => 'image',
+							'return_format' => 'array',
+						),
+						array(
+							'key'          => 'field_gociss_service_cert_card_2_badge_text',
+							'label'        => 'Текст бейджа',
+							'name'         => 'badge_text',
+							'type'         => 'text',
+							'placeholder'  => 'Аккредитация ФСА',
+						),
+						array(
+							'key'          => 'field_gociss_service_cert_card_2_badge_color',
+							'label'        => 'Цвет бейджа',
+							'name'         => 'badge_color',
+							'type'         => 'color_picker',
+							'default_value' => '#7C3AED',
+						),
+						array(
+							'key'   => 'field_gociss_service_cert_card_2_title',
+							'label' => 'Заголовок',
+							'name'  => 'title',
+							'type'  => 'text',
+						),
+						array(
+							'key'  => 'field_gociss_service_cert_card_2_desc',
+							'label' => 'Описание',
+							'name'  => 'description',
+							'type'  => 'textarea',
+							'rows'  => 2,
+						),
+						array(
+							'key'   => 'field_gociss_service_cert_card_2_price',
+							'label' => 'Цена',
+							'name'  => 'price',
+							'type'  => 'text',
+							'placeholder' => 'от 40 000 ₽',
+						),
+					),
+				),
+				// Карточка 3
+				array(
+					'key'        => 'field_gociss_service_cert_card_3',
+					'label'      => 'Сертификат 3',
+					'name'       => 'gociss_service_cert_card_3',
+					'type'       => 'group',
+					'layout'     => 'block',
+					'sub_fields' => array(
+						array(
+							'key'           => 'field_gociss_service_cert_card_3_image',
+							'label'         => 'Изображение',
+							'name'          => 'image',
+							'type'          => 'image',
+							'return_format' => 'array',
+						),
+						array(
+							'key'          => 'field_gociss_service_cert_card_3_badge_text',
+							'label'        => 'Текст бейджа',
+							'name'         => 'badge_text',
+							'type'         => 'text',
+							'placeholder'  => 'Аккредитация IAF',
+						),
+						array(
+							'key'          => 'field_gociss_service_cert_card_3_badge_color',
+							'label'        => 'Цвет бейджа',
+							'name'         => 'badge_color',
+							'type'         => 'color_picker',
+							'default_value' => '#EA580C',
+						),
+						array(
+							'key'   => 'field_gociss_service_cert_card_3_title',
+							'label' => 'Заголовок',
+							'name'  => 'title',
+							'type'  => 'text',
+						),
+						array(
+							'key'  => 'field_gociss_service_cert_card_3_desc',
+							'label' => 'Описание',
+							'name'  => 'description',
+							'type'  => 'textarea',
+							'rows'  => 2,
+						),
+						array(
+							'key'   => 'field_gociss_service_cert_card_3_price',
+							'label' => 'Цена',
+							'name'  => 'price',
+							'type'  => 'text',
+							'placeholder' => 'от 60 000 ₽',
+						),
+					),
+				),
+				// Карточка 4
+				array(
+					'key'        => 'field_gociss_service_cert_card_4',
+					'label'      => 'Сертификат 4',
+					'name'       => 'gociss_service_cert_card_4',
+					'type'       => 'group',
+					'layout'     => 'block',
+					'sub_fields' => array(
+						array(
+							'key'           => 'field_gociss_service_cert_card_4_image',
+							'label'         => 'Изображение',
+							'name'          => 'image',
+							'type'          => 'image',
+							'return_format' => 'array',
+						),
+						array(
+							'key'          => 'field_gociss_service_cert_card_4_badge_text',
+							'label'        => 'Текст бейджа',
+							'name'         => 'badge_text',
+							'type'         => 'text',
+						),
+						array(
+							'key'          => 'field_gociss_service_cert_card_4_badge_color',
+							'label'        => 'Цвет бейджа',
+							'name'         => 'badge_color',
+							'type'         => 'color_picker',
+							'default_value' => '#16A34A',
+						),
+						array(
+							'key'   => 'field_gociss_service_cert_card_4_title',
+							'label' => 'Заголовок',
+							'name'  => 'title',
+							'type'  => 'text',
+						),
+						array(
+							'key'  => 'field_gociss_service_cert_card_4_desc',
+							'label' => 'Описание',
+							'name'  => 'description',
+							'type'  => 'textarea',
+							'rows'  => 2,
+						),
+						array(
+							'key'   => 'field_gociss_service_cert_card_4_price',
+							'label' => 'Цена',
+							'name'  => 'price',
+							'type'  => 'text',
+						),
+					),
 				),
 			),
 			'location'              => array(
@@ -1100,7 +1822,7 @@ function gociss_register_acf_fields() {
 		)
 	);
 
-	// Секция отзывов
+	// Секция отзывов (до 6 отзывов через group поля)
 	acf_add_local_field_group(
 		array(
 			'key'                   => 'group_gociss_service_reviews',
@@ -1121,41 +1843,41 @@ function gociss_register_acf_fields() {
 					'rows'              => 2,
 					'default_value'     => 'Что говорят наши клиенты о нашей работе',
 				),
+				// Отзыв 1
 				array(
-					'key'               => 'field_gociss_service_reviews_items',
-					'label'             => 'Отзывы',
-					'name'              => 'gociss_service_reviews_items',
-					'type'              => 'repeater',
-					'layout'            => 'block',
-					'button_label'      => 'Добавить отзыв',
-					'sub_fields'        => array(
+					'key'        => 'field_gociss_service_review_1',
+					'label'      => 'Отзыв 1',
+					'name'       => 'gociss_service_review_1',
+					'type'       => 'group',
+					'layout'     => 'block',
+					'sub_fields' => array(
 						array(
-							'key'   => 'field_gociss_service_review_company',
+							'key'   => 'field_gociss_service_review_1_company',
 							'label' => 'Компания',
 							'name'  => 'company',
 							'type'  => 'text',
 						),
 						array(
-							'key'   => 'field_gociss_service_review_author',
+							'key'   => 'field_gociss_service_review_1_author',
 							'label' => 'Имя автора',
 							'name'  => 'author',
 							'type'  => 'text',
 						),
 						array(
-							'key'   => 'field_gociss_service_review_position',
+							'key'   => 'field_gociss_service_review_1_position',
 							'label' => 'Должность',
 							'name'  => 'position',
 							'type'  => 'text',
 						),
 						array(
-							'key'   => 'field_gociss_service_review_text',
+							'key'   => 'field_gociss_service_review_1_text',
 							'label' => 'Текст отзыва',
 							'name'  => 'text',
 							'type'  => 'textarea',
 							'rows'  => 4,
 						),
 						array(
-							'key'           => 'field_gociss_service_review_rating',
+							'key'           => 'field_gociss_service_review_1_rating',
 							'label'         => 'Рейтинг (1-5)',
 							'name'          => 'rating',
 							'type'          => 'number',
@@ -1164,12 +1886,266 @@ function gociss_register_acf_fields() {
 							'default_value' => 5,
 						),
 						array(
-							'key'           => 'field_gociss_service_review_image',
+							'key'           => 'field_gociss_service_review_1_image',
 							'label'         => 'Фото автора',
 							'name'          => 'image',
 							'type'          => 'image',
 							'return_format' => 'array',
-							'preview_size'  => 'thumbnail',
+						),
+					),
+				),
+				// Отзыв 2
+				array(
+					'key'        => 'field_gociss_service_review_2',
+					'label'      => 'Отзыв 2',
+					'name'       => 'gociss_service_review_2',
+					'type'       => 'group',
+					'layout'     => 'block',
+					'sub_fields' => array(
+						array(
+							'key'   => 'field_gociss_service_review_2_company',
+							'label' => 'Компания',
+							'name'  => 'company',
+							'type'  => 'text',
+						),
+						array(
+							'key'   => 'field_gociss_service_review_2_author',
+							'label' => 'Имя автора',
+							'name'  => 'author',
+							'type'  => 'text',
+						),
+						array(
+							'key'   => 'field_gociss_service_review_2_position',
+							'label' => 'Должность',
+							'name'  => 'position',
+							'type'  => 'text',
+						),
+						array(
+							'key'   => 'field_gociss_service_review_2_text',
+							'label' => 'Текст отзыва',
+							'name'  => 'text',
+							'type'  => 'textarea',
+							'rows'  => 4,
+						),
+						array(
+							'key'           => 'field_gociss_service_review_2_rating',
+							'label'         => 'Рейтинг (1-5)',
+							'name'          => 'rating',
+							'type'          => 'number',
+							'min'           => 1,
+							'max'           => 5,
+							'default_value' => 5,
+						),
+						array(
+							'key'           => 'field_gociss_service_review_2_image',
+							'label'         => 'Фото автора',
+							'name'          => 'image',
+							'type'          => 'image',
+							'return_format' => 'array',
+						),
+					),
+				),
+				// Отзыв 3
+				array(
+					'key'        => 'field_gociss_service_review_3',
+					'label'      => 'Отзыв 3',
+					'name'       => 'gociss_service_review_3',
+					'type'       => 'group',
+					'layout'     => 'block',
+					'sub_fields' => array(
+						array(
+							'key'   => 'field_gociss_service_review_3_company',
+							'label' => 'Компания',
+							'name'  => 'company',
+							'type'  => 'text',
+						),
+						array(
+							'key'   => 'field_gociss_service_review_3_author',
+							'label' => 'Имя автора',
+							'name'  => 'author',
+							'type'  => 'text',
+						),
+						array(
+							'key'   => 'field_gociss_service_review_3_position',
+							'label' => 'Должность',
+							'name'  => 'position',
+							'type'  => 'text',
+						),
+						array(
+							'key'   => 'field_gociss_service_review_3_text',
+							'label' => 'Текст отзыва',
+							'name'  => 'text',
+							'type'  => 'textarea',
+							'rows'  => 4,
+						),
+						array(
+							'key'           => 'field_gociss_service_review_3_rating',
+							'label'         => 'Рейтинг (1-5)',
+							'name'          => 'rating',
+							'type'          => 'number',
+							'min'           => 1,
+							'max'           => 5,
+							'default_value' => 5,
+						),
+						array(
+							'key'           => 'field_gociss_service_review_3_image',
+							'label'         => 'Фото автора',
+							'name'          => 'image',
+							'type'          => 'image',
+							'return_format' => 'array',
+						),
+					),
+				),
+				// Отзыв 4
+				array(
+					'key'        => 'field_gociss_service_review_4',
+					'label'      => 'Отзыв 4',
+					'name'       => 'gociss_service_review_4',
+					'type'       => 'group',
+					'layout'     => 'block',
+					'sub_fields' => array(
+						array(
+							'key'   => 'field_gociss_service_review_4_company',
+							'label' => 'Компания',
+							'name'  => 'company',
+							'type'  => 'text',
+						),
+						array(
+							'key'   => 'field_gociss_service_review_4_author',
+							'label' => 'Имя автора',
+							'name'  => 'author',
+							'type'  => 'text',
+						),
+						array(
+							'key'   => 'field_gociss_service_review_4_position',
+							'label' => 'Должность',
+							'name'  => 'position',
+							'type'  => 'text',
+						),
+						array(
+							'key'   => 'field_gociss_service_review_4_text',
+							'label' => 'Текст отзыва',
+							'name'  => 'text',
+							'type'  => 'textarea',
+							'rows'  => 4,
+						),
+						array(
+							'key'           => 'field_gociss_service_review_4_rating',
+							'label'         => 'Рейтинг (1-5)',
+							'name'          => 'rating',
+							'type'          => 'number',
+							'min'           => 1,
+							'max'           => 5,
+							'default_value' => 5,
+						),
+						array(
+							'key'           => 'field_gociss_service_review_4_image',
+							'label'         => 'Фото автора',
+							'name'          => 'image',
+							'type'          => 'image',
+							'return_format' => 'array',
+						),
+					),
+				),
+				// Отзыв 5
+				array(
+					'key'        => 'field_gociss_service_review_5',
+					'label'      => 'Отзыв 5',
+					'name'       => 'gociss_service_review_5',
+					'type'       => 'group',
+					'layout'     => 'block',
+					'sub_fields' => array(
+						array(
+							'key'   => 'field_gociss_service_review_5_company',
+							'label' => 'Компания',
+							'name'  => 'company',
+							'type'  => 'text',
+						),
+						array(
+							'key'   => 'field_gociss_service_review_5_author',
+							'label' => 'Имя автора',
+							'name'  => 'author',
+							'type'  => 'text',
+						),
+						array(
+							'key'   => 'field_gociss_service_review_5_position',
+							'label' => 'Должность',
+							'name'  => 'position',
+							'type'  => 'text',
+						),
+						array(
+							'key'   => 'field_gociss_service_review_5_text',
+							'label' => 'Текст отзыва',
+							'name'  => 'text',
+							'type'  => 'textarea',
+							'rows'  => 4,
+						),
+						array(
+							'key'           => 'field_gociss_service_review_5_rating',
+							'label'         => 'Рейтинг (1-5)',
+							'name'          => 'rating',
+							'type'          => 'number',
+							'min'           => 1,
+							'max'           => 5,
+							'default_value' => 5,
+						),
+						array(
+							'key'           => 'field_gociss_service_review_5_image',
+							'label'         => 'Фото автора',
+							'name'          => 'image',
+							'type'          => 'image',
+							'return_format' => 'array',
+						),
+					),
+				),
+				// Отзыв 6
+				array(
+					'key'        => 'field_gociss_service_review_6',
+					'label'      => 'Отзыв 6',
+					'name'       => 'gociss_service_review_6',
+					'type'       => 'group',
+					'layout'     => 'block',
+					'sub_fields' => array(
+						array(
+							'key'   => 'field_gociss_service_review_6_company',
+							'label' => 'Компания',
+							'name'  => 'company',
+							'type'  => 'text',
+						),
+						array(
+							'key'   => 'field_gociss_service_review_6_author',
+							'label' => 'Имя автора',
+							'name'  => 'author',
+							'type'  => 'text',
+						),
+						array(
+							'key'   => 'field_gociss_service_review_6_position',
+							'label' => 'Должность',
+							'name'  => 'position',
+							'type'  => 'text',
+						),
+						array(
+							'key'   => 'field_gociss_service_review_6_text',
+							'label' => 'Текст отзыва',
+							'name'  => 'text',
+							'type'  => 'textarea',
+							'rows'  => 4,
+						),
+						array(
+							'key'           => 'field_gociss_service_review_6_rating',
+							'label'         => 'Рейтинг (1-5)',
+							'name'          => 'rating',
+							'type'          => 'number',
+							'min'           => 1,
+							'max'           => 5,
+							'default_value' => 5,
+						),
+						array(
+							'key'           => 'field_gociss_service_review_6_image',
+							'label'         => 'Фото автора',
+							'name'          => 'image',
+							'type'          => 'image',
+							'return_format' => 'array',
 						),
 					),
 				),

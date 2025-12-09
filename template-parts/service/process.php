@@ -12,51 +12,73 @@ if ( ! defined( 'ABSPATH' ) ) {
 // Получаем данные из ACF
 $process_title    = function_exists( 'get_field' ) ? get_field( 'gociss_service_process_title' ) : '';
 $process_subtitle = function_exists( 'get_field' ) ? get_field( 'gociss_service_process_subtitle' ) : '';
-$process_steps    = function_exists( 'get_field' ) ? get_field( 'gociss_service_process_steps' ) : '';
+
+// Собираем шаги из отдельных group полей
+$process_steps = array();
+for ( $i = 1; $i <= 8; $i++ ) {
+	$step = function_exists( 'get_field' ) ? get_field( 'gociss_service_process_step_' . $i ) : null;
+	if ( $step && ! empty( $step['title'] ) ) {
+		$process_steps[] = $step;
+	}
+}
 
 // Заглушки
 if ( ! $process_title ) {
 	$process_title = 'Процесс получения сертификата';
 }
 if ( ! $process_subtitle ) {
-	$process_subtitle = 'Простой путь к сертификации вашей продукции';
+	$process_subtitle = 'Полная схема сертификации в 8 этапов';
 }
 
-// Заглушки шагов
-$default_steps = array(
-	array(
-		'icon'        => '',
-		'title'       => 'Оставьте заявку',
-		'description' => 'Заполните форму на сайте или позвоните нам',
-	),
-	array(
-		'icon'        => '',
-		'title'       => 'Получите консультацию',
-		'description' => 'Наш эксперт ответит на все вопросы по телефону или на встрече',
-	),
-	array(
-		'icon'        => '',
-		'title'       => 'Подготовьте документы',
-		'description' => 'Мы поможем собрать необходимый пакет документов',
-	),
-	array(
-		'icon'        => '',
-		'title'       => 'Проведение аудита',
-		'description' => 'Наши эксперты проведут аудит и сформируют отчёт',
-	),
-	array(
-		'icon'        => '',
-		'title'       => 'Получите сертификат',
-		'description' => 'После успешного аудита вы получите сертификат',
-	),
-	array(
-		'icon'        => '',
-		'title'       => 'Инспекционный контроль',
-		'description' => 'Ежегодный контроль для поддержания сертификата',
-	),
+// Иконки по умолчанию из папки service/process
+$default_icons = array(
+	get_template_directory_uri() . '/assets/images/service/process/Rectangle.png',
+	get_template_directory_uri() . '/assets/images/service/process/Rectangle-1.png',
+	get_template_directory_uri() . '/assets/images/service/process/Rectangle-2.png',
+	get_template_directory_uri() . '/assets/images/service/process/Rectangle-3.png',
+	get_template_directory_uri() . '/assets/images/service/process/Rectangle-4.png',
+	get_template_directory_uri() . '/assets/images/service/process/Rectangle-5.png',
+	get_template_directory_uri() . '/assets/images/service/process/Rectangle-6.png',
+	get_template_directory_uri() . '/assets/images/service/process/Rectangle-7.png',
 );
 
-$steps_to_show = ( $process_steps && is_array( $process_steps ) && count( $process_steps ) > 0 ) ? $process_steps : $default_steps;
+// Заглушки шагов если ACF не заполнен
+if ( empty( $process_steps ) ) {
+	$process_steps = array(
+		array(
+			'title'       => 'Оформление заявки',
+			'description' => 'Подача заявки на сертификацию с указанием области применения',
+		),
+		array(
+			'title'       => 'Заключение договора',
+			'description' => 'Подписание договора на проведение работ по сертификации',
+		),
+		array(
+			'title'       => 'Проверка документов',
+			'description' => 'Анализ документации системы управления охраной труда',
+		),
+		array(
+			'title'       => 'Проведение аудита',
+			'description' => 'Выездная проверка соответствия требованиям стандарта',
+		),
+		array(
+			'title'       => 'Регистрация',
+			'description' => 'Регистрация сертификата в установленном порядке',
+		),
+		array(
+			'title'       => 'Инспекционный контроль №1',
+			'description' => 'Первая плановая проверка через 12 месяцев',
+		),
+		array(
+			'title'       => 'Инспекционный контроль №2',
+			'description' => 'Вторая плановая проверка через 24 месяца',
+		),
+		array(
+			'title'       => 'Ресертификация СМК',
+			'description' => 'Подтверждение соответствия через 3 года',
+		),
+	);
+}
 ?>
 
 <section class="service-process" id="process">
@@ -71,24 +93,17 @@ $steps_to_show = ( $process_steps && is_array( $process_steps ) && count( $proce
 
 		<div class="service-process__grid">
 			<?php
-			$step_num = 1;
-			foreach ( $steps_to_show as $step ) :
+			$step_index = 0;
+			foreach ( $process_steps as $step ) :
 				?>
 				<div class="service-process__step">
-					<div class="service-process__step-number"><?php echo esc_html( $step_num ); ?></div>
-
-					<?php if ( ! empty( $step['icon'] ) && ! empty( $step['icon']['ID'] ) ) : ?>
-						<div class="service-process__step-icon">
-							<?php
-							echo wp_get_attachment_image(
-								$step['icon']['ID'],
-								'thumbnail',
-								false,
-								array( 'alt' => '' )
-							);
-							?>
-						</div>
-					<?php endif; ?>
+					<div class="service-process__step-icon">
+						<?php if ( ! empty( $step['icon'] ) && ! empty( $step['icon']['url'] ) ) : ?>
+							<img src="<?php echo esc_url( $step['icon']['url'] ); ?>" alt="">
+						<?php else : ?>
+							<img src="<?php echo esc_url( $default_icons[ $step_index % 8 ] ); ?>" alt="">
+						<?php endif; ?>
+					</div>
 
 					<?php if ( ! empty( $step['title'] ) ) : ?>
 						<h3 class="service-process__step-title"><?php echo esc_html( $step['title'] ); ?></h3>
@@ -99,7 +114,7 @@ $steps_to_show = ( $process_steps && is_array( $process_steps ) && count( $proce
 					<?php endif; ?>
 				</div>
 				<?php
-				$step_num++;
+				$step_index++;
 			endforeach;
 			?>
 		</div>

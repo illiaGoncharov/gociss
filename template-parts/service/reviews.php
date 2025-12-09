@@ -12,9 +12,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 // Получаем данные из ACF
 $reviews_title    = function_exists( 'get_field' ) ? get_field( 'gociss_service_reviews_title' ) : '';
 $reviews_subtitle = function_exists( 'get_field' ) ? get_field( 'gociss_service_reviews_subtitle' ) : '';
-$reviews_items    = function_exists( 'get_field' ) ? get_field( 'gociss_service_reviews_items' ) : '';
 
-// Заглушки
+// Собираем отзывы из отдельных group полей (от 0 до 6)
+$reviews_items = array();
+for ( $i = 1; $i <= 6; $i++ ) {
+	$review = function_exists( 'get_field' ) ? get_field( 'gociss_service_review_' . $i ) : null;
+	// Проверяем что заполнен хотя бы текст отзыва или автор
+	if ( $review && ( ! empty( $review['text'] ) || ! empty( $review['author'] ) ) ) {
+		$reviews_items[] = $review;
+	}
+}
+
+// Заглушки для заголовков
 if ( ! $reviews_title ) {
 	$reviews_title = 'Отзывы клиентов';
 }
@@ -22,35 +31,37 @@ if ( ! $reviews_subtitle ) {
 	$reviews_subtitle = 'Что говорят наши клиенты о нашей работе';
 }
 
-// Заглушки отзывов
-$default_reviews = array(
-	array(
-		'company' => 'ООО "Технопром"',
-		'author'  => 'Иванов И.И.',
-		'position' => 'Генеральный директор',
-		'text'    => 'Благодарим ГоЦИСС за профессиональную работу по сертификации нашей системы менеджмента. Все было выполнено в срок и на высшем уровне.',
-		'rating'  => 5,
-		'image'   => '',
-	),
-	array(
-		'company' => 'АО "СтройГарант"',
-		'author'  => 'Петров П.П.',
-		'position' => 'Директор по качеству',
-		'text'    => 'Сотрудничаем с ГоЦИСС уже 5 лет. Всегда довольны качеством услуг и оперативностью выполнения заказов.',
-		'rating'  => 5,
-		'image'   => '',
-	),
-	array(
-		'company' => 'ООО "ПищеПром"',
-		'author'  => 'Сидорова А.В.',
-		'position' => 'Руководитель отдела сертификации',
-		'text'    => 'Рекомендую ГоЦИСС всем, кто ищет надежного партнера для сертификации. Профессиональный подход и внимание к деталям.',
-		'rating'  => 5,
-		'image'   => '',
-	),
-);
+// Дефолтные отзывы если ничего не заполнено
+if ( empty( $reviews_items ) ) {
+	$reviews_items = array(
+		array(
+			'company'  => 'ООО "Технопром"',
+			'author'   => 'Иванов И.И.',
+			'position' => 'Генеральный директор',
+			'text'     => 'Благодарим ГоЦИСС за профессиональную работу по сертификации нашей системы менеджмента. Все было выполнено в срок и на высшем уровне.',
+			'rating'   => 5,
+			'image'    => '',
+		),
+		array(
+			'company'  => 'АО "СтройГарант"',
+			'author'   => 'Петров П.П.',
+			'position' => 'Директор по качеству',
+			'text'     => 'Сотрудничаем с ГоЦИСС уже 5 лет. Всегда довольны качеством услуг и оперативностью выполнения заказов.',
+			'rating'   => 5,
+			'image'    => '',
+		),
+		array(
+			'company'  => 'ООО "ПищеПром"',
+			'author'   => 'Сидорова А.В.',
+			'position' => 'Руководитель отдела сертификации',
+			'text'     => 'Рекомендую ГоЦИСС всем, кто ищет надежного партнера для сертификации. Профессиональный подход и внимание к деталям.',
+			'rating'   => 5,
+			'image'    => '',
+		),
+	);
+}
 
-$reviews_to_show = ( $reviews_items && is_array( $reviews_items ) && count( $reviews_items ) > 0 ) ? $reviews_items : $default_reviews;
+$reviews_to_show = $reviews_items;
 ?>
 
 <section class="service-reviews" id="reviews">

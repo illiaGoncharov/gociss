@@ -3825,64 +3825,143 @@ body {
    СТИЛИ СТРАНИЦЫ УСЛУГИ (page-service.php)
    ============================================================ */
 
-/* Service Hero секция */
-.service-hero {
-	padding-top: 24px;
-	padding-bottom: 64px;
+/* ===========================================
+   Секция баннера
+   =========================================== */
+.service-banner {
 	background-color: var(--color-white);
+	padding-bottom: 0;
 }
 
 /* Breadcrumb */
-.service-hero__breadcrumb {
+.service-banner__breadcrumb {
 	display: flex;
 	align-items: center;
-	gap: 8px;
-	margin-bottom: 32px;
-	font-size: 14px;
+	flex-wrap: wrap;
+	gap: 12px;
+	padding: 20px 0;
+	font-size: 16px;
 	font-family: var(--font-primary);
 }
 
-.service-hero__breadcrumb a {
-	color: #6B7280;
+.service-banner__breadcrumb a {
+	color: #9CA3AF;
 	text-decoration: none;
 	transition: color 0.2s ease;
 }
 
-.service-hero__breadcrumb a:hover {
+.service-banner__breadcrumb a:hover {
 	color: #0052CC;
 }
 
-.service-hero__breadcrumb-sep {
-	color: #D1D5DB;
+.service-banner__breadcrumb-sep {
+	color: #9CA3AF;
+	font-size: 16px;
 }
 
-.service-hero__breadcrumb-current {
-	color: #111827;
-	font-weight: 500;
+.service-banner__breadcrumb-current {
+	color: #9CA3AF;
 }
 
-/* Hero контент */
-.service-hero__content {
+/* Баннер изображение */
+.service-banner__image {
+	width: 100%;
+	border-radius: 12px;
+	overflow: hidden;
+}
+
+.service-banner__img {
+	width: 100%;
+	height: 480px;
+	object-fit: cover;
+	object-position: center;
+	display: block;
+}
+
+/* Заглушка для баннера */
+.service-banner__placeholder {
+	width: 100%;
+	height: 480px;
+	background: linear-gradient(135deg, #E5E7EB 0%, #D1D5DB 100%);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: #6B7280;
+	font-size: 16px;
+	font-family: var(--font-primary);
+}
+
+/* Адаптив баннера */
+@media (max-width: 1024px) {
+	.service-banner__img {
+		height: 380px;
+	}
+
+	.service-banner__placeholder {
+		height: 380px;
+	}
+}
+
+@media (max-width: 768px) {
+	.service-banner__breadcrumb {
+		gap: 8px;
+		font-size: 14px;
+		padding: 16px 0;
+	}
+
+	.service-banner__img {
+		height: 280px;
+	}
+
+	.service-banner__placeholder {
+		height: 280px;
+	}
+}
+
+@media (max-width: 480px) {
+	.service-banner__breadcrumb {
+		font-size: 13px;
+		gap: 6px;
+	}
+
+	.service-banner__img {
+		height: 200px;
+		border-radius: 8px;
+	}
+
+	.service-banner__placeholder {
+		height: 200px;
+		font-size: 14px;
+		border-radius: 8px;
+	}
+
+	.service-banner__image {
+		border-radius: 8px;
+	}
+}
+
+/* ===========================================
+   Секция описания услуги (текст + сертификат)
+   =========================================== */
+.service-about {
+	padding: 48px 0 64px;
+	background-color: var(--color-white);
+}
+
+.service-about__content {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
 	gap: 48px;
 	align-items: start;
 }
 
-.service-hero__label {
-	display: inline-block;
-	padding: 6px 12px;
-	background-color: #EFF6FF;
-	color: #0052CC;
-	border-radius: 6px;
-	font-size: 14px;
-	font-weight: 600;
-	font-family: var(--font-primary);
-	margin-bottom: 16px;
+/* Текстовая часть */
+.service-about__text {
+	padding-right: 24px;
 }
 
-.service-hero__title {
-	font-size: 48px;
+.service-about__title {
+	font-size: 36px;
 	font-weight: 700;
 	color: #051945;
 	margin-bottom: 20px;
@@ -3890,107 +3969,237 @@ body {
 	font-family: var(--font-primary);
 }
 
-.service-hero__description {
+.service-about__description {
 	font-size: 16px;
 	font-weight: 400;
 	color: #4B5563;
-	margin-bottom: 32px;
+	margin-bottom: 28px;
 	line-height: 1.7;
 	font-family: var(--font-primary);
 }
 
-.service-hero__description p {
-	margin-bottom: 12px;
+.service-about__description p {
+	margin-bottom: 16px;
 }
 
-.service-hero__description p:last-child {
+.service-about__description p:last-child {
 	margin-bottom: 0;
 }
 
-/* Преимущества в Hero */
-.service-hero__advantages {
-	display: grid;
-	grid-template-columns: repeat(2, 1fr);
-	gap: 20px;
-}
-
-.service-hero__advantage {
-	display: flex;
-	align-items: flex-start;
-	gap: 12px;
-	padding: 16px;
-	background-color: #F9FAFB;
-	border-radius: 8px;
-	border: 1px solid #E5E7EB;
-}
-
-.service-hero__advantage-icon {
-	flex-shrink: 0;
-	width: 40px;
-	height: 40px;
-	background-color: #EBF4FF;
-	border-radius: 8px;
-	display: flex;
+/* Кнопка консультации */
+.service-about__btn {
+	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	color: #0052CC;
-}
-
-.service-hero__advantage-icon img {
-	width: 24px;
-	height: 24px;
-	object-fit: contain;
-}
-
-.service-hero__advantage-text {
-	font-size: 14px;
+	min-width: 250px;
+	height: 50px;
+	padding: 0 32px;
+	background-color: #051945;
+	color: var(--color-white);
+	font-size: 16px;
 	font-weight: 500;
-	color: #111827;
-	line-height: 1.4;
 	font-family: var(--font-primary);
+	border-radius: 8px;
+	text-decoration: none;
+	transition: background-color 0.2s ease, box-shadow 0.2s ease;
+	border: none;
+	cursor: pointer;
 }
 
-/* Hero изображение */
-.service-hero__image {
+.service-about__btn:hover {
+	background-color: #0a2a6b;
+	box-shadow: 0 4px 12px rgba(5, 25, 69, 0.3);
+	color: var(--color-white);
+}
+
+/* Изображение сертификата */
+.service-about__image {
 	display: flex;
 	justify-content: center;
 	align-items: flex-start;
 }
 
-.service-hero__img {
+.service-about__cert-img {
 	max-width: 100%;
 	height: auto;
-	border-radius: 12px;
-	box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
 }
 
-.service-hero__placeholder {
-	width: 100%;
-}
-
-/* Адаптив Hero */
+/* Адаптив описания */
 @media (max-width: 1024px) {
-	.service-hero__content {
+	.service-about__content {
 		grid-template-columns: 1fr;
 		gap: 32px;
 	}
 
-	.service-hero__title {
-		font-size: 36px;
+	.service-about__text {
+		padding-right: 0;
+		order: 1;
 	}
 
-	.service-hero__image {
-		order: -1;
+	.service-about__title {
+		font-size: 28px;
+	}
+
+	.service-about__image {
+		order: 2;
+		max-width: 350px;
+		margin: 0 auto;
 	}
 }
 
 @media (max-width: 640px) {
-	.service-hero__advantages {
-		grid-template-columns: 1fr;
+	.service-about {
+		padding: 32px 0 40px;
 	}
 
-	.service-hero__title {
-		font-size: 28px;
+	.service-about__title {
+		font-size: 24px;
+	}
+
+	.service-about__description {
+		font-size: 15px;
+		margin-bottom: 24px;
+	}
+
+	.service-about__btn {
+		width: 100%;
+		padding: 14px 24px;
+	}
+}
+
+/* ===========================================
+   Секция поинтов (нумерованные блоки)
+   =========================================== */
+.service-points {
+	padding: 48px 0 64px;
+	background-color: var(--color-white);
+}
+
+.service-points__grid {
+	display: grid;
+	gap: 32px 24px;
+}
+
+/* Колонки в зависимости от количества поинтов */
+.service-points__grid--cols-3 {
+	grid-template-columns: repeat(3, 1fr);
+}
+
+.service-points__grid--cols-4 {
+	grid-template-columns: repeat(4, 1fr);
+}
+
+/* Для 5-8 поинтов: 4 колонки, 2 ряда */
+.service-points__grid--cols-5,
+.service-points__grid--cols-6,
+.service-points__grid--cols-7,
+.service-points__grid--cols-8 {
+	grid-template-columns: repeat(4, 1fr);
+}
+
+/* Один поинт */
+.service-points__item {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
+	gap: 16px;
+}
+
+/* Номер поинта */
+.service-points__number {
+	width: 56px;
+	height: 56px;
+	background-color: #051945;
+	color: var(--color-white);
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 24px;
+	font-weight: 700;
+	font-family: var(--font-primary);
+	flex-shrink: 0;
+}
+
+/* Контент поинта */
+.service-points__content {
+	flex: 1;
+}
+
+.service-points__title {
+	font-size: 18px;
+	font-weight: 600;
+	color: #111827;
+	margin-bottom: 8px;
+	font-family: var(--font-primary);
+	line-height: 1.3;
+}
+
+.service-points__desc {
+	font-size: 14px;
+	color: #6B7280;
+	line-height: 1.5;
+	font-family: var(--font-primary);
+	margin: 0;
+}
+
+/* Адаптив поинтов */
+@media (max-width: 1024px) {
+	.service-points__grid--cols-3,
+	.service-points__grid--cols-4,
+	.service-points__grid--cols-5,
+	.service-points__grid--cols-6,
+	.service-points__grid--cols-7,
+	.service-points__grid--cols-8 {
+		grid-template-columns: repeat(2, 1fr);
+	}
+
+	.service-points__number {
+		width: 48px;
+		height: 48px;
+		font-size: 20px;
+	}
+}
+
+@media (max-width: 640px) {
+	.service-points {
+		padding: 32px 0 40px;
+	}
+
+	.service-points__grid--cols-3,
+	.service-points__grid--cols-4,
+	.service-points__grid--cols-5,
+	.service-points__grid--cols-6,
+	.service-points__grid--cols-7,
+	.service-points__grid--cols-8 {
+		grid-template-columns: 1fr 1fr;
+		gap: 24px 16px;
+	}
+
+	.service-points__number {
+		width: 44px;
+		height: 44px;
+		font-size: 18px;
+	}
+
+	.service-points__title {
+		font-size: 16px;
+	}
+
+	.service-points__desc {
+		font-size: 13px;
+	}
+}
+
+@media (max-width: 480px) {
+	.service-points__grid--cols-3,
+	.service-points__grid--cols-4,
+	.service-points__grid--cols-5,
+	.service-points__grid--cols-6,
+	.service-points__grid--cols-7,
+	.service-points__grid--cols-8 {
+		grid-template-columns: 1fr;
 	}
 }
 
@@ -3998,12 +4207,12 @@ body {
    Секция стоимости
    ============================================================ */
 .service-pricing {
-	background-color: #F9FAFB;
-	padding: 80px 0;
+	background-color: var(--color-white);
+	padding: 64px 0 80px;
 }
 
 .service-pricing__title {
-	font-size: 40px;
+	font-size: 36px;
 	font-weight: 700;
 	color: #051945;
 	text-align: center;
@@ -4012,49 +4221,57 @@ body {
 }
 
 .service-pricing__subtitle {
-	font-size: 18px;
+	font-size: 16px;
 	font-weight: 400;
-	color: #4B5563;
+	color: #6B7280;
 	text-align: center;
-	margin-bottom: 48px;
+	margin-bottom: 40px;
 	font-family: var(--font-primary);
 }
 
 .service-pricing__grid {
 	display: grid;
 	grid-template-columns: repeat(4, 1fr);
-	gap: 24px;
+	gap: 20px;
 }
 
 .service-pricing__card {
 	background: var(--color-white);
 	border: 1px solid #E5E7EB;
-	border-radius: 12px;
+	border-radius: 20px;
 	padding: 24px;
 	display: flex;
 	flex-direction: column;
-	transition: box-shadow 0.3s ease, transform 0.3s ease;
+	align-items: flex-start;
+	transition: box-shadow 0.3s ease;
+	min-height: 340px;
 }
 
 .service-pricing__card:hover {
-	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-	transform: translateY(-4px);
+	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
 }
 
-.service-pricing__card-header {
+/* Иконка в круге */
+.service-pricing__card-icon {
+	width: 56px;
+	height: 56px;
+	border: 2px solid #051945;
+	border-radius: 50%;
 	display: flex;
 	align-items: center;
-	gap: 12px;
-	margin-bottom: 16px;
+	justify-content: center;
+	margin-bottom: 20px;
+	box-shadow: 0 0 0 1px rgba(5, 25, 69, 0.1);
 }
 
-.service-pricing__card-icon {
-	flex-shrink: 0;
+.service-pricing__card-icon svg {
+	width: 28px;
+	height: 28px;
 }
 
 .service-pricing__card-icon img {
-	width: 48px;
-	height: 48px;
+	width: 28px;
+	height: 28px;
 	object-fit: contain;
 }
 
@@ -4063,21 +4280,23 @@ body {
 	font-weight: 600;
 	color: #111827;
 	font-family: var(--font-primary);
-	margin: 0;
+	margin: 0 0 12px 0;
+	line-height: 1.3;
 }
 
 .service-pricing__card-description {
 	font-size: 14px;
 	color: #6B7280;
-	margin-bottom: 16px;
+	margin-bottom: 20px;
 	flex-grow: 1;
 	font-family: var(--font-primary);
+	line-height: 1.5;
 }
 
 .service-pricing__card-price {
-	font-size: 24px;
+	font-size: 22px;
 	font-weight: 700;
-	color: #051945;
+	color: #111827;
 	margin-bottom: 20px;
 	font-family: var(--font-primary);
 }
@@ -4086,21 +4305,26 @@ body {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	padding: 12px 24px;
-	background-color: #0052CC;
+	width: 100%;
+	height: 48px;
+	padding: 0 20px;
+	background-color: #051945;
 	color: var(--color-white);
 	border: none;
 	border-radius: 8px;
-	font-size: 14px;
+	font-size: 15px;
 	font-weight: 500;
 	font-family: var(--font-primary);
 	text-decoration: none;
-	transition: background-color 0.2s ease;
+	transition: background-color 0.2s ease, box-shadow 0.2s ease;
 	text-align: center;
+	margin-top: auto;
 }
 
 .service-pricing__card-btn:hover {
-	background-color: #0047B3;
+	background-color: #0a2a6b;
+	box-shadow: 0 4px 12px rgba(5, 25, 69, 0.3);
+	color: var(--color-white);
 }
 
 /* Адаптив стоимости */
@@ -4110,13 +4334,37 @@ body {
 	}
 }
 
-@media (max-width: 640px) {
-	.service-pricing__grid {
-		grid-template-columns: 1fr;
+@media (max-width: 768px) {
+	.service-pricing {
+		padding: 48px 0 64px;
 	}
 
 	.service-pricing__title {
 		font-size: 28px;
+	}
+
+	.service-pricing__card {
+		padding: 24px 20px;
+	}
+}
+
+@media (max-width: 640px) {
+	.service-pricing__grid {
+		grid-template-columns: 1fr;
+		gap: 16px;
+	}
+
+	.service-pricing__title {
+		font-size: 24px;
+	}
+
+	.service-pricing__card {
+		align-items: center;
+		text-align: center;
+	}
+
+	.service-pricing__card-description {
+		text-align: center;
 	}
 }
 
@@ -4124,12 +4372,12 @@ body {
    Секция процесса
    ============================================================ */
 .service-process {
-	background-color: var(--color-white);
-	padding: 80px 0;
+	background-color: #F0F7FF;
+	padding: 64px 0 80px;
 }
 
 .service-process__title {
-	font-size: 40px;
+	font-size: 36px;
 	font-weight: 700;
 	color: #051945;
 	text-align: center;
@@ -4138,9 +4386,9 @@ body {
 }
 
 .service-process__subtitle {
-	font-size: 18px;
+	font-size: 16px;
 	font-weight: 400;
-	color: #4B5563;
+	color: #6B7280;
 	text-align: center;
 	margin-bottom: 48px;
 	font-family: var(--font-primary);
@@ -4148,35 +4396,18 @@ body {
 
 .service-process__grid {
 	display: grid;
-	grid-template-columns: repeat(3, 1fr);
-	gap: 32px 24px;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 40px 24px;
 }
 
 .service-process__step {
-	position: relative;
 	text-align: center;
-	padding: 24px;
-}
-
-.service-process__step-number {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	width: 48px;
-	height: 48px;
-	background: linear-gradient(135deg, #183D61 0%, #0052CC 100%);
-	color: var(--color-white);
-	border-radius: 50%;
-	font-size: 20px;
-	font-weight: 700;
-	font-family: var(--font-primary);
-	margin-bottom: 16px;
 }
 
 .service-process__step-icon {
-	width: 64px;
-	height: 64px;
-	margin: 0 auto 16px;
+	width: 80px;
+	height: 80px;
+	margin: 0 auto 20px;
 }
 
 .service-process__step-icon img {
@@ -4186,11 +4417,12 @@ body {
 }
 
 .service-process__step-title {
-	font-size: 18px;
+	font-size: 16px;
 	font-weight: 600;
 	color: #111827;
 	margin-bottom: 8px;
 	font-family: var(--font-primary);
+	line-height: 1.3;
 }
 
 .service-process__step-description {
@@ -4204,29 +4436,48 @@ body {
 @media (max-width: 1024px) {
 	.service-process__grid {
 		grid-template-columns: repeat(2, 1fr);
+		gap: 32px 20px;
 	}
 }
 
 @media (max-width: 640px) {
+	.service-process {
+		padding: 48px 0 64px;
+	}
+
 	.service-process__grid {
-		grid-template-columns: 1fr;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 24px 16px;
 	}
 
 	.service-process__title {
-		font-size: 28px;
+		font-size: 24px;
+	}
+
+	.service-process__step-icon {
+		width: 64px;
+		height: 64px;
+	}
+
+	.service-process__step-title {
+		font-size: 14px;
+	}
+
+	.service-process__step-description {
+		font-size: 13px;
 	}
 }
 
 /* ============================================================
    Секция примеров сертификатов
    ============================================================ */
-.service-certificates {
-	background-color: #F9FAFB;
-	padding: 80px 0;
+.service-certs {
+	background-color: var(--color-white);
+	padding: 64px 0 80px;
 }
 
-.service-certificates__title {
-	font-size: 40px;
+.service-certs__title {
+	font-size: 36px;
 	font-weight: 700;
 	color: #051945;
 	text-align: center;
@@ -4234,120 +4485,126 @@ body {
 	font-family: var(--font-primary);
 }
 
-.service-certificates__subtitle {
-	font-size: 18px;
+.service-certs__subtitle {
+	font-size: 16px;
 	font-weight: 400;
-	color: #4B5563;
+	color: #6B7280;
 	text-align: center;
 	margin-bottom: 48px;
 	font-family: var(--font-primary);
 }
 
-.service-certificates__content {
+.service-certs__grid {
 	display: grid;
-	grid-template-columns: 1fr 1fr;
-	gap: 48px;
-	align-items: start;
-}
-
-.service-certificates__main {
-	display: flex;
-	justify-content: center;
-	align-items: flex-start;
-}
-
-.service-certificates__main-img {
-	max-width: 100%;
-	height: auto;
-	border-radius: 8px;
-	box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
-}
-
-.service-certificates__sidebar {
-	display: flex;
-	flex-direction: column;
+	grid-template-columns: repeat(3, 1fr);
 	gap: 24px;
 }
 
-.service-certificates__thumbnails {
-	display: flex;
-	gap: 16px;
-	flex-wrap: wrap;
-}
-
-.service-certificates__thumb {
-	flex: 0 0 calc(50% - 8px);
-}
-
-.service-certificates__thumb-img {
-	width: 100%;
-	height: auto;
-	border-radius: 8px;
+/* Карточка сертификата */
+.service-certs__card {
+	background: var(--color-white);
 	border: 1px solid #E5E7EB;
+	border-radius: 16px;
+	overflow: hidden;
+	transition: box-shadow 0.3s ease;
 }
 
-.service-certificates__thumb-placeholder {
-	width: 100%;
-	height: 200px;
-	background: linear-gradient(135deg, #e0e7ef 0%, #c5d0dc 100%);
-	border-radius: 8px;
+.service-certs__card:hover {
+	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+}
+
+/* Изображение с бейджем */
+.service-certs__card-image {
+	position: relative;
+	height: 280px;
+	background: #F9FAFB;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	color: #6B7280;
-	font-size: 14px;
+	overflow: hidden;
 }
 
-.service-certificates__thumb-caption {
-	display: block;
-	text-align: center;
-	font-size: 12px;
-	color: #6B7280;
-	margin-top: 8px;
+.service-certs__card-image img {
+	max-width: 90%;
+	max-height: 90%;
+	object-fit: contain;
+}
+
+.service-certs__card-placeholder {
+	width: 100%;
+	height: 100%;
+	background: linear-gradient(135deg, #F3F4F6 0%, #E5E7EB 100%);
+}
+
+/* Бейдж/флажок */
+.service-certs__card-badge {
+	position: absolute;
+	top: 16px;
+	left: 16px;
+	padding: 8px 16px;
+	color: var(--color-white);
+	font-size: 13px;
+	font-weight: 500;
 	font-family: var(--font-primary);
+	border-radius: 20px;
+	white-space: nowrap;
 }
 
-.service-certificates__description {
-	background: var(--color-white);
-	border-radius: 12px;
+/* Контент карточки */
+.service-certs__card-content {
 	padding: 24px;
-	border: 1px solid #E5E7EB;
 }
 
-.service-certificates__description p {
-	font-size: 14px;
-	color: #374151;
+.service-certs__card-title {
+	font-size: 18px;
+	font-weight: 600;
+	color: #111827;
 	margin-bottom: 12px;
 	font-family: var(--font-primary);
+	line-height: 1.3;
 }
 
-.service-certificates__description ul {
-	margin: 0;
-	padding-left: 20px;
-}
-
-.service-certificates__description li {
+.service-certs__card-description {
 	font-size: 14px;
-	color: #4B5563;
-	margin-bottom: 8px;
+	color: #6B7280;
+	line-height: 1.5;
+	margin-bottom: 16px;
+	font-family: var(--font-primary);
+}
+
+.service-certs__card-price {
+	font-size: 20px;
+	font-weight: 700;
+	color: #EA580C;
 	font-family: var(--font-primary);
 }
 
 /* Адаптив сертификатов */
 @media (max-width: 1024px) {
-	.service-certificates__content {
+	.service-certs__grid {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+
+@media (max-width: 768px) {
+	.service-certs__grid {
 		grid-template-columns: 1fr;
-		gap: 32px;
+		max-width: 400px;
+		margin: 0 auto;
+	}
+
+	.service-certs__card-image {
+		height: 240px;
 	}
 }
 
 @media (max-width: 640px) {
-	.service-certificates__title {
-		font-size: 28px;
+	.service-certs {
+		padding: 48px 0 64px;
 	}
 
-	.service-certificates__thumb {
-		flex: 0 0 100%;
+	.service-certs__title {
+		font-size: 24px;
 	}
 }
 

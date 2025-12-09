@@ -12,53 +12,65 @@ if ( ! defined( 'ABSPATH' ) ) {
 // Получаем данные из ACF
 $pricing_title    = function_exists( 'get_field' ) ? get_field( 'gociss_service_pricing_title' ) : '';
 $pricing_subtitle = function_exists( 'get_field' ) ? get_field( 'gociss_service_pricing_subtitle' ) : '';
-$pricing_items    = function_exists( 'get_field' ) ? get_field( 'gociss_service_pricing_items' ) : '';
+
+// Собираем карточки из отдельных group полей
+$pricing_items = array();
+for ( $i = 1; $i <= 4; $i++ ) {
+	$card = function_exists( 'get_field' ) ? get_field( 'gociss_service_pricing_card_' . $i ) : null;
+	if ( $card && ! empty( $card['title'] ) ) {
+		$pricing_items[] = $card;
+	}
+}
 
 // Заглушки
 if ( ! $pricing_title ) {
 	$pricing_title = 'Стоимость сертификации';
 }
 if ( ! $pricing_subtitle ) {
-	$pricing_subtitle = 'Все цены указаны для одного юридического лица/ИП';
+	$pricing_subtitle = 'Выберите подходящий вариант сертификации ISO 45001';
 }
 
-// Заглушки для карточек
-$default_pricing = array(
-	array(
-		'icon'        => '',
-		'title'       => 'Консультация',
-		'description' => 'Бесплатная первичная консультация',
-		'price'       => 'Бесплатно',
-		'button_text' => 'Записаться',
-		'button_url'  => '#form',
-	),
-	array(
-		'icon'        => '',
-		'title'       => 'Сертификация ISO 9001',
-		'description' => 'Сертификат сроком на 3 года',
-		'price'       => 'от 15 000 ₽',
-		'button_text' => 'Заказать',
-		'button_url'  => '#form',
-	),
-	array(
-		'icon'        => '',
-		'title'       => 'Сертификация ISO 45001',
-		'description' => 'Сертификат сроком на 3 года',
-		'price'       => 'от 40 000 ₽',
-		'button_text' => 'Заказать',
-		'button_url'  => '#form',
-	),
-	array(
-		'icon'        => '',
-		'title'       => 'Комплексная сертификация',
-		'description' => 'ISO 9001 + ISO 45001 + ISO 14001',
-		'price'       => 'от 50 000 ₽',
-		'button_text' => 'Заказать',
-		'button_url'  => '#form',
-	),
+// Иконки по умолчанию из папки service/price (SVG)
+$default_icons = array(
+	get_template_directory_uri() . '/assets/images/service/price/Vector.svg',
+	get_template_directory_uri() . '/assets/images/service/price/Vector-1.svg',
+	get_template_directory_uri() . '/assets/images/service/price/Vector-2.svg',
+	get_template_directory_uri() . '/assets/images/service/price/Group.svg',
 );
 
-$pricing_to_show = ( $pricing_items && is_array( $pricing_items ) && count( $pricing_items ) > 0 ) ? $pricing_items : $default_pricing;
+// Заглушки для карточек если ACF не заполнен
+if ( empty( $pricing_items ) ) {
+	$pricing_items = array(
+		array(
+			'title'       => 'Консультация',
+			'description' => 'Предоставление необходимой информации по вариантам и порядку оформления сертификатов',
+			'price'       => 'Бесплатно',
+			'button_text' => 'Получить консультацию',
+			'button_url'  => '#form',
+		),
+		array(
+			'title'       => 'Сертификация ИСО 45001',
+			'description' => 'в Системе добровольной сертификации менеджмента качества, зарегистрированной в Росстандарте',
+			'price'       => '15 000 ₽',
+			'button_text' => 'Заказать',
+			'button_url'  => '#form',
+		),
+		array(
+			'title'       => 'Сертификация ИСО 45001',
+			'description' => 'в органе по сертификации аккредитованном в Федеральной службе по аккредитации (ФСА)',
+			'price'       => 'от 40 000 ₽',
+			'button_text' => 'Заказать',
+			'button_url'  => '#form',
+		),
+		array(
+			'title'       => 'Сертификация ИСО 45001',
+			'description' => 'в органе по сертификации с аккредитацией IAF (International Accreditation Forum)',
+			'price'       => 'от 60 000 ₽',
+			'button_text' => 'Заказать',
+			'button_url'  => '#form',
+		),
+	);
+}
 ?>
 
 <section class="service-pricing" id="pricing">
@@ -72,42 +84,36 @@ $pricing_to_show = ( $pricing_items && is_array( $pricing_items ) && count( $pri
 		<?php endif; ?>
 
 		<div class="service-pricing__grid">
-			<?php foreach ( $pricing_to_show as $item ) : ?>
+			<?php
+			$card_index = 0;
+			foreach ( $pricing_items as $item ) :
+				?>
 				<div class="service-pricing__card">
-					<div class="service-pricing__card-header">
-						<?php if ( ! empty( $item['icon'] ) && ! empty( $item['icon']['ID'] ) ) : ?>
-							<div class="service-pricing__card-icon">
-								<?php
-								echo wp_get_attachment_image(
-									$item['icon']['ID'],
-									'thumbnail',
-									false,
-									array( 'alt' => '' )
-								);
-								?>
-							</div>
+					<!-- Иконка -->
+					<div class="service-pricing__card-icon">
+						<?php if ( ! empty( $item['icon'] ) && ! empty( $item['icon']['url'] ) ) : ?>
+							<img src="<?php echo esc_url( $item['icon']['url'] ); ?>" alt="">
 						<?php else : ?>
-							<div class="service-pricing__card-icon">
-								<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-									<rect width="48" height="48" rx="8" fill="#EBF4FF"/>
-									<path d="M24 16V32M16 24H32" stroke="#0052CC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-								</svg>
-							</div>
-						<?php endif; ?>
-
-						<?php if ( ! empty( $item['title'] ) ) : ?>
-							<h3 class="service-pricing__card-title"><?php echo esc_html( $item['title'] ); ?></h3>
+							<img src="<?php echo esc_url( $default_icons[ $card_index % 4 ] ); ?>" alt="">
 						<?php endif; ?>
 					</div>
 
+					<!-- Заголовок -->
+					<?php if ( ! empty( $item['title'] ) ) : ?>
+						<h3 class="service-pricing__card-title"><?php echo esc_html( $item['title'] ); ?></h3>
+					<?php endif; ?>
+
+					<!-- Описание -->
 					<?php if ( ! empty( $item['description'] ) ) : ?>
 						<p class="service-pricing__card-description"><?php echo esc_html( $item['description'] ); ?></p>
 					<?php endif; ?>
 
+					<!-- Цена -->
 					<?php if ( ! empty( $item['price'] ) ) : ?>
 						<div class="service-pricing__card-price"><?php echo esc_html( $item['price'] ); ?></div>
 					<?php endif; ?>
 
+					<!-- Кнопка -->
 					<?php
 					$btn_text = ! empty( $item['button_text'] ) ? $item['button_text'] : 'Заказать';
 					$btn_url  = ! empty( $item['button_url'] ) ? $item['button_url'] : '#form';
@@ -116,7 +122,10 @@ $pricing_to_show = ( $pricing_items && is_array( $pricing_items ) && count( $pri
 						<?php echo esc_html( $btn_text ); ?>
 					</a>
 				</div>
-			<?php endforeach; ?>
+				<?php
+				$card_index++;
+			endforeach;
+			?>
 		</div>
 	</div>
 </section>
