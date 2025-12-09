@@ -205,6 +205,42 @@ if ( ! defined( 'ABSPATH' ) ) {
 					}
 					?>
 				</nav>
+				
+				<!-- Меню услуг в мобильном меню -->
+				<div class="header-mobile-menu__services">
+					<h3 class="header-mobile-menu__services-title">Услуги</h3>
+					<nav class="header-mobile-menu__services-nav">
+						<a href="#services" class="header-mobile-menu__services-item">
+							<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/ui_ham[white].svg' ); ?>" alt="" class="header-mobile-menu__services-icon" width="16" height="16">
+							<span>Все услуги</span>
+						</a>
+						<a href="#iso" class="header-mobile-menu__services-item">
+							<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/ui_iso[white].svg' ); ?>" alt="" class="header-mobile-menu__services-icon" width="16" height="16">
+							<span>Сертификация ISO</span>
+						</a>
+						<a href="#reputation" class="header-mobile-menu__services-item">
+							<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/ui_grad[white].svg' ); ?>" alt="" class="header-mobile-menu__services-icon" width="16" height="16">
+							<span>Опыт и репутация</span>
+						</a>
+						<a href="#product" class="header-mobile-menu__services-item">
+							<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/ui_pack[white].svg' ); ?>" alt="" class="header-mobile-menu__services-icon" width="16" height="16">
+							<span>Сертификация продукции</span>
+						</a>
+						<a href="#personnel" class="header-mobile-menu__services-item">
+							<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/ui_user[white].svg' ); ?>" alt="" class="header-mobile-menu__services-icon" width="16" height="16">
+							<span>Сертификация персонала</span>
+						</a>
+						<a href="#voluntary" class="header-mobile-menu__services-item">
+							<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/ui_file[white].svg' ); ?>" alt="" class="header-mobile-menu__services-icon" width="16" height="16">
+							<span>Добровольная сертификация</span>
+						</a>
+						<a href="#training" class="header-mobile-menu__services-item">
+							<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/ui_file[white].svg' ); ?>" alt="" class="header-mobile-menu__services-icon" width="16" height="16">
+							<span>Учебный центр</span>
+						</a>
+					</nav>
+				</div>
+				
 				<div class="header-mobile-menu__contacts">
 					<a href="tel:+78005510236" class="header-mobile-menu__phone">+7 (800) 551-02-36</a>
 					<a href="mailto:info@gociss.ru" class="header-mobile-menu__email">info@gociss.ru</a>

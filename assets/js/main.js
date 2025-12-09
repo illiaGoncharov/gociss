@@ -15,7 +15,7 @@
 		initNewsSlider();
 		initSearch();
 		initMobileMenu();
-		initServicesMenu();
+		// initServicesMenu(); // Услуги теперь в мобильном меню
 	});
 
 	/**

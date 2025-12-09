@@ -793,6 +793,585 @@ function gociss_register_acf_fields() {
 			),
 		)
 	);
+
+	// ======================================================================
+	// ГРУППЫ ПОЛЕЙ ДЛЯ ШАБЛОНА "СТРАНИЦА УСЛУГИ" (page-service.php)
+	// ======================================================================
+
+	// Hero секция страницы услуги
+	acf_add_local_field_group(
+		array(
+			'key'                   => 'group_gociss_service_hero',
+			'title'                 => 'Услуга: Hero секция',
+			'fields'                => array(
+				array(
+					'key'               => 'field_gociss_service_label',
+					'label'             => 'Метка (над заголовком)',
+					'name'              => 'gociss_service_label',
+					'type'              => 'text',
+					'instructions'      => 'Например: "Сертификация систем менеджмента"',
+				),
+				array(
+					'key'               => 'field_gociss_service_title',
+					'label'             => 'Заголовок услуги',
+					'name'              => 'gociss_service_title',
+					'type'              => 'text',
+					'instructions'      => 'Если не заполнено, используется название страницы',
+				),
+				array(
+					'key'               => 'field_gociss_service_description',
+					'label'             => 'Описание услуги',
+					'name'              => 'gociss_service_description',
+					'type'              => 'wysiwyg',
+					'toolbar'           => 'basic',
+					'media_upload'      => 0,
+				),
+				array(
+					'key'               => 'field_gociss_service_image',
+					'label'             => 'Изображение',
+					'name'              => 'gociss_service_image',
+					'type'              => 'image',
+					'instructions'      => 'Изображение сертификата или услуги. Рекомендуемый размер: 600x400px',
+					'return_format'     => 'array',
+					'preview_size'      => 'medium',
+				),
+				array(
+					'key'               => 'field_gociss_service_advantages',
+					'label'             => 'Преимущества услуги',
+					'name'              => 'gociss_service_advantages',
+					'type'              => 'repeater',
+					'layout'            => 'block',
+					'button_label'      => 'Добавить преимущество',
+					'max'               => 6,
+					'sub_fields'        => array(
+						array(
+							'key'           => 'field_gociss_service_adv_icon',
+							'label'         => 'Иконка',
+							'name'          => 'icon',
+							'type'          => 'image',
+							'return_format' => 'array',
+							'preview_size'  => 'thumbnail',
+							'instructions'  => 'SVG или PNG, 24x24px',
+						),
+						array(
+							'key'   => 'field_gociss_service_adv_text',
+							'label' => 'Текст преимущества',
+							'name'  => 'text',
+							'type'  => 'text',
+						),
+					),
+				),
+			),
+			'location'              => array(
+				array(
+					array(
+						'param'    => 'page_template',
+						'operator' => '==',
+						'value'    => 'page-service.php',
+					),
+				),
+			),
+			'menu_order'            => 0,
+		)
+	);
+
+	// Секция стоимости
+	acf_add_local_field_group(
+		array(
+			'key'                   => 'group_gociss_service_pricing',
+			'title'                 => 'Услуга: Стоимость',
+			'fields'                => array(
+				array(
+					'key'               => 'field_gociss_service_pricing_title',
+					'label'             => 'Заголовок',
+					'name'              => 'gociss_service_pricing_title',
+					'type'              => 'text',
+					'default_value'     => 'Стоимость сертификации',
+				),
+				array(
+					'key'               => 'field_gociss_service_pricing_subtitle',
+					'label'             => 'Подзаголовок',
+					'name'              => 'gociss_service_pricing_subtitle',
+					'type'              => 'textarea',
+					'rows'              => 2,
+					'default_value'     => 'Все цены указаны для одного юридического лица/ИП',
+				),
+				array(
+					'key'               => 'field_gociss_service_pricing_items',
+					'label'             => 'Ценовые карточки',
+					'name'              => 'gociss_service_pricing_items',
+					'type'              => 'repeater',
+					'layout'            => 'block',
+					'button_label'      => 'Добавить карточку',
+					'max'               => 6,
+					'sub_fields'        => array(
+						array(
+							'key'           => 'field_gociss_service_pricing_icon',
+							'label'         => 'Иконка',
+							'name'          => 'icon',
+							'type'          => 'image',
+							'return_format' => 'array',
+							'preview_size'  => 'thumbnail',
+						),
+						array(
+							'key'   => 'field_gociss_service_pricing_item_title',
+							'label' => 'Название',
+							'name'  => 'title',
+							'type'  => 'text',
+						),
+						array(
+							'key'   => 'field_gociss_service_pricing_item_desc',
+							'label' => 'Описание',
+							'name'  => 'description',
+							'type'  => 'textarea',
+							'rows'  => 2,
+						),
+						array(
+							'key'   => 'field_gociss_service_pricing_item_price',
+							'label' => 'Цена',
+							'name'  => 'price',
+							'type'  => 'text',
+							'instructions' => 'Например: "от 15 000 ₽" или "Бесплатно"',
+						),
+						array(
+							'key'           => 'field_gociss_service_pricing_item_btn_text',
+							'label'         => 'Текст кнопки',
+							'name'          => 'button_text',
+							'type'          => 'text',
+							'default_value' => 'Заказать',
+						),
+						array(
+							'key'           => 'field_gociss_service_pricing_item_btn_url',
+							'label'         => 'Ссылка кнопки',
+							'name'          => 'button_url',
+							'type'          => 'text',
+							'default_value' => '#form',
+						),
+					),
+				),
+			),
+			'location'              => array(
+				array(
+					array(
+						'param'    => 'page_template',
+						'operator' => '==',
+						'value'    => 'page-service.php',
+					),
+				),
+			),
+			'menu_order'            => 1,
+		)
+	);
+
+	// Секция процесса
+	acf_add_local_field_group(
+		array(
+			'key'                   => 'group_gociss_service_process',
+			'title'                 => 'Услуга: Процесс получения',
+			'fields'                => array(
+				array(
+					'key'               => 'field_gociss_service_process_title',
+					'label'             => 'Заголовок',
+					'name'              => 'gociss_service_process_title',
+					'type'              => 'text',
+					'default_value'     => 'Процесс получения сертификата',
+				),
+				array(
+					'key'               => 'field_gociss_service_process_subtitle',
+					'label'             => 'Подзаголовок',
+					'name'              => 'gociss_service_process_subtitle',
+					'type'              => 'textarea',
+					'rows'              => 2,
+					'default_value'     => 'Простой путь к сертификации вашей продукции',
+				),
+				array(
+					'key'               => 'field_gociss_service_process_steps',
+					'label'             => 'Шаги процесса',
+					'name'              => 'gociss_service_process_steps',
+					'type'              => 'repeater',
+					'layout'            => 'block',
+					'button_label'      => 'Добавить шаг',
+					'max'               => 8,
+					'sub_fields'        => array(
+						array(
+							'key'           => 'field_gociss_service_process_step_icon',
+							'label'         => 'Иконка',
+							'name'          => 'icon',
+							'type'          => 'image',
+							'return_format' => 'array',
+							'preview_size'  => 'thumbnail',
+						),
+						array(
+							'key'   => 'field_gociss_service_process_step_title',
+							'label' => 'Название шага',
+							'name'  => 'title',
+							'type'  => 'text',
+						),
+						array(
+							'key'   => 'field_gociss_service_process_step_desc',
+							'label' => 'Описание',
+							'name'  => 'description',
+							'type'  => 'textarea',
+							'rows'  => 2,
+						),
+					),
+				),
+			),
+			'location'              => array(
+				array(
+					array(
+						'param'    => 'page_template',
+						'operator' => '==',
+						'value'    => 'page-service.php',
+					),
+				),
+			),
+			'menu_order'            => 2,
+		)
+	);
+
+	// Секция примеров сертификатов
+	acf_add_local_field_group(
+		array(
+			'key'                   => 'group_gociss_service_certs',
+			'title'                 => 'Услуга: Примеры сертификатов',
+			'fields'                => array(
+				array(
+					'key'               => 'field_gociss_service_certs_title',
+					'label'             => 'Заголовок',
+					'name'              => 'gociss_service_certs_title',
+					'type'              => 'text',
+					'default_value'     => 'Примеры сертификатов',
+				),
+				array(
+					'key'               => 'field_gociss_service_certs_subtitle',
+					'label'             => 'Подзаголовок',
+					'name'              => 'gociss_service_certs_subtitle',
+					'type'              => 'textarea',
+					'rows'              => 2,
+				),
+				array(
+					'key'               => 'field_gociss_service_certs_items',
+					'label'             => 'Сертификаты',
+					'name'              => 'gociss_service_certs_items',
+					'type'              => 'repeater',
+					'layout'            => 'block',
+					'button_label'      => 'Добавить сертификат',
+					'max'               => 5,
+					'sub_fields'        => array(
+						array(
+							'key'           => 'field_gociss_service_certs_item_image',
+							'label'         => 'Изображение',
+							'name'          => 'image',
+							'type'          => 'image',
+							'return_format' => 'array',
+							'preview_size'  => 'medium',
+							'instructions'  => 'Загрузите изображение сертификата',
+						),
+						array(
+							'key'   => 'field_gociss_service_certs_item_caption',
+							'label' => 'Подпись',
+							'name'  => 'caption',
+							'type'  => 'text',
+							'instructions' => 'Например: "Образец 2023"',
+						),
+					),
+				),
+				array(
+					'key'               => 'field_gociss_service_certs_description',
+					'label'             => 'Описание (справа)',
+					'name'              => 'gociss_service_certs_description',
+					'type'              => 'wysiwyg',
+					'toolbar'           => 'basic',
+					'media_upload'      => 0,
+					'instructions'      => 'Текст с описанием, что должен содержать сертификат',
+				),
+			),
+			'location'              => array(
+				array(
+					array(
+						'param'    => 'page_template',
+						'operator' => '==',
+						'value'    => 'page-service.php',
+					),
+				),
+			),
+			'menu_order'            => 3,
+		)
+	);
+
+	// Секция отзывов
+	acf_add_local_field_group(
+		array(
+			'key'                   => 'group_gociss_service_reviews',
+			'title'                 => 'Услуга: Отзывы клиентов',
+			'fields'                => array(
+				array(
+					'key'               => 'field_gociss_service_reviews_title',
+					'label'             => 'Заголовок',
+					'name'              => 'gociss_service_reviews_title',
+					'type'              => 'text',
+					'default_value'     => 'Отзывы клиентов',
+				),
+				array(
+					'key'               => 'field_gociss_service_reviews_subtitle',
+					'label'             => 'Подзаголовок',
+					'name'              => 'gociss_service_reviews_subtitle',
+					'type'              => 'textarea',
+					'rows'              => 2,
+					'default_value'     => 'Что говорят наши клиенты о нашей работе',
+				),
+				array(
+					'key'               => 'field_gociss_service_reviews_items',
+					'label'             => 'Отзывы',
+					'name'              => 'gociss_service_reviews_items',
+					'type'              => 'repeater',
+					'layout'            => 'block',
+					'button_label'      => 'Добавить отзыв',
+					'sub_fields'        => array(
+						array(
+							'key'   => 'field_gociss_service_review_company',
+							'label' => 'Компания',
+							'name'  => 'company',
+							'type'  => 'text',
+						),
+						array(
+							'key'   => 'field_gociss_service_review_author',
+							'label' => 'Имя автора',
+							'name'  => 'author',
+							'type'  => 'text',
+						),
+						array(
+							'key'   => 'field_gociss_service_review_position',
+							'label' => 'Должность',
+							'name'  => 'position',
+							'type'  => 'text',
+						),
+						array(
+							'key'   => 'field_gociss_service_review_text',
+							'label' => 'Текст отзыва',
+							'name'  => 'text',
+							'type'  => 'textarea',
+							'rows'  => 4,
+						),
+						array(
+							'key'           => 'field_gociss_service_review_rating',
+							'label'         => 'Рейтинг (1-5)',
+							'name'          => 'rating',
+							'type'          => 'number',
+							'min'           => 1,
+							'max'           => 5,
+							'default_value' => 5,
+						),
+						array(
+							'key'           => 'field_gociss_service_review_image',
+							'label'         => 'Фото автора',
+							'name'          => 'image',
+							'type'          => 'image',
+							'return_format' => 'array',
+							'preview_size'  => 'thumbnail',
+						),
+					),
+				),
+			),
+			'location'              => array(
+				array(
+					array(
+						'param'    => 'page_template',
+						'operator' => '==',
+						'value'    => 'page-service.php',
+					),
+				),
+			),
+			'menu_order'            => 4,
+		)
+	);
+
+	// Секция CTA для страницы услуги (переиспользуем поля с главной)
+	acf_add_local_field_group(
+		array(
+			'key'                   => 'group_gociss_service_cta',
+			'title'                 => 'Услуга: CTA секция',
+			'fields'                => array(
+				array(
+					'key'               => 'field_gociss_service_cta_label',
+					'label'             => 'Метка',
+					'name'              => 'gociss_cta_label',
+					'type'              => 'text',
+					'default_value'     => 'Начните прямо сейчас',
+				),
+				array(
+					'key'               => 'field_gociss_service_cta_title',
+					'label'             => 'Заголовок',
+					'name'              => 'gociss_cta_title',
+					'type'              => 'text',
+					'default_value'     => 'Готовы начать сертификацию?',
+				),
+				array(
+					'key'               => 'field_gociss_service_cta_description',
+					'label'             => 'Описание',
+					'name'              => 'gociss_cta_description',
+					'type'              => 'textarea',
+					'default_value'     => 'Получите бесплатную консультацию эксперта и узнайте точные сроки и стоимость сертификации для вашего продукта',
+				),
+				array(
+					'key'               => 'field_gociss_service_cta_btn_primary',
+					'label'             => 'Кнопка с рамкой',
+					'name'              => 'gociss_cta_btn_primary',
+					'type'              => 'group',
+					'sub_fields'        => array(
+						array(
+							'key'   => 'field_gociss_service_cta_btn_primary_text',
+							'label' => 'Текст',
+							'name'  => 'text',
+							'type'  => 'text',
+							'default_value' => 'Получить консультацию',
+						),
+						array(
+							'key'   => 'field_gociss_service_cta_btn_primary_url',
+							'label' => 'Ссылка',
+							'name'  => 'url',
+							'type'  => 'url',
+						),
+					),
+				),
+				array(
+					'key'               => 'field_gociss_service_cta_btn_secondary',
+					'label'             => 'Кнопка залитая',
+					'name'              => 'gociss_cta_btn_secondary',
+					'type'              => 'group',
+					'sub_fields'        => array(
+						array(
+							'key'   => 'field_gociss_service_cta_btn_secondary_text',
+							'label' => 'Текст',
+							'name'  => 'text',
+							'type'  => 'text',
+							'default_value' => 'Заказать обратный звонок',
+						),
+						array(
+							'key'   => 'field_gociss_service_cta_btn_secondary_url',
+							'label' => 'Ссылка',
+							'name'  => 'url',
+							'type'  => 'url',
+						),
+					),
+				),
+			),
+			'location'              => array(
+				array(
+					array(
+						'param'    => 'page_template',
+						'operator' => '==',
+						'value'    => 'page-service.php',
+					),
+				),
+			),
+			'menu_order'            => 5,
+		)
+	);
+
+	// Секция FAQ для страницы услуги (переиспользуем поля)
+	acf_add_local_field_group(
+		array(
+			'key'                   => 'group_gociss_service_faq',
+			'title'                 => 'Услуга: FAQ',
+			'fields'                => array(
+				array(
+					'key'               => 'field_gociss_service_faq_title',
+					'label'             => 'Заголовок',
+					'name'              => 'gociss_faq_title',
+					'type'              => 'text',
+					'default_value'     => 'Часто задаваемые вопросы',
+				),
+				array(
+					'key'               => 'field_gociss_service_faq_subtitle',
+					'label'             => 'Подзаголовок',
+					'name'              => 'gociss_faq_subtitle',
+					'type'              => 'textarea',
+				),
+				array(
+					'key'               => 'field_gociss_service_faq_items',
+					'label'             => 'Вопросы',
+					'name'              => 'gociss_faq_items',
+					'type'              => 'repeater',
+					'layout'            => 'block',
+					'sub_fields'        => array(
+						array(
+							'key'   => 'field_gociss_service_faq_question',
+							'label' => 'Вопрос',
+							'name'  => 'question',
+							'type'  => 'text',
+						),
+						array(
+							'key'   => 'field_gociss_service_faq_answer',
+							'label' => 'Ответ',
+							'name'  => 'answer',
+							'type'  => 'wysiwyg',
+						),
+					),
+				),
+			),
+			'location'              => array(
+				array(
+					array(
+						'param'    => 'page_template',
+						'operator' => '==',
+						'value'    => 'page-service.php',
+					),
+				),
+			),
+			'menu_order'            => 6,
+		)
+	);
+
+	// Секция формы для страницы услуги
+	acf_add_local_field_group(
+		array(
+			'key'                   => 'group_gociss_service_form',
+			'title'                 => 'Услуга: Форма обратной связи',
+			'fields'                => array(
+				array(
+					'key'               => 'field_gociss_service_form_label',
+					'label'             => 'Метка',
+					'name'              => 'gociss_form_label',
+					'type'              => 'text',
+					'default_value'     => 'Связаться с нами',
+				),
+				array(
+					'key'               => 'field_gociss_service_form_title',
+					'label'             => 'Заголовок',
+					'name'              => 'gociss_form_title',
+					'type'              => 'text',
+					'default_value'     => 'Оставить заявку',
+				),
+				array(
+					'key'               => 'field_gociss_service_form_description',
+					'label'             => 'Описание',
+					'name'              => 'gociss_form_description',
+					'type'              => 'textarea',
+					'default_value'     => 'Заполните форму, и наш эксперт свяжется с вами в течение 30 минут',
+				),
+				array(
+					'key'               => 'field_gociss_service_form_shortcode',
+					'label'             => 'Шорткод Contact Form 7',
+					'name'              => 'gociss_form_shortcode',
+					'type'              => 'text',
+					'instructions'      => 'Вставьте шорткод формы Contact Form 7',
+					'default_value'     => '[contact-form-7 id="274d127" title="Контактная Форма Главная"]',
+				),
+			),
+			'location'              => array(
+				array(
+					array(
+						'param'    => 'page_template',
+						'operator' => '==',
+						'value'    => 'page-service.php',
+					),
+				),
+			),
+			'menu_order'            => 10,
+		)
+	);
 }
 add_action( 'acf/init', 'gociss_register_acf_fields' );
 

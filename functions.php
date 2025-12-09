@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Константы темы
-define( 'GOCISS_THEME_VERSION', '1.1.0' );
+define( 'GOCISS_THEME_VERSION', '1.1.1' );
 define( 'GOCISS_THEME_PATH', get_template_directory() );
 define( 'GOCISS_THEME_URI', get_template_directory_uri() );
 

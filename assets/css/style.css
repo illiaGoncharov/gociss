@@ -2472,7 +2472,7 @@ body {
 	transform: translateX(100%);
 	transition: transform 0.3s ease;
 	overflow-y: auto;
-	padding: 0 15px 0;
+	padding: 0 15px 20px;
 	z-index: 10000;
 }
 
@@ -2596,6 +2596,52 @@ body {
 	color: var(--color-primary-light);
 }
 
+.header-mobile-menu__services {
+	margin-top: 2rem;
+	padding-top: 2rem;
+	border-top: 1px solid #e0e0e0;
+}
+
+.header-mobile-menu__services-title {
+	margin: 0 0 1rem 0;
+	font-size: 18px;
+	font-weight: 600;
+	color: #051945;
+	font-family: var(--font-primary);
+}
+
+.header-mobile-menu__services-nav {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.header-mobile-menu__services-item {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 0.75rem 1rem;
+	background-color: var(--color-primary);
+	color: var(--color-white);
+	text-decoration: none;
+	border-radius: 6px;
+	font-size: 14px;
+	font-weight: 500;
+	font-family: var(--font-primary);
+	transition: background-color 0.3s ease;
+}
+
+.header-mobile-menu__services-item:hover {
+	background-color: #0d2a47;
+}
+
+.header-mobile-menu__services-icon {
+	width: 16px;
+	height: 16px;
+	flex-shrink: 0;
+	filter: brightness(0) invert(1);
+}
+
 .header-mobile-menu__contacts {
 	margin-top: 2rem;
 	padding-top: 2rem;
@@ -2705,108 +2751,9 @@ body {
 		justify-content: center;
 	}
 
-	/* Меню услуг на мобильных */
+	/* Меню услуг на мобильных - скрыто, услуги в гамбургер-меню */
 	.header-services {
-		min-height: 48px;
-		overflow: hidden;
-		transition: max-height 0.3s ease;
-		max-height: 48px;
-	}
-
-	.header-services:not(.is-collapsed) {
-		max-height: 1000px;
-	}
-
-	.header-services__toggle {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		padding: 12px 16px;
-		background-color: var(--color-primary);
-		border: none;
-		width: 100%;
-		cursor: pointer;
-		color: var(--color-white);
-		font-size: 14px;
-		font-weight: 500;
-		font-family: var(--font-primary);
-		gap: 8px;
-		text-align: left;
-	}
-
-	.header-services__toggle-text {
-		display: flex;
-		align-items: center;
-		gap: 8px;
-	}
-
-	.header-services__toggle-icon {
-		width: 16px;
-		height: 16px;
-		flex-shrink: 0;
-		transition: transform 0.3s ease;
-		position: relative;
-	}
-
-	.header-services__toggle-icon::after {
-		content: '';
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%) rotate(45deg);
-		width: 6px;
-		height: 6px;
-		border-right: 2px solid var(--color-white);
-		border-bottom: 2px solid var(--color-white);
-		transition: transform 0.3s ease;
-	}
-
-	.header-services.is-collapsed .header-services__toggle-icon::after {
-		transform: translate(-50%, -50%) rotate(225deg);
-	}
-
-	.header-services__nav {
 		display: none;
-		padding: 12px 16px;
-		background-color: var(--color-primary);
-	}
-
-	.header-services:not(.is-collapsed) .header-services__nav {
-		display: grid;
-		grid-template-columns: repeat(2, 1fr);
-		gap: 12px;
-	}
-
-	.header-services__item {
-		display: flex;
-		align-items: flex-start;
-		gap: 8px;
-		font-size: 12px;
-		line-height: 1.3;
-		padding: 8px;
-		border-radius: 6px;
-		transition: background-color 0.3s ease;
-	}
-
-	.header-services__item:hover {
-		background-color: rgba(255, 255, 255, 0.1);
-	}
-
-	/* Скрываем иконку гамбургера на мобильных */
-	.header-services__item--all .header-services__icon {
-		display: none;
-	}
-
-	.header-services__icon {
-		width: 14px;
-		height: 14px;
-		flex-shrink: 0;
-		margin-top: 2px;
-	}
-
-	.header-services__text {
-		font-size: 12px;
-		line-height: 1.3;
 	}
 }
 
