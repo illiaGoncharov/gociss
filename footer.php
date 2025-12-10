@@ -28,7 +28,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 					<div class="site-footer__certifications">
 						<?php
 						$cert_image = function_exists( 'get_field' ) ? get_field( 'gociss_footer_cert_image', 'option' ) : '';
-						
+
 						if ( $cert_image ) {
 							?>
 							<div class="site-footer__certification">
@@ -61,7 +61,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 							'fallback_cb'    => function() {
 								?>
 								<ul class="site-footer__menu">
-									<li><a href="#iso-certification">Сертификация ISO</a></li>
+									<li><a href="https://aq-spb.ru/iso-45001">Сертификация ISO</a></li>
 									<li><a href="#experience">Опыт и репутация</a></li>
 									<li><a href="#product-certification">Сертификация продукции</a></li>
 									<li><a href="#personnel-certification">Сертификация персонала</a></li>
