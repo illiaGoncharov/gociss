@@ -17,6 +17,13 @@ get_header();
 <?php
 // Подключаем все секции страницы услуги
 get_template_part( 'template-parts/service/hero' );
+
+// Секция аккредитации (если включена)
+$show_accreditation = function_exists( 'get_field' ) ? get_field( 'gociss_accreditation_show' ) : false;
+if ( $show_accreditation ) {
+	get_template_part( 'template-parts/service/accreditation' );
+}
+
 get_template_part( 'template-parts/service/pricing' );
 get_template_part( 'template-parts/service/process' );
 get_template_part( 'template-parts/service/certificates' );
@@ -31,3 +38,6 @@ get_template_part( 'template-parts/partners' );
 
 <?php
 get_footer();
+
+
+

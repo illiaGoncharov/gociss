@@ -22,7 +22,8 @@ get_template_part( 'template-parts/stats' );
 get_template_part( 'template-parts/advantages' );
 get_template_part( 'template-parts/experts' );
 get_template_part( 'template-parts/cta' );
-get_template_part( 'template-parts/news' );
+// Секция новостей временно скрыта по запросу заказчика
+// get_template_part( 'template-parts/news' );
 get_template_part( 'template-parts/geography' );
 get_template_part( 'template-parts/form' );
 get_template_part( 'template-parts/faq' );

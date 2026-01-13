@@ -10,13 +10,23 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Проверяем наличие ACF перед использованием
-$hero_label        = function_exists( 'get_field' ) ? get_field( 'gociss_hero_label' ) : '';
-$hero_title        = function_exists( 'get_field' ) ? get_field( 'gociss_hero_title' ) : '';
-$hero_description  = function_exists( 'get_field' ) ? get_field( 'gociss_hero_description' ) : '';
-$hero_image        = function_exists( 'get_field' ) ? get_field( 'gociss_hero_image' ) : '';
-$hero_btn_primary = function_exists( 'get_field' ) ? get_field( 'gociss_hero_btn_primary' ) : '';
+$hero_label         = function_exists( 'get_field' ) ? get_field( 'gociss_hero_label' ) : '';
+$hero_title         = function_exists( 'get_field' ) ? get_field( 'gociss_hero_title' ) : '';
+$hero_description   = function_exists( 'get_field' ) ? get_field( 'gociss_hero_description' ) : '';
+$hero_btn_primary   = function_exists( 'get_field' ) ? get_field( 'gociss_hero_btn_primary' ) : '';
 $hero_btn_secondary = function_exists( 'get_field' ) ? get_field( 'gociss_hero_btn_secondary' ) : '';
-$hero_stats        = function_exists( 'get_field' ) ? get_field( 'gociss_hero_stats' ) : '';
+$hero_stats         = function_exists( 'get_field' ) ? get_field( 'gociss_hero_stats' ) : '';
+
+// Собираем слайды из отдельных полей image в массив
+$hero_gallery = array();
+if ( function_exists( 'get_field' ) ) {
+	for ( $i = 1; $i <= 5; $i++ ) {
+		$slide = get_field( 'gociss_hero_slide_' . $i );
+		if ( $slide && ! empty( $slide['ID'] ) ) {
+			$hero_gallery[] = $slide;
+		}
+	}
+}
 
 // Заглушки, если ACF поля не заполнены
 if ( ! $hero_title ) {
@@ -90,24 +100,57 @@ if ( ! $hero_label ) {
 			</div>
 
 			<div class="hero__image">
-				<?php if ( $hero_image ) : ?>
-					<?php
-					echo wp_get_attachment_image(
-						$hero_image['ID'],
-						'gociss-hero',
-						false,
-						array(
-							'alt' => esc_attr( $hero_image['alt'] ),
-							'class' => 'hero__img',
-						)
-					);
-					?>
+				<?php if ( $hero_gallery && is_array( $hero_gallery ) && count( $hero_gallery ) > 0 ) : ?>
+					<!-- Слайдер изображений -->
+					<div class="hero__slider" data-slider="hero">
+						<div class="hero__slides">
+							<?php foreach ( $hero_gallery as $index => $image ) : ?>
+								<div class="hero__slide<?php echo 0 === $index ? ' is-active' : ''; ?>">
+									<?php
+									echo wp_get_attachment_image(
+										$image['ID'],
+										'gociss-hero',
+										false,
+										array(
+											'alt'   => esc_attr( $image['alt'] ),
+											'class' => 'hero__img',
+										)
+									);
+									?>
+								</div>
+							<?php endforeach; ?>
+						</div>
+						<?php if ( count( $hero_gallery ) > 1 ) : ?>
+							<!-- Кнопки навигации -->
+							<button type="button" class="hero__nav hero__nav--prev" aria-label="Предыдущий слайд">
+								<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+								</svg>
+							</button>
+							<button type="button" class="hero__nav hero__nav--next" aria-label="Следующий слайд">
+								<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+								</svg>
+							</button>
+							<!-- Точки индикаторы -->
+							<div class="hero__dots">
+								<?php foreach ( $hero_gallery as $index => $image ) : ?>
+									<button
+										type="button"
+										class="hero__dot<?php echo 0 === $index ? ' is-active' : ''; ?>"
+										data-slide="<?php echo esc_attr( $index ); ?>"
+										aria-label="<?php echo esc_attr( sprintf( 'Слайд %d', $index + 1 ) ); ?>"
+									></button>
+								<?php endforeach; ?>
+							</div>
+						<?php endif; ?>
+					</div>
 				<?php else : ?>
 					<!-- Placeholder для изображения (загрузите через ACF) -->
 					<div class="hero__placeholder">
 						<div class="hero__placeholder-inner">
 							<span class="hero__placeholder-icon">🖼️</span>
-							<span class="hero__placeholder-text">Изображение сертификатов<br><small>Загрузите через ACF</small></span>
+							<span class="hero__placeholder-text">Изображения для слайдера<br><small>Загрузите через ACF</small></span>
 						</div>
 					</div>
 				<?php endif; ?>

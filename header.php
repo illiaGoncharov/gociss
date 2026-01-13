@@ -121,11 +121,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 					<span class="header-services__toggle-icon"></span>
 				</button>
 				<nav class="header-services__nav">
-					<a href="#services" class="header-services__item header-services__item--all">
+					<a href="<?php echo esc_url( get_post_type_archive_link( 'gociss_service' ) ); ?>" class="header-services__item header-services__item--all">
 						<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/ui_ham[white].svg' ); ?>" alt="" class="header-services__icon" width="16" height="16">
 						<span class="header-services__text">Все услуги</span>
 					</a>
-					<a href="#iso" class="header-services__item">
+					<?php
+					// Ищем категорию "Сертификация ISO" или похожую
+					$iso_category = get_term_by( 'name', 'Сертификация ISO', 'gociss_service_cat' );
+					if ( ! $iso_category ) {
+						$iso_category = get_term_by( 'slug', 'iso', 'gociss_service_cat' );
+					}
+					$iso_link = $iso_category && ! is_wp_error( $iso_category ) 
+						? get_term_link( $iso_category ) 
+						: get_post_type_archive_link( 'gociss_service' );
+					?>
+					<a href="<?php echo esc_url( $iso_link ); ?>" class="header-services__item">
 						<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/ui_iso[white].svg' ); ?>" alt="" class="header-services__icon" width="16" height="16">
 						<span class="header-services__text">Сертификация ISO</span>
 					</a>
@@ -210,11 +220,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 				<div class="header-mobile-menu__services">
 					<h3 class="header-mobile-menu__services-title">Услуги</h3>
 					<nav class="header-mobile-menu__services-nav">
-						<a href="#services" class="header-mobile-menu__services-item">
+						<a href="<?php echo esc_url( get_post_type_archive_link( 'gociss_service' ) ); ?>" class="header-mobile-menu__services-item">
 							<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/ui_ham[white].svg' ); ?>" alt="" class="header-mobile-menu__services-icon" width="16" height="16">
 							<span>Все услуги</span>
 						</a>
-						<a href="#iso" class="header-mobile-menu__services-item">
+						<?php
+						// Ищем категорию "Сертификация ISO" или похожую
+						$iso_category_mobile = get_term_by( 'name', 'Сертификация ISO', 'gociss_service_cat' );
+						if ( ! $iso_category_mobile ) {
+							$iso_category_mobile = get_term_by( 'slug', 'iso', 'gociss_service_cat' );
+						}
+						$iso_link_mobile = $iso_category_mobile && ! is_wp_error( $iso_category_mobile ) 
+							? get_term_link( $iso_category_mobile ) 
+							: get_post_type_archive_link( 'gociss_service' );
+						?>
+						<a href="<?php echo esc_url( $iso_link_mobile ); ?>" class="header-mobile-menu__services-item">
 							<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/ui_iso[white].svg' ); ?>" alt="" class="header-mobile-menu__services-icon" width="16" height="16">
 							<span>Сертификация ISO</span>
 						</a>

@@ -45,10 +45,20 @@ if ( ! $experts_subtitle ) {
 						<?php foreach ( $experts_items as $expert ) : ?>
 							<div class="experts__item">
 								<div class="experts__photo">
-									<?php if ( ! empty( $expert['photo'] ) && ! empty( $expert['photo']['url'] ) ) : ?>
-										<img src="<?php echo esc_url( $expert['photo']['url'] ); ?>" alt="<?php echo esc_attr( $expert['name'] ?? '' ); ?>">
+									<?php if ( ! empty( $expert['photo'] ) && ! empty( $expert['photo']['ID'] ) ) : ?>
+										<?php
+										echo wp_get_attachment_image(
+											$expert['photo']['ID'],
+											'gociss-expert',
+											false,
+											array(
+												'alt'   => esc_attr( $expert['name'] ?? 'Эксперт' ),
+												'class' => 'experts__photo-img',
+											)
+										);
+										?>
 									<?php else : ?>
-										<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/expert-placeholder.jpg' ); ?>" alt="Эксперт">
+										<div class="experts__photo-placeholder"></div>
 									<?php endif; ?>
 								</div>
 								<?php if ( ! empty( $expert['name'] ) ) : ?>

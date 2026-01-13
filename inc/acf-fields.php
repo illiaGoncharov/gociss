@@ -66,12 +66,53 @@ function gociss_register_acf_fields() {
 					'name'              => 'gociss_hero_description',
 					'type'              => 'textarea',
 				),
+				// Слайды для карусели (отдельные поля image вместо gallery для бесплатной версии ACF)
 				array(
-					'key'               => 'field_gociss_hero_image',
-					'label'             => 'Изображение сертификатов',
-					'name'              => 'gociss_hero_image',
+					'key'               => 'field_gociss_hero_slide_1',
+					'label'             => 'Слайд 1',
+					'name'              => 'gociss_hero_slide_1',
 					'type'              => 'image',
-					'instructions'      => 'Загрузите изображение с сертификатами для Hero секции. Рекомендуемый размер: 600x400px',
+					'instructions'      => 'Рекомендуемый размер: 600x400px',
+					'return_format'     => 'array',
+					'preview_size'      => 'medium',
+					'library'           => 'all',
+				),
+				array(
+					'key'               => 'field_gociss_hero_slide_2',
+					'label'             => 'Слайд 2',
+					'name'              => 'gociss_hero_slide_2',
+					'type'              => 'image',
+					'instructions'      => 'Рекомендуемый размер: 600x400px',
+					'return_format'     => 'array',
+					'preview_size'      => 'medium',
+					'library'           => 'all',
+				),
+				array(
+					'key'               => 'field_gociss_hero_slide_3',
+					'label'             => 'Слайд 3',
+					'name'              => 'gociss_hero_slide_3',
+					'type'              => 'image',
+					'instructions'      => 'Рекомендуемый размер: 600x400px',
+					'return_format'     => 'array',
+					'preview_size'      => 'medium',
+					'library'           => 'all',
+				),
+				array(
+					'key'               => 'field_gociss_hero_slide_4',
+					'label'             => 'Слайд 4 (опционально)',
+					'name'              => 'gociss_hero_slide_4',
+					'type'              => 'image',
+					'instructions'      => 'Рекомендуемый размер: 600x400px',
+					'return_format'     => 'array',
+					'preview_size'      => 'medium',
+					'library'           => 'all',
+				),
+				array(
+					'key'               => 'field_gociss_hero_slide_5',
+					'label'             => 'Слайд 5 (опционально)',
+					'name'              => 'gociss_hero_slide_5',
+					'type'              => 'image',
+					'instructions'      => 'Рекомендуемый размер: 600x400px',
 					'return_format'     => 'array',
 					'preview_size'      => 'medium',
 					'library'           => 'all',
@@ -828,17 +869,118 @@ function gociss_register_acf_fields() {
 					'label'             => 'Баннер (фото на всю ширину)',
 					'name'              => 'gociss_service_banner',
 					'type'              => 'image',
-					'instructions'      => 'Большое фото для баннера сверху. Рекомендуемый размер: 1920x500px',
+					'instructions'      => 'Большое фото для баннера сверху. Рекомендуемый размер: 1920x700px',
 					'return_format'     => 'array',
 					'preview_size'      => 'large',
 				),
-				// Заголовок услуги
+				// Заголовок на баннере
+				array(
+					'key'               => 'field_gociss_service_hero_title',
+					'label'             => 'Заголовок на баннере',
+					'name'              => 'gociss_service_hero_title',
+					'type'              => 'textarea',
+					'rows'              => 3,
+					'instructions'      => 'Заголовок поверх баннера. Можно использовать &lt;br&gt; для переноса строки. Если не заполнено, используется название страницы.',
+				),
+				// Буллет 1
+				array(
+					'key'               => 'field_gociss_service_hero_bullet_1',
+					'label'             => 'Буллет 1',
+					'name'              => 'gociss_service_hero_bullet_1',
+					'type'              => 'text',
+					'default_value'     => 'Государственная аккредитация',
+				),
+				// Буллет 2
+				array(
+					'key'               => 'field_gociss_service_hero_bullet_2',
+					'label'             => 'Буллет 2',
+					'name'              => 'gociss_service_hero_bullet_2',
+					'type'              => 'text',
+					'default_value'     => 'Официальное оформление',
+				),
+				// Буллет 3
+				array(
+					'key'               => 'field_gociss_service_hero_bullet_3',
+					'label'             => 'Буллет 3',
+					'name'              => 'gociss_service_hero_bullet_3',
+					'type'              => 'text',
+					'default_value'     => 'Короткие сроки получения',
+				),
+				// Буллет 4
+				array(
+					'key'               => 'field_gociss_service_hero_bullet_4',
+					'label'             => 'Буллет 4',
+					'name'              => 'gociss_service_hero_bullet_4',
+					'type'              => 'text',
+					'default_value'     => 'Работаем по всей России',
+				),
+				// Буллет 5 (опционально)
+				array(
+					'key'               => 'field_gociss_service_hero_bullet_5',
+					'label'             => 'Буллет 5 (опционально)',
+					'name'              => 'gociss_service_hero_bullet_5',
+					'type'              => 'text',
+				),
+				// Буллет 6 (опционально)
+				array(
+					'key'               => 'field_gociss_service_hero_bullet_6',
+					'label'             => 'Буллет 6 (опционально)',
+					'name'              => 'gociss_service_hero_bullet_6',
+					'type'              => 'text',
+				),
+				// Основная кнопка
+				array(
+					'key'               => 'field_gociss_service_hero_btn_primary',
+					'label'             => 'Основная кнопка (залитая)',
+					'name'              => 'gociss_service_hero_btn_primary',
+					'type'              => 'group',
+					'sub_fields'        => array(
+						array(
+							'key'   => 'field_gociss_service_hero_btn_primary_text',
+							'label' => 'Текст',
+							'name'  => 'text',
+							'type'  => 'text',
+							'default_value' => 'Обратный звонок',
+						),
+						array(
+							'key'   => 'field_gociss_service_hero_btn_primary_url',
+							'label' => 'Ссылка',
+							'name'  => 'url',
+							'type'  => 'text',
+							'default_value' => '#form',
+						),
+					),
+				),
+				// Вторичная кнопка
+				array(
+					'key'               => 'field_gociss_service_hero_btn_secondary',
+					'label'             => 'Вторичная кнопка (с рамкой)',
+					'name'              => 'gociss_service_hero_btn_secondary',
+					'type'              => 'group',
+					'sub_fields'        => array(
+						array(
+							'key'   => 'field_gociss_service_hero_btn_secondary_text',
+							'label' => 'Текст',
+							'name'  => 'text',
+							'type'  => 'text',
+							'default_value' => 'Рассчитать стоимость',
+						),
+						array(
+							'key'   => 'field_gociss_service_hero_btn_secondary_url',
+							'label' => 'Ссылка',
+							'name'  => 'url',
+							'type'  => 'text',
+							'default_value' => '#pricing',
+						),
+					),
+				),
+				// Заголовок услуги (для секции описания ниже)
 				array(
 					'key'               => 'field_gociss_service_title',
-					'label'             => 'Заголовок услуги',
+					'label'             => 'Заголовок секции описания',
 					'name'              => 'gociss_service_title',
 					'type'              => 'text',
-					'instructions'      => 'Если не заполнено, используется название страницы',
+					'instructions'      => 'Заголовок для секции описания под баннером. Если не заполнено, используется название страницы',
 				),
 				// Описание услуги (несколько абзацев)
 				array(
@@ -2394,6 +2536,302 @@ function gociss_validate_action_url( $valid, $value, $field, $input ) {
 	return $valid;
 }
 add_filter( 'acf/validate_value/name=url', 'gociss_validate_action_url', 10, 4 );
+
+/**
+ * Регистрация ACF полей для типа записей "Услуги"
+ */
+function gociss_register_service_acf_fields() {
+	if ( ! function_exists( 'acf_add_local_field_group' ) ) {
+		return;
+	}
+
+	// Основные поля услуги
+	acf_add_local_field_group(
+		array(
+			'key'                   => 'group_gociss_service_main',
+			'title'                 => 'Данные услуги',
+			'fields'                => array(
+				array(
+					'key'               => 'field_gociss_service_icon',
+					'label'             => 'Иконка услуги',
+					'name'              => 'gociss_service_icon',
+					'type'              => 'image',
+					'instructions'      => 'SVG или PNG иконка для отображения в архиве услуг. Рекомендуемый размер: 64x64px',
+					'return_format'     => 'array',
+					'preview_size'      => 'thumbnail',
+					'library'           => 'all',
+					'mime_types'        => 'svg,png',
+				),
+				array(
+					'key'               => 'field_gociss_service_short_desc',
+					'label'             => 'Краткое описание',
+					'name'              => 'gociss_service_short_desc',
+					'type'              => 'textarea',
+					'instructions'      => 'Краткое описание для карточки услуги в архиве (2-3 предложения)',
+					'rows'              => 3,
+				),
+				array(
+					'key'               => 'field_gociss_service_hero_image',
+					'label'             => 'Изображение для hero-секции',
+					'name'              => 'gociss_service_hero_image',
+					'type'              => 'image',
+					'instructions'      => 'Изображение для отображения на странице услуги',
+					'return_format'     => 'array',
+					'preview_size'      => 'medium',
+					'library'           => 'all',
+				),
+				array(
+					'key'               => 'field_gociss_service_hero_subtitle',
+					'label'             => 'Подзаголовок hero-секции',
+					'name'              => 'gociss_service_hero_subtitle',
+					'type'              => 'text',
+					'instructions'      => 'Например: "Комплексная поддержка на всех этапах"',
+				),
+			),
+			'location'              => array(
+				array(
+					array(
+						'param'    => 'post_type',
+						'operator' => '==',
+						'value'    => 'gociss_service',
+					),
+				),
+			),
+			'menu_order'            => 0,
+			'position'              => 'normal',
+			'style'                 => 'default',
+		)
+	);
+
+	// Секция аккредитации для услуг
+	acf_add_local_field_group(
+		array(
+			'key'                   => 'group_gociss_service_accreditation',
+			'title'                 => 'Секция "Аккредитация"',
+			'fields'                => array(
+				array(
+					'key'               => 'field_gociss_accreditation_show',
+					'label'             => 'Показать секцию аккредитации',
+					'name'              => 'gociss_accreditation_show',
+					'type'              => 'true_false',
+					'instructions'      => 'Включите, чтобы отобразить секцию аккредитации на странице услуги',
+					'default_value'     => 0,
+					'ui'                => 1,
+				),
+				array(
+					'key'               => 'field_gociss_accreditation_title',
+					'label'             => 'Заголовок секции',
+					'name'              => 'gociss_accreditation_title',
+					'type'              => 'text',
+					'default_value'     => 'Аккредитация',
+					'conditional_logic' => array(
+						array(
+							array(
+								'field'    => 'field_gociss_accreditation_show',
+								'operator' => '==',
+								'value'    => '1',
+							),
+						),
+					),
+				),
+				array(
+					'key'               => 'field_gociss_accreditation_info_blocks',
+					'label'             => 'Информационные блоки',
+					'name'              => 'gociss_accreditation_info_blocks',
+					'type'              => 'repeater',
+					'instructions'      => '4 информационных блока с заголовком и описанием',
+					'layout'            => 'block',
+					'min'               => 0,
+					'max'               => 4,
+					'sub_fields'        => array(
+						array(
+							'key'   => 'field_gociss_accreditation_info_title',
+							'label' => 'Заголовок блока',
+							'name'  => 'title',
+							'type'  => 'text',
+						),
+						array(
+							'key'   => 'field_gociss_accreditation_info_desc',
+							'label' => 'Описание',
+							'name'  => 'description',
+							'type'  => 'textarea',
+							'rows'  => 3,
+						),
+					),
+					'conditional_logic' => array(
+						array(
+							array(
+								'field'    => 'field_gociss_accreditation_show',
+								'operator' => '==',
+								'value'    => '1',
+							),
+						),
+					),
+				),
+				array(
+					'key'               => 'field_gociss_accreditation_cert_image',
+					'label'             => 'Изображение сертификата',
+					'name'              => 'gociss_accreditation_cert_image',
+					'type'              => 'image',
+					'instructions'      => 'Изображение аттестата аккредитации',
+					'return_format'     => 'array',
+					'preview_size'      => 'medium',
+					'library'           => 'all',
+					'conditional_logic' => array(
+						array(
+							array(
+								'field'    => 'field_gociss_accreditation_show',
+								'operator' => '==',
+								'value'    => '1',
+							),
+						),
+					),
+				),
+				array(
+					'key'               => 'field_gociss_accreditation_text',
+					'label'             => 'Текст описания аккредитации',
+					'name'              => 'gociss_accreditation_text',
+					'type'              => 'wysiwyg',
+					'instructions'      => 'Текст с информацией об аккредитации (номер аттестата, дата и т.д.)',
+					'toolbar'           => 'basic',
+					'media_upload'      => 0,
+					'conditional_logic' => array(
+						array(
+							array(
+								'field'    => 'field_gociss_accreditation_show',
+								'operator' => '==',
+								'value'    => '1',
+							),
+						),
+					),
+				),
+				array(
+					'key'               => 'field_gociss_accreditation_button_text',
+					'label'             => 'Текст кнопки',
+					'name'              => 'gociss_accreditation_button_text',
+					'type'              => 'text',
+					'default_value'     => 'Заказать звонок',
+					'conditional_logic' => array(
+						array(
+							array(
+								'field'    => 'field_gociss_accreditation_show',
+								'operator' => '==',
+								'value'    => '1',
+							),
+						),
+					),
+				),
+			),
+			'location'              => array(
+				array(
+					array(
+						'param'    => 'post_type',
+						'operator' => '==',
+						'value'    => 'gociss_service',
+					),
+				),
+			),
+			'menu_order'            => 1,
+			'position'              => 'normal',
+			'style'                 => 'default',
+		)
+	);
+
+	// FAQ для услуги (отдельно от главной страницы)
+	acf_add_local_field_group(
+		array(
+			'key'                   => 'group_gociss_service_faq_new',
+			'title'                 => 'FAQ услуги',
+			'fields'                => array(
+				array(
+					'key'               => 'field_gociss_service_faq_title_new',
+					'label'             => 'Заголовок',
+					'name'              => 'gociss_service_faq_title',
+					'type'              => 'text',
+					'default_value'     => 'Часто задаваемые вопросы',
+				),
+				array(
+					'key'               => 'field_gociss_service_faq_subtitle_new',
+					'label'             => 'Подзаголовок',
+					'name'              => 'gociss_service_faq_subtitle',
+					'type'              => 'textarea',
+				),
+				array(
+					'key'               => 'field_gociss_service_faq_items_new',
+					'label'             => 'Вопросы',
+					'name'              => 'gociss_service_faq_items',
+					'type'              => 'repeater',
+					'layout'            => 'block',
+					'sub_fields'        => array(
+						array(
+							'key'   => 'field_gociss_service_faq_question_new',
+							'label' => 'Вопрос',
+							'name'  => 'question',
+							'type'  => 'text',
+						),
+						array(
+							'key'   => 'field_gociss_service_faq_answer_new',
+							'label' => 'Ответ',
+							'name'  => 'answer',
+							'type'  => 'wysiwyg',
+							'toolbar' => 'basic',
+							'media_upload' => 0,
+						),
+					),
+				),
+			),
+			'location'              => array(
+				array(
+					array(
+						'param'    => 'post_type',
+						'operator' => '==',
+						'value'    => 'gociss_service',
+					),
+				),
+			),
+			'menu_order'            => 2,
+		)
+	);
+
+	// ACF поля для категорий услуг
+	acf_add_local_field_group(
+		array(
+			'key'                   => 'group_gociss_service_cat',
+			'title'                 => 'Настройки категории',
+			'fields'                => array(
+				array(
+					'key'               => 'field_gociss_service_cat_icon',
+					'label'             => 'Иконка категории',
+					'name'              => 'gociss_service_cat_icon',
+					'type'              => 'image',
+					'instructions'      => 'SVG или PNG иконка для отображения в архиве. Рекомендуемый размер: 64x64px',
+					'return_format'     => 'array',
+					'preview_size'      => 'thumbnail',
+					'library'           => 'all',
+					'mime_types'        => 'svg,png',
+				),
+				array(
+					'key'               => 'field_gociss_service_cat_desc',
+					'label'             => 'Описание категории',
+					'name'              => 'gociss_service_cat_desc',
+					'type'              => 'textarea',
+					'instructions'      => 'Краткое описание для карточки категории',
+					'rows'              => 3,
+				),
+			),
+			'location'              => array(
+				array(
+					array(
+						'param'    => 'taxonomy',
+						'operator' => '==',
+						'value'    => 'gociss_service_cat',
+					),
+				),
+			),
+		)
+	);
+}
+add_action( 'acf/init', 'gociss_register_service_acf_fields' );
 
 /**
  * Регистрация страницы настроек ACF

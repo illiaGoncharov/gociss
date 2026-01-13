@@ -11,11 +11,12 @@
     document.addEventListener('DOMContentLoaded', function() {
         initFAQ();
         initForm();
+        initHeroSlider();
         initExpertsSlider();
         initNewsSlider();
         initSearch();
         initMobileMenu();
-        initInteractiveMap();
+        // initInteractiveMap(); // Карта теперь статичная PNG
         // initServicesMenu(); // Услуги теперь в мобильном меню
     });
 
@@ -120,6 +121,108 @@
                 console.error('Form submission error:', error);
             });
         });
+    }
+
+    /**
+     * Инициализация слайдера Hero-секции
+     * Автоматическая смена изображений с fade-эффектом
+     */
+    function initHeroSlider() {
+        const slider = document.querySelector('.hero__slider');
+
+        if (!slider) {
+            return;
+        }
+
+        const slides = slider.querySelectorAll('.hero__slide');
+        const dots = slider.querySelectorAll('.hero__dot');
+        const prevBtn = slider.querySelector('.hero__nav--prev');
+        const nextBtn = slider.querySelector('.hero__nav--next');
+
+        // Если только один слайд — слайдер не нужен
+        if (slides.length <= 1) {
+            return;
+        }
+
+        let currentIndex = 0;
+        let intervalId = null;
+        const autoplayDelay = 4500; // 4.5 секунды между слайдами
+
+        // Переключение на конкретный слайд
+        function goToSlide(index) {
+            // Убираем активный класс у всех
+            slides.forEach(function(slide) {
+                slide.classList.remove('is-active');
+            });
+            dots.forEach(function(dot) {
+                dot.classList.remove('is-active');
+            });
+
+            // Добавляем активный класс нужному слайду
+            currentIndex = index;
+            slides[currentIndex].classList.add('is-active');
+            dots[currentIndex].classList.add('is-active');
+        }
+
+        // Следующий слайд
+        function nextSlide() {
+            const nextIndex = (currentIndex + 1) % slides.length;
+            goToSlide(nextIndex);
+        }
+
+        // Предыдущий слайд
+        function prevSlide() {
+            const prevIndex = (currentIndex - 1 + slides.length) % slides.length;
+            goToSlide(prevIndex);
+        }
+
+        // Запуск автопрокрутки
+        function startAutoplay() {
+            if (intervalId) {
+                clearInterval(intervalId);
+            }
+            intervalId = setInterval(nextSlide, autoplayDelay);
+        }
+
+        // Остановка автопрокрутки
+        function stopAutoplay() {
+            if (intervalId) {
+                clearInterval(intervalId);
+                intervalId = null;
+            }
+        }
+
+        // Клик по точкам
+        dots.forEach(function(dot) {
+            dot.addEventListener('click', function() {
+                const slideIndex = parseInt(dot.getAttribute('data-slide'), 10);
+                goToSlide(slideIndex);
+                // Перезапускаем таймер после ручного переключения
+                startAutoplay();
+            });
+        });
+
+        // Клик по кнопкам навигации
+        if (prevBtn) {
+            prevBtn.addEventListener('click', function() {
+                prevSlide();
+                startAutoplay(); // Перезапускаем таймер
+            });
+        }
+
+        if (nextBtn) {
+            nextBtn.addEventListener('click', function() {
+                nextSlide();
+                startAutoplay(); // Перезапускаем таймер
+            });
+        }
+
+        // Пауза при наведении на слайдер
+        slider.addEventListener('mouseenter', stopAutoplay);
+        slider.addEventListener('mouseleave', startAutoplay);
+
+        // Запускаем автопрокрутку
+        startAutoplay();
     }
 
     /**
@@ -408,99 +511,44 @@
     }
 
     /**
-     * Инициализация интерактивной карты России
+     * Инициализация SVG карты России
      */
     function initInteractiveMap() {
-        const mapContainer = document.getElementById('interactiveMap');
-        const mapImage = document.getElementById('interactiveMapImage');
-        const tooltip = document.getElementById('mapTooltip');
-        const map = document.getElementById('russiaMap');
+        const mapContainer = document.querySelector('.russia-map');
+        const tooltip = document.getElementById('russiaMapTooltip');
 
-        if (!mapContainer || !mapImage || !map) {
+        if (!mapContainer || !tooltip) {
             return;
         }
 
-        const areas = map.querySelectorAll('area');
+        const regions = mapContainer.querySelectorAll('.russia-map__region');
 
-        if (!areas.length) {
+        if (!regions.length) {
             return;
         }
 
         // Обработка наведения на регион
-        areas.forEach(function(area) {
-            area.addEventListener('mouseenter', function(e) {
-                const offset = area.getAttribute('data-offset');
-                const regionName = area.getAttribute('alt') || area.getAttribute('title');
-
-                // Изменяем позицию фона для подсветки региона
-                if (offset) {
-                    mapImage.style.backgroundPosition = '0px ' + offset;
-                }
-
-                // Показываем тултип
-                if (tooltip && regionName) {
+        regions.forEach(function(region) {
+            region.addEventListener('mouseenter', function() {
+                const regionName = region.getAttribute('data-name');
+                if (regionName) {
                     tooltip.textContent = regionName;
                     tooltip.classList.add('is-visible');
                 }
             });
 
-            area.addEventListener('mouseleave', function() {
-                // Возвращаем исходную позицию фона
-                mapImage.style.backgroundPosition = '0px 0px';
-
-                // Скрываем тултип
-                if (tooltip) {
-                    tooltip.classList.remove('is-visible');
-                }
+            region.addEventListener('mouseleave', function() {
+                tooltip.classList.remove('is-visible');
             });
 
-            area.addEventListener('mousemove', function(e) {
-                if (tooltip) {
-                    const containerRect = mapContainer.getBoundingClientRect();
-                    const x = e.clientX - containerRect.left;
-                    const y = e.clientY - containerRect.top;
+            region.addEventListener('mousemove', function(e) {
+                const containerRect = mapContainer.getBoundingClientRect();
+                const x = e.clientX - containerRect.left;
+                const y = e.clientY - containerRect.top;
 
-                    tooltip.style.left = x + 'px';
-                    tooltip.style.top = y + 'px';
-                }
+                tooltip.style.left = x + 'px';
+                tooltip.style.top = y + 'px';
             });
-        });
-
-        // Масштабирование координат карты при изменении размера окна
-        function scaleMapCoords() {
-            const originalWidth = 528; // Исходная ширина карты
-            const currentWidth = mapImage.offsetWidth;
-            const scale = currentWidth / originalWidth;
-
-            areas.forEach(function(area) {
-                const originalCoords = area.getAttribute('data-original-coords');
-
-                // Сохраняем исходные координаты при первом вызове
-                if (!originalCoords) {
-                    area.setAttribute('data-original-coords', area.getAttribute('coords'));
-                }
-
-                const coords = (originalCoords || area.getAttribute('coords')).split(',');
-                const scaledCoords = coords.map(function(coord) {
-                    return Math.round(parseInt(coord, 10) * scale);
-                });
-
-                area.setAttribute('coords', scaledCoords.join(','));
-            });
-        }
-
-        // Масштабируем координаты при загрузке
-        if (mapImage.complete) {
-            scaleMapCoords();
-        } else {
-            mapImage.addEventListener('load', scaleMapCoords);
-        }
-
-        // Масштабируем при изменении размера окна
-        let resizeTimeout;
-        window.addEventListener('resize', function() {
-            clearTimeout(resizeTimeout);
-            resizeTimeout = setTimeout(scaleMapCoords, 100);
         });
     }
 

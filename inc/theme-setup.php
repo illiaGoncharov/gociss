@@ -36,8 +36,10 @@ function gociss_theme_setup() {
 	// Кастомные размеры изображений
 	add_image_size( 'gociss-hero', 1200, 600, true );
 	add_image_size( 'gociss-service', 400, 300, true );
-	add_image_size( 'gociss-expert', 300, 300, true );
+	add_image_size( 'gociss-expert', 230, 300, true ); // Изменено с 300x300 на 230x300
 	add_image_size( 'gociss-news', 600, 400, true );
+	add_image_size( 'gociss-service-icon', 64, 64, true ); // Иконки услуг в архиве
+	add_image_size( 'gociss-accreditation-cert', 400, 550, false ); // Сертификат аккредитации
 
 	// Регистрация меню
 	register_nav_menus(
@@ -179,4 +181,102 @@ function gociss_fix_uploads_permissions() {
 	}
 }
 add_action( 'admin_init', 'gociss_fix_uploads_permissions' );
+
+/**
+ * Получить хлебные крошки для услуги
+ *
+ * @param int|null $post_id ID поста (опционально, по умолчанию текущий пост).
+ * @return array Массив элементов breadcrumbs с ключами 'title', 'url', 'current'.
+ */
+function gociss_get_service_breadcrumbs( $post_id = null ) {
+	if ( ! $post_id ) {
+		$post_id = get_the_ID();
+	}
+
+	$breadcrumbs = array();
+
+	// Главная
+	$breadcrumbs[] = array(
+		'title'   => __( 'Главная', 'gociss' ),
+		'url'     => home_url( '/' ),
+		'current' => false,
+	);
+
+	// Услуги (архив)
+	$breadcrumbs[] = array(
+		'title'   => __( 'Услуги', 'gociss' ),
+		'url'     => get_post_type_archive_link( 'gociss_service' ),
+		'current' => false,
+	);
+
+	// Получаем категории услуги
+	$service_terms = get_the_terms( $post_id, 'gociss_service_cat' );
+
+	if ( $service_terms && ! is_wp_error( $service_terms ) ) {
+		$primary_term = $service_terms[0];
+
+		// Проверяем, есть ли родительская категория
+		if ( $primary_term->parent > 0 ) {
+			$parent_term = get_term( $primary_term->parent, 'gociss_service_cat' );
+			if ( $parent_term && ! is_wp_error( $parent_term ) ) {
+				$breadcrumbs[] = array(
+					'title'   => $parent_term->name,
+					'url'     => get_term_link( $parent_term ),
+					'current' => false,
+				);
+			}
+		}
+
+		// Текущая категория
+		$breadcrumbs[] = array(
+			'title'   => $primary_term->name,
+			'url'     => get_term_link( $primary_term ),
+			'current' => false,
+		);
+	}
+
+	// Текущая услуга
+	$breadcrumbs[] = array(
+		'title'   => get_the_title( $post_id ),
+		'url'     => '',
+		'current' => true,
+	);
+
+	return $breadcrumbs;
+}
+
+/**
+ * Вывести хлебные крошки HTML
+ *
+ * @param array $breadcrumbs Массив элементов breadcrumbs.
+ * @param string $separator Разделитель между элементами.
+ */
+function gociss_render_breadcrumbs( $breadcrumbs, $separator = '/' ) {
+	if ( empty( $breadcrumbs ) ) {
+		return;
+	}
+	?>
+	<nav class="breadcrumbs" aria-label="<?php esc_attr_e( 'Хлебные крошки', 'gociss' ); ?>">
+		<?php
+		$total = count( $breadcrumbs );
+		$i     = 0;
+		foreach ( $breadcrumbs as $item ) :
+			$i++;
+			if ( $item['current'] ) :
+				?>
+				<span class="breadcrumbs__current"><?php echo esc_html( $item['title'] ); ?></span>
+				<?php
+			else :
+				?>
+				<a href="<?php echo esc_url( $item['url'] ); ?>"><?php echo esc_html( $item['title'] ); ?></a>
+				<?php if ( $i < $total ) : ?>
+					<span class="breadcrumbs__separator"><?php echo esc_html( $separator ); ?></span>
+				<?php endif; ?>
+				<?php
+			endif;
+		endforeach;
+		?>
+	</nav>
+	<?php
+}
 
