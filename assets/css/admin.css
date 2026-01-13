@@ -1,0 +1,83 @@
+/**
+ * Стили для админки — toggle-модули ACF полей
+ */
+
+.gociss-toggle-group {
+	border: 1px solid #c3c4c7;
+	border-radius: 4px;
+	margin-bottom: 12px;
+	background: #fff;
+	overflow: hidden;
+}
+
+.gociss-toggle-header {
+	background: #f6f7f7;
+	padding: 12px 15px;
+	cursor: pointer;
+	user-select: none;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	border-bottom: 1px solid transparent;
+}
+
+.gociss-toggle-header:hover {
+	background: #f0f0f1;
+}
+
+.gociss-toggle-group.is-open .gociss-toggle-header {
+	background: #2271b1;
+	color: #fff;
+	border-bottom-color: #1e6198;
+}
+
+.gociss-toggle-header .toggle-title {
+	font-weight: 600;
+	font-size: 13px;
+}
+
+.gociss-toggle-header .toggle-status {
+	font-size: 12px;
+	opacity: 0.7;
+	margin-left: 10px;
+	font-weight: 400;
+}
+
+.gociss-toggle-group.is-open .gociss-toggle-header .toggle-status {
+	opacity: 0.85;
+}
+
+.gociss-toggle-header .toggle-arrow {
+	font-size: 16px;
+	transition: transform 0.2s ease;
+	line-height: 1;
+}
+
+.gociss-toggle-group.is-open .gociss-toggle-header .toggle-arrow {
+	transform: rotate(180deg);
+}
+
+.gociss-toggle-content {
+	display: none;
+	padding: 15px;
+	background: #fff;
+}
+
+.gociss-toggle-group.is-open .gociss-toggle-content {
+	display: block;
+}
+
+.gociss-toggle-content .acf-field {
+	padding: 12px 0 !important;
+	border-top: 1px solid #f0f0f1 !important;
+}
+
+.gociss-toggle-content .acf-field:first-child {
+	border-top: none !important;
+	padding-top: 0 !important;
+}
+
+.gociss-toggle-content .acf-field:last-child {
+	padding-bottom: 0 !important;
+}
+

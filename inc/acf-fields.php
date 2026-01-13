@@ -157,27 +157,7 @@ function gociss_register_acf_fields() {
 						),
 					),
 				),
-				array(
-					'key'               => 'field_gociss_hero_stats',
-					'label'             => 'Статистика',
-					'name'              => 'gociss_hero_stats',
-					'type'              => 'repeater',
-					'layout'            => 'table',
-					'sub_fields'        => array(
-						array(
-							'key'   => 'field_gociss_hero_stats_number',
-							'label' => 'Число',
-							'name'  => 'number',
-							'type'  => 'text',
-						),
-						array(
-							'key'   => 'field_gociss_hero_stats_label',
-							'label' => 'Подпись',
-							'name'  => 'label',
-							'type'  => 'text',
-						),
-					),
-				),
+				// Статистика hero скрыта, репитер удалён
 			),
 			'location'              => array(
 				array(
@@ -191,60 +171,69 @@ function gociss_register_acf_fields() {
 		)
 	);
 
-	// Группа полей для секции Услуги
+	// Услуги теперь управляются через CPT gociss_service
+	// См. Админка → Услуги
+
+	// Группа полей "Секция Услуги" - 8 фиксированных услуг
+	$services_fields = array(
+		array(
+			'key'           => 'field_gociss_services_title_fixed',
+			'label'         => 'Заголовок секции',
+			'name'          => 'gociss_services_title',
+			'type'          => 'text',
+			'default_value' => 'Ключевые направления',
+		),
+		array(
+			'key'           => 'field_gociss_services_subtitle_fixed',
+			'label'         => 'Подзаголовок секции',
+			'name'          => 'gociss_services_subtitle',
+			'type'          => 'textarea',
+			'rows'          => 2,
+		),
+	);
+
+	// Генерируем 8 услуг
+	for ( $i = 1; $i <= 8; $i++ ) {
+		$services_fields[] = array(
+			'key'          => 'field_gociss_service_' . $i . '_title',
+			'label'        => '▼ Услуга ' . $i . ' (клик чтобы открыть)',
+			'name'         => 'gociss_service_' . $i . '_title',
+			'type'         => 'text',
+			'instructions' => 'Заполните заголовок, чтобы услуга отображалась',
+			'wrapper'      => array( 'class' => 'gociss-collapsible-header' ),
+		);
+		$services_fields[] = array(
+			'key'           => 'field_gociss_service_' . $i . '_icon',
+			'label'         => 'Иконка',
+			'name'          => 'gociss_service_' . $i . '_icon',
+			'type'          => 'image',
+			'return_format' => 'array',
+			'preview_size'  => 'thumbnail',
+			'wrapper'       => array( 'class' => 'gociss-collapsible-content' ),
+		);
+		$services_fields[] = array(
+			'key'     => 'field_gociss_service_' . $i . '_desc',
+			'label'   => 'Описание',
+			'name'    => 'gociss_service_' . $i . '_desc',
+			'type'    => 'textarea',
+			'rows'    => 2,
+			'wrapper' => array( 'class' => 'gociss-collapsible-content' ),
+		);
+		$services_fields[] = array(
+			'key'     => 'field_gociss_service_' . $i . '_link',
+			'label'   => 'Ссылка',
+			'name'    => 'gociss_service_' . $i . '_link',
+			'type'    => 'url',
+			'wrapper' => array( 'class' => 'gociss-collapsible-content gociss-collapsible-last' ),
+		);
+	}
+
 	acf_add_local_field_group(
 		array(
-			'key'                   => 'group_gociss_services',
-			'title'                 => 'Секция Услуги',
-			'fields'                => array(
-				array(
-					'key'               => 'field_gociss_services_title',
-					'label'             => 'Заголовок',
-					'name'              => 'gociss_services_title',
-					'type'              => 'text',
-					'default_value'     => 'Ключевые направления',
-				),
-				array(
-					'key'               => 'field_gociss_services_subtitle',
-					'label'             => 'Подзаголовок',
-					'name'              => 'gociss_services_subtitle',
-					'type'              => 'textarea',
-				),
-				array(
-					'key'               => 'field_gociss_services_items',
-					'label'             => 'Услуги',
-					'name'              => 'gociss_services_items',
-					'type'              => 'repeater',
-					'layout'            => 'block',
-					'sub_fields'        => array(
-						array(
-							'key'   => 'field_gociss_services_icon',
-							'label' => 'Иконка',
-							'name'  => 'icon',
-							'type'  => 'image',
-						),
-						array(
-							'key'   => 'field_gociss_services_title',
-							'label' => 'Заголовок',
-							'name'  => 'title',
-							'type'  => 'text',
-						),
-						array(
-							'key'   => 'field_gociss_services_description',
-							'label' => 'Описание',
-							'name'  => 'description',
-							'type'  => 'textarea',
-						),
-						array(
-							'key'   => 'field_gociss_services_link',
-							'label' => 'Ссылка',
-							'name'  => 'link',
-							'type'  => 'url',
-						),
-					),
-				),
-			),
-			'location'              => array(
+			'key'        => 'group_gociss_services_fixed',
+			'title'      => 'Секция Услуги (8 шт)',
+			'fields'     => $services_fields,
+			'location'   => array(
 				array(
 					array(
 						'param'    => 'page_template',
@@ -253,48 +242,156 @@ function gociss_register_acf_fields() {
 					),
 				),
 			),
+			'menu_order' => 2,
 		)
 	);
 
-	// Группа полей для секции Преимущества
+	// Группа полей "Секция Преимущества" - 6 фиксированных преимуществ
 	acf_add_local_field_group(
 		array(
-			'key'                   => 'group_gociss_advantages',
+			'key'                   => 'group_gociss_advantages_fixed',
 			'title'                 => 'Секция Преимущества',
 			'fields'                => array(
 				array(
-					'key'               => 'field_gociss_advantages_title',
-					'label'             => 'Заголовок',
-					'name'              => 'gociss_advantages_title',
-					'type'              => 'text',
-					'default_value'     => 'Наши конкурентные преимущества',
+					'key'           => 'field_gociss_advantages_title_fixed',
+					'label'         => 'Заголовок секции',
+					'name'          => 'gociss_advantages_title',
+					'type'          => 'text',
+					'default_value' => 'Наши конкурентные преимущества',
 				),
 				array(
-					'key'               => 'field_gociss_advantages_subtitle',
-					'label'             => 'Подзаголовок',
-					'name'              => 'gociss_advantages_subtitle',
-					'type'              => 'textarea',
+					'key'           => 'field_gociss_advantages_subtitle_fixed',
+					'label'         => 'Подзаголовок секции',
+					'name'          => 'gociss_advantages_subtitle',
+					'type'          => 'textarea',
 				),
+				// Преимущество 1
 				array(
-					'key'               => 'field_gociss_advantages_items',
-					'label'             => 'Преимущества',
-					'name'              => 'gociss_advantages_items',
-					'type'              => 'repeater',
-					'layout'            => 'block',
-					'sub_fields'        => array(
+					'key'   => 'field_gociss_advantage_1_icon',
+					'label' => 'Преимущество 1: Иконка',
+					'name'  => 'gociss_advantage_1_icon',
+					'type'  => 'image',
+					'return_format' => 'array',
+					'preview_size'  => 'thumbnail',
+				),
 						array(
-							'key'   => 'field_gociss_advantages_icon',
-							'label' => 'Иконка',
-							'name'  => 'icon',
+					'key'   => 'field_gociss_advantage_1_text',
+					'label' => 'Преимущество 1: Текст',
+					'name'  => 'gociss_advantage_1_text',
+					'type'  => 'textarea',
+					'rows'  => 2,
+				),
+				// Преимущество 2
+				array(
+					'key'   => 'field_gociss_advantage_2_icon',
+					'label' => 'Преимущество 2: Иконка',
+					'name'  => 'gociss_advantage_2_icon',
 							'type'  => 'image',
+					'return_format' => 'array',
+					'preview_size'  => 'thumbnail',
 						),
 						array(
-							'key'   => 'field_gociss_advantages_text',
-							'label' => 'Текст',
-							'name'  => 'text',
+					'key'   => 'field_gociss_advantage_2_text',
+					'label' => 'Преимущество 2: Текст',
+					'name'  => 'gociss_advantage_2_text',
 							'type'  => 'textarea',
-						),
-					),
+					'rows'  => 2,
+				),
+				// Преимущество 3
+				array(
+					'key'   => 'field_gociss_advantage_3_icon',
+					'label' => 'Преимущество 3: Иконка',
+					'name'  => 'gociss_advantage_3_icon',
+					'type'  => 'image',
+					'return_format' => 'array',
+					'preview_size'  => 'thumbnail',
+				),
+				array(
+					'key'   => 'field_gociss_advantage_3_text',
+					'label' => 'Преимущество 3: Текст',
+					'name'  => 'gociss_advantage_3_text',
+					'type'  => 'textarea',
+					'rows'  => 2,
+				),
+				// Преимущество 4
+				array(
+					'key'   => 'field_gociss_advantage_4_icon',
+					'label' => 'Преимущество 4: Иконка',
+					'name'  => 'gociss_advantage_4_icon',
+					'type'  => 'image',
+					'return_format' => 'array',
+					'preview_size'  => 'thumbnail',
+				),
+				array(
+					'key'   => 'field_gociss_advantage_4_text',
+					'label' => 'Преимущество 4: Текст',
+					'name'  => 'gociss_advantage_4_text',
+					'type'  => 'textarea',
+					'rows'  => 2,
+				),
+				// Преимущество 5
+				array(
+					'key'   => 'field_gociss_advantage_5_icon',
+					'label' => 'Преимущество 5: Иконка',
+					'name'  => 'gociss_advantage_5_icon',
+					'type'  => 'image',
+					'return_format' => 'array',
+					'preview_size'  => 'thumbnail',
+				),
+				array(
+					'key'   => 'field_gociss_advantage_5_text',
+					'label' => 'Преимущество 5: Текст',
+					'name'  => 'gociss_advantage_5_text',
+					'type'  => 'textarea',
+					'rows'  => 2,
+				),
+				// Преимущество 6
+				array(
+					'key'   => 'field_gociss_advantage_6_icon',
+					'label' => 'Преимущество 6: Иконка',
+					'name'  => 'gociss_advantage_6_icon',
+					'type'  => 'image',
+					'return_format' => 'array',
+					'preview_size'  => 'thumbnail',
+				),
+				array(
+					'key'   => 'field_gociss_advantage_6_text',
+					'label' => 'Преимущество 6: Текст',
+					'name'  => 'gociss_advantage_6_text',
+					'type'  => 'textarea',
+					'rows'  => 2,
+				),
+				// Преимущество 7
+				array(
+					'key'   => 'field_gociss_advantage_7_icon',
+					'label' => 'Преимущество 7: Иконка',
+					'name'  => 'gociss_advantage_7_icon',
+					'type'  => 'image',
+					'return_format' => 'array',
+					'preview_size'  => 'thumbnail',
+				),
+				array(
+					'key'   => 'field_gociss_advantage_7_text',
+					'label' => 'Преимущество 7: Текст',
+					'name'  => 'gociss_advantage_7_text',
+					'type'  => 'textarea',
+					'rows'  => 2,
+				),
+				// Преимущество 8
+				array(
+					'key'   => 'field_gociss_advantage_8_icon',
+					'label' => 'Преимущество 8: Иконка',
+					'name'  => 'gociss_advantage_8_icon',
+					'type'  => 'image',
+					'return_format' => 'array',
+					'preview_size'  => 'thumbnail',
+				),
+				array(
+					'key'   => 'field_gociss_advantage_8_text',
+					'label' => 'Преимущество 8: Текст',
+					'name'  => 'gociss_advantage_8_text',
+					'type'  => 'textarea',
+					'rows'  => 2,
 				),
 			),
 			'location'              => array(
@@ -306,66 +403,252 @@ function gociss_register_acf_fields() {
 					),
 				),
 			),
+			'menu_order'            => 3,
 		)
 	);
 
-	// Группа полей для секции Эксперты
+	// Группа полей "Секция Эксперты" - 5 фиксированных экспертов
 	acf_add_local_field_group(
 		array(
-			'key'                   => 'group_gociss_experts',
+			'key'                   => 'group_gociss_experts_fixed',
 			'title'                 => 'Секция Эксперты',
 			'fields'                => array(
 				array(
-					'key'               => 'field_gociss_experts_title',
-					'label'             => 'Заголовок',
-					'name'              => 'gociss_experts_title',
-					'type'              => 'text',
-					'default_value'     => 'Наши ведущие эксперты',
+					'key'           => 'field_gociss_experts_title_fixed',
+					'label'         => 'Заголовок секции',
+					'name'          => 'gociss_experts_title',
+					'type'          => 'text',
+					'default_value' => 'Наши ведущие эксперты',
 				),
 				array(
-					'key'               => 'field_gociss_experts_subtitle',
-					'label'             => 'Подзаголовок',
-					'name'              => 'gociss_experts_subtitle',
-					'type'              => 'textarea',
-					'default_value'     => 'Команда профессионалов с международной аккредитацией и многолетним опытом',
+					'key'           => 'field_gociss_experts_subtitle_fixed',
+					'label'         => 'Подзаголовок секции',
+					'name'          => 'gociss_experts_subtitle',
+					'type'          => 'textarea',
 				),
+				// Эксперт 1
 				array(
-					'key'               => 'field_gociss_experts_items',
-					'label'             => 'Эксперты',
-					'name'              => 'gociss_experts_items',
-					'type'              => 'repeater',
-					'layout'            => 'block',
-					'button_label'      => 'Добавить эксперта',
-					'sub_fields'        => array(
+					'key'           => 'field_gociss_expert_1_photo',
+					'label'         => 'Эксперт 1: Фото',
+					'name'          => 'gociss_expert_1_photo',
+					'type'          => 'image',
+					'return_format' => 'array',
+					'preview_size'  => 'medium',
+				),
 						array(
-							'key'           => 'field_gociss_experts_photo',
-							'label'         => 'Фото',
-							'name'          => 'photo',
+					'key'   => 'field_gociss_expert_1_name',
+					'label' => 'Эксперт 1: ФИО',
+					'name'  => 'gociss_expert_1_name',
+					'type'  => 'text',
+				),
+				array(
+					'key'   => 'field_gociss_expert_1_position',
+					'label' => 'Эксперт 1: Должность',
+					'name'  => 'gociss_expert_1_position',
+					'type'  => 'text',
+				),
+				array(
+					'key'   => 'field_gociss_expert_1_experience',
+					'label' => 'Эксперт 1: Опыт',
+					'name'  => 'gociss_expert_1_experience',
+					'type'  => 'textarea',
+					'rows'  => 2,
+				),
+				// Эксперт 2
+				array(
+					'key'           => 'field_gociss_expert_2_photo',
+					'label'         => 'Эксперт 2: Фото',
+					'name'          => 'gociss_expert_2_photo',
 							'type'          => 'image',
 							'return_format' => 'array',
 							'preview_size'  => 'medium',
-							'instructions'  => 'Рекомендуемый размер: 320x320px',
 						),
 						array(
-							'key'   => 'field_gociss_experts_name',
-							'label' => 'ФИО',
-							'name'  => 'name',
+					'key'   => 'field_gociss_expert_2_name',
+					'label' => 'Эксперт 2: ФИО',
+					'name'  => 'gociss_expert_2_name',
 							'type'  => 'text',
 						),
 						array(
-							'key'   => 'field_gociss_experts_position',
-							'label' => 'Должность',
-							'name'  => 'position',
+					'key'   => 'field_gociss_expert_2_position',
+					'label' => 'Эксперт 2: Должность',
+					'name'  => 'gociss_expert_2_position',
 							'type'  => 'text',
 						),
 						array(
-							'key'   => 'field_gociss_experts_experience',
-							'label' => 'Опыт/Описание',
-							'name'  => 'experience',
+					'key'   => 'field_gociss_expert_2_experience',
+					'label' => 'Эксперт 2: Опыт',
+					'name'  => 'gociss_expert_2_experience',
 							'type'  => 'textarea',
 							'rows'  => 2,
 						),
-					),
+				// Эксперт 3
+				array(
+					'key'           => 'field_gociss_expert_3_photo',
+					'label'         => 'Эксперт 3: Фото',
+					'name'          => 'gociss_expert_3_photo',
+					'type'          => 'image',
+					'return_format' => 'array',
+					'preview_size'  => 'medium',
+				),
+				array(
+					'key'   => 'field_gociss_expert_3_name',
+					'label' => 'Эксперт 3: ФИО',
+					'name'  => 'gociss_expert_3_name',
+					'type'  => 'text',
+				),
+				array(
+					'key'   => 'field_gociss_expert_3_position',
+					'label' => 'Эксперт 3: Должность',
+					'name'  => 'gociss_expert_3_position',
+					'type'  => 'text',
+				),
+				array(
+					'key'   => 'field_gociss_expert_3_experience',
+					'label' => 'Эксперт 3: Опыт',
+					'name'  => 'gociss_expert_3_experience',
+					'type'  => 'textarea',
+					'rows'  => 2,
+				),
+				// Эксперт 4
+				array(
+					'key'           => 'field_gociss_expert_4_photo',
+					'label'         => 'Эксперт 4: Фото',
+					'name'          => 'gociss_expert_4_photo',
+					'type'          => 'image',
+					'return_format' => 'array',
+					'preview_size'  => 'medium',
+				),
+				array(
+					'key'   => 'field_gociss_expert_4_name',
+					'label' => 'Эксперт 4: ФИО',
+					'name'  => 'gociss_expert_4_name',
+					'type'  => 'text',
+				),
+				array(
+					'key'   => 'field_gociss_expert_4_position',
+					'label' => 'Эксперт 4: Должность',
+					'name'  => 'gociss_expert_4_position',
+					'type'  => 'text',
+				),
+				array(
+					'key'   => 'field_gociss_expert_4_experience',
+					'label' => 'Эксперт 4: Опыт',
+					'name'  => 'gociss_expert_4_experience',
+					'type'  => 'textarea',
+					'rows'  => 2,
+				),
+				// Эксперт 5
+				array(
+					'key'           => 'field_gociss_expert_5_photo',
+					'label'         => 'Эксперт 5: Фото',
+					'name'          => 'gociss_expert_5_photo',
+					'type'          => 'image',
+					'return_format' => 'array',
+					'preview_size'  => 'medium',
+				),
+				array(
+					'key'   => 'field_gociss_expert_5_name',
+					'label' => 'Эксперт 5: ФИО',
+					'name'  => 'gociss_expert_5_name',
+					'type'  => 'text',
+				),
+				array(
+					'key'   => 'field_gociss_expert_5_position',
+					'label' => 'Эксперт 5: Должность',
+					'name'  => 'gociss_expert_5_position',
+					'type'  => 'text',
+				),
+				array(
+					'key'   => 'field_gociss_expert_5_experience',
+					'label' => 'Эксперт 5: Опыт',
+					'name'  => 'gociss_expert_5_experience',
+					'type'  => 'textarea',
+					'rows'  => 2,
+				),
+				// Эксперт 6
+				array(
+					'key'           => 'field_gociss_expert_6_photo',
+					'label'         => 'Эксперт 6: Фото',
+					'name'          => 'gociss_expert_6_photo',
+					'type'          => 'image',
+					'return_format' => 'array',
+					'preview_size'  => 'medium',
+				),
+				array(
+					'key'   => 'field_gociss_expert_6_name',
+					'label' => 'Эксперт 6: ФИО',
+					'name'  => 'gociss_expert_6_name',
+					'type'  => 'text',
+				),
+				array(
+					'key'   => 'field_gociss_expert_6_position',
+					'label' => 'Эксперт 6: Должность',
+					'name'  => 'gociss_expert_6_position',
+					'type'  => 'text',
+				),
+				array(
+					'key'   => 'field_gociss_expert_6_experience',
+					'label' => 'Эксперт 6: Опыт',
+					'name'  => 'gociss_expert_6_experience',
+					'type'  => 'textarea',
+					'rows'  => 2,
+				),
+				// Эксперт 7
+				array(
+					'key'           => 'field_gociss_expert_7_photo',
+					'label'         => 'Эксперт 7: Фото',
+					'name'          => 'gociss_expert_7_photo',
+					'type'          => 'image',
+					'return_format' => 'array',
+					'preview_size'  => 'medium',
+				),
+				array(
+					'key'   => 'field_gociss_expert_7_name',
+					'label' => 'Эксперт 7: ФИО',
+					'name'  => 'gociss_expert_7_name',
+					'type'  => 'text',
+				),
+				array(
+					'key'   => 'field_gociss_expert_7_position',
+					'label' => 'Эксперт 7: Должность',
+					'name'  => 'gociss_expert_7_position',
+					'type'  => 'text',
+				),
+				array(
+					'key'   => 'field_gociss_expert_7_experience',
+					'label' => 'Эксперт 7: Опыт',
+					'name'  => 'gociss_expert_7_experience',
+					'type'  => 'textarea',
+					'rows'  => 2,
+				),
+				// Эксперт 8
+				array(
+					'key'           => 'field_gociss_expert_8_photo',
+					'label'         => 'Эксперт 8: Фото',
+					'name'          => 'gociss_expert_8_photo',
+					'type'          => 'image',
+					'return_format' => 'array',
+					'preview_size'  => 'medium',
+				),
+				array(
+					'key'   => 'field_gociss_expert_8_name',
+					'label' => 'Эксперт 8: ФИО',
+					'name'  => 'gociss_expert_8_name',
+					'type'  => 'text',
+				),
+				array(
+					'key'   => 'field_gociss_expert_8_position',
+					'label' => 'Эксперт 8: Должность',
+					'name'  => 'gociss_expert_8_position',
+					'type'  => 'text',
+				),
+				array(
+					'key'   => 'field_gociss_expert_8_experience',
+					'label' => 'Эксперт 8: Опыт',
+					'name'  => 'gociss_expert_8_experience',
+					'type'  => 'textarea',
+					'rows'  => 2,
 				),
 			),
 			'location'              => array(
@@ -377,48 +660,148 @@ function gociss_register_acf_fields() {
 					),
 				),
 			),
+			'menu_order'            => 4,
 		)
 	);
 
-	// Группа полей для секции FAQ
+	// Группа полей "Секция FAQ" - 6 фиксированных вопросов
 	acf_add_local_field_group(
 		array(
-			'key'                   => 'group_gociss_faq',
+			'key'                   => 'group_gociss_faq_fixed',
 			'title'                 => 'Секция FAQ',
 			'fields'                => array(
 				array(
-					'key'               => 'field_gociss_faq_title',
-					'label'             => 'Заголовок',
-					'name'              => 'gociss_faq_title',
-					'type'              => 'text',
-					'default_value'     => 'Часто задаваемые вопросы',
+					'key'           => 'field_gociss_faq_title_fixed',
+					'label'         => 'Заголовок секции',
+					'name'          => 'gociss_faq_title',
+					'type'          => 'text',
+					'default_value' => 'Часто задаваемые вопросы',
 				),
 				array(
-					'key'               => 'field_gociss_faq_subtitle',
-					'label'             => 'Подзаголовок',
-					'name'              => 'gociss_faq_subtitle',
-					'type'              => 'textarea',
+					'key'           => 'field_gociss_faq_subtitle_fixed',
+					'label'         => 'Подзаголовок секции',
+					'name'          => 'gociss_faq_subtitle',
+					'type'          => 'textarea',
 				),
+				// Вопрос 1
 				array(
-					'key'               => 'field_gociss_faq_items',
-					'label'             => 'Вопросы',
-					'name'              => 'gociss_faq_items',
-					'type'              => 'repeater',
-					'layout'            => 'block',
-					'sub_fields'        => array(
+					'key'   => 'field_gociss_faq_1_question',
+					'label' => 'Вопрос 1',
+					'name'  => 'gociss_faq_1_question',
+					'type'  => 'text',
+				),
 						array(
-							'key'   => 'field_gociss_faq_question',
-							'label' => 'Вопрос',
-							'name'  => 'question',
+					'key'   => 'field_gociss_faq_1_answer',
+					'label' => 'Ответ 1',
+					'name'  => 'gociss_faq_1_answer',
+					'type'  => 'wysiwyg',
+					'toolbar' => 'basic',
+					'media_upload' => 0,
+				),
+				// Вопрос 2
+				array(
+					'key'   => 'field_gociss_faq_2_question',
+					'label' => 'Вопрос 2',
+					'name'  => 'gociss_faq_2_question',
 							'type'  => 'text',
 						),
 						array(
-							'key'   => 'field_gociss_faq_answer',
-							'label' => 'Ответ',
-							'name'  => 'answer',
+					'key'   => 'field_gociss_faq_2_answer',
+					'label' => 'Ответ 2',
+					'name'  => 'gociss_faq_2_answer',
 							'type'  => 'wysiwyg',
-						),
-					),
+					'toolbar' => 'basic',
+					'media_upload' => 0,
+				),
+				// Вопрос 3
+				array(
+					'key'   => 'field_gociss_faq_3_question',
+					'label' => 'Вопрос 3',
+					'name'  => 'gociss_faq_3_question',
+					'type'  => 'text',
+				),
+				array(
+					'key'   => 'field_gociss_faq_3_answer',
+					'label' => 'Ответ 3',
+					'name'  => 'gociss_faq_3_answer',
+					'type'  => 'wysiwyg',
+					'toolbar' => 'basic',
+					'media_upload' => 0,
+				),
+				// Вопрос 4
+				array(
+					'key'   => 'field_gociss_faq_4_question',
+					'label' => 'Вопрос 4',
+					'name'  => 'gociss_faq_4_question',
+					'type'  => 'text',
+				),
+				array(
+					'key'   => 'field_gociss_faq_4_answer',
+					'label' => 'Ответ 4',
+					'name'  => 'gociss_faq_4_answer',
+					'type'  => 'wysiwyg',
+					'toolbar' => 'basic',
+					'media_upload' => 0,
+				),
+				// Вопрос 5
+				array(
+					'key'   => 'field_gociss_faq_5_question',
+					'label' => 'Вопрос 5',
+					'name'  => 'gociss_faq_5_question',
+					'type'  => 'text',
+				),
+				array(
+					'key'   => 'field_gociss_faq_5_answer',
+					'label' => 'Ответ 5',
+					'name'  => 'gociss_faq_5_answer',
+					'type'  => 'wysiwyg',
+					'toolbar' => 'basic',
+					'media_upload' => 0,
+				),
+				// Вопрос 6
+				array(
+					'key'   => 'field_gociss_faq_6_question',
+					'label' => 'Вопрос 6',
+					'name'  => 'gociss_faq_6_question',
+					'type'  => 'text',
+				),
+				array(
+					'key'   => 'field_gociss_faq_6_answer',
+					'label' => 'Ответ 6',
+					'name'  => 'gociss_faq_6_answer',
+					'type'  => 'wysiwyg',
+					'toolbar' => 'basic',
+					'media_upload' => 0,
+				),
+				// Вопрос 7
+				array(
+					'key'   => 'field_gociss_faq_7_question',
+					'label' => 'Вопрос 7',
+					'name'  => 'gociss_faq_7_question',
+					'type'  => 'text',
+				),
+				array(
+					'key'   => 'field_gociss_faq_7_answer',
+					'label' => 'Ответ 7',
+					'name'  => 'gociss_faq_7_answer',
+					'type'  => 'wysiwyg',
+					'toolbar' => 'basic',
+					'media_upload' => 0,
+				),
+				// Вопрос 8
+				array(
+					'key'   => 'field_gociss_faq_8_question',
+					'label' => 'Вопрос 8',
+					'name'  => 'gociss_faq_8_question',
+					'type'  => 'text',
+				),
+				array(
+					'key'   => 'field_gociss_faq_8_answer',
+					'label' => 'Ответ 8',
+					'name'  => 'gociss_faq_8_answer',
+					'type'  => 'wysiwyg',
+					'toolbar' => 'basic',
+					'media_upload' => 0,
 				),
 			),
 			'location'              => array(
@@ -430,6 +813,7 @@ function gociss_register_acf_fields() {
 					),
 				),
 			),
+			'menu_order'            => 5,
 		)
 	);
 
@@ -2388,59 +2772,7 @@ function gociss_register_acf_fields() {
 		)
 	);
 
-	// Секция FAQ для страницы услуги (переиспользуем поля)
-	acf_add_local_field_group(
-		array(
-			'key'                   => 'group_gociss_service_faq',
-			'title'                 => 'Услуга: FAQ',
-			'fields'                => array(
-				array(
-					'key'               => 'field_gociss_service_faq_title',
-					'label'             => 'Заголовок',
-					'name'              => 'gociss_faq_title',
-					'type'              => 'text',
-					'default_value'     => 'Часто задаваемые вопросы',
-				),
-				array(
-					'key'               => 'field_gociss_service_faq_subtitle',
-					'label'             => 'Подзаголовок',
-					'name'              => 'gociss_faq_subtitle',
-					'type'              => 'textarea',
-				),
-				array(
-					'key'               => 'field_gociss_service_faq_items',
-					'label'             => 'Вопросы',
-					'name'              => 'gociss_faq_items',
-					'type'              => 'repeater',
-					'layout'            => 'block',
-					'sub_fields'        => array(
-						array(
-							'key'   => 'field_gociss_service_faq_question',
-							'label' => 'Вопрос',
-							'name'  => 'question',
-							'type'  => 'text',
-						),
-						array(
-							'key'   => 'field_gociss_service_faq_answer',
-							'label' => 'Ответ',
-							'name'  => 'answer',
-							'type'  => 'wysiwyg',
-						),
-					),
-				),
-			),
-			'location'              => array(
-				array(
-					array(
-						'param'    => 'page_template',
-						'operator' => '==',
-						'value'    => 'page-service.php',
-					),
-				),
-			),
-			'menu_order'            => 6,
-		)
-	);
+	// FAQ для page-service.php теперь управляется через CPT gociss_faq
 
 	// Секция формы для страницы услуги
 	acf_add_local_field_group(
@@ -2737,49 +3069,30 @@ function gociss_register_service_acf_fields() {
 		)
 	);
 
-	// FAQ для услуги (отдельно от главной страницы)
+	// FAQ для страницы услуги (8 вопросов)
+	$service_faq_fields = array();
+	for ( $i = 1; $i <= 8; $i++ ) {
+		$service_faq_fields[] = array(
+			'key'          => 'field_gociss_sfaq_' . $i . '_question',
+			'label'        => 'Вопрос ' . $i,
+			'name'         => 'gociss_sfaq_' . $i . '_question',
+			'type'         => 'text',
+			'instructions' => 'Заполните вопрос, чтобы он отображался',
+		);
+		$service_faq_fields[] = array(
+			'key'          => 'field_gociss_sfaq_' . $i . '_answer',
+			'label'        => 'Ответ ' . $i,
+			'name'         => 'gociss_sfaq_' . $i . '_answer',
+			'type'         => 'textarea',
+			'rows'         => 4,
+		);
+	}
+
 	acf_add_local_field_group(
 		array(
-			'key'                   => 'group_gociss_service_faq_new',
+			'key'                   => 'group_gociss_service_faq_fixed',
 			'title'                 => 'FAQ услуги',
-			'fields'                => array(
-				array(
-					'key'               => 'field_gociss_service_faq_title_new',
-					'label'             => 'Заголовок',
-					'name'              => 'gociss_service_faq_title',
-					'type'              => 'text',
-					'default_value'     => 'Часто задаваемые вопросы',
-				),
-				array(
-					'key'               => 'field_gociss_service_faq_subtitle_new',
-					'label'             => 'Подзаголовок',
-					'name'              => 'gociss_service_faq_subtitle',
-					'type'              => 'textarea',
-				),
-				array(
-					'key'               => 'field_gociss_service_faq_items_new',
-					'label'             => 'Вопросы',
-					'name'              => 'gociss_service_faq_items',
-					'type'              => 'repeater',
-					'layout'            => 'block',
-					'sub_fields'        => array(
-						array(
-							'key'   => 'field_gociss_service_faq_question_new',
-							'label' => 'Вопрос',
-							'name'  => 'question',
-							'type'  => 'text',
-						),
-						array(
-							'key'   => 'field_gociss_service_faq_answer_new',
-							'label' => 'Ответ',
-							'name'  => 'answer',
-							'type'  => 'wysiwyg',
-							'toolbar' => 'basic',
-							'media_upload' => 0,
-						),
-					),
-				),
-			),
+			'fields'                => $service_faq_fields,
 			'location'              => array(
 				array(
 					array(
@@ -2789,7 +3102,11 @@ function gociss_register_service_acf_fields() {
 					),
 				),
 			),
-			'menu_order'            => 2,
+			'menu_order'            => 80,
+			'position'              => 'normal',
+			'style'                 => 'default',
+			'label_placement'       => 'top',
+			'instruction_placement' => 'label',
 		)
 	);
 

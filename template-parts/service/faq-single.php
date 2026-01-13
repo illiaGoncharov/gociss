@@ -1,8 +1,8 @@
 <?php
 /**
- * Секция FAQ для страницы услуги (Custom Post Type)
+ * Секция FAQ для страницы услуги
  *
- * Использует отдельные ACF поля для услуг: gociss_service_faq_*
+ * Использует 8 индивидуальных полей ACF
  *
  * @package Gociss
  */
@@ -11,19 +11,25 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$faq_title    = function_exists( 'get_field' ) ? get_field( 'gociss_service_faq_title' ) : '';
-$faq_subtitle = function_exists( 'get_field' ) ? get_field( 'gociss_service_faq_subtitle' ) : '';
-$faq_items    = function_exists( 'get_field' ) ? get_field( 'gociss_service_faq_items' ) : '';
+$faq_title    = 'Часто задаваемые вопросы';
+$faq_subtitle = 'Ответы на вопросы по данной услуге';
 
-// Заглушки
-if ( ! $faq_title ) {
-	$faq_title = 'Часто задаваемые вопросы';
-}
-if ( ! $faq_subtitle ) {
-	$faq_subtitle = 'Ответы на вопросы по данной услуге';
+// Собираем FAQ из 8 индивидуальных полей
+$faq_items = array();
+for ( $i = 1; $i <= 8; $i++ ) {
+	$question = get_field( 'gociss_sfaq_' . $i . '_question' );
+	$answer   = get_field( 'gociss_sfaq_' . $i . '_answer' );
+
+	// Достаточно вопроса — ответ может быть пустым
+	if ( ! empty( $question ) ) {
+		$faq_items[] = array(
+			'question' => $question,
+			'answer'   => ! empty( $answer ) ? $answer : 'Ответ скоро появится.',
+		);
+	}
 }
 
-// Заглушки вопросов для услуги
+// Заглушки вопросов для услуги (если ничего не заполнено)
 $default_faqs = array(
 	array(
 		'question' => 'Какие документы нужны для получения сертификата?',
@@ -43,28 +49,19 @@ $default_faqs = array(
 	),
 );
 
-$faqs_to_show = ( $faq_items && is_array( $faq_items ) && count( $faq_items ) > 0 ) ? $faq_items : $default_faqs;
-
-// Если нет вопросов, не показываем секцию
-if ( empty( $faqs_to_show ) ) {
-	return;
-}
+// Используем реальные данные или заглушки
+$display_items = ! empty( $faq_items ) ? $faq_items : $default_faqs;
 ?>
 
 <section class="faq" id="faq">
 	<div class="container">
-		<?php if ( $faq_title ) : ?>
-			<h2 class="faq__title"><?php echo esc_html( $faq_title ); ?></h2>
-		<?php endif; ?>
-
-		<?php if ( $faq_subtitle ) : ?>
-			<p class="faq__subtitle"><?php echo esc_html( $faq_subtitle ); ?></p>
-		<?php endif; ?>
+		<h2 class="faq__title"><?php echo esc_html( $faq_title ); ?></h2>
+		<p class="faq__subtitle"><?php echo esc_html( $faq_subtitle ); ?></p>
 
 		<div class="faq__list">
 			<?php
 			$index = 0;
-			foreach ( $faqs_to_show as $faq_item ) :
+			foreach ( $display_items as $faq_item ) :
 				$index++;
 				$is_open = ( 1 === $index ) ? 'is-open' : '';
 				?>
@@ -79,9 +76,7 @@ if ( empty( $faqs_to_show ) ) {
 					</button>
 					<div class="faq__answer">
 						<div class="faq__answer-inner">
-							<?php if ( isset( $faq_item['answer'] ) ) : ?>
-								<?php echo wp_kses_post( $faq_item['answer'] ); ?>
-							<?php endif; ?>
+							<p><?php echo wp_kses_post( $faq_item['answer'] ); ?></p>
 						</div>
 					</div>
 				</div>
@@ -89,4 +84,3 @@ if ( empty( $faqs_to_show ) ) {
 		</div>
 	</div>
 </section>
-

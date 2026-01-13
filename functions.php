@@ -38,3 +38,29 @@ add_filter( 'wp_auto_update_core', '__return_false' );
 add_filter( 'allow_major_auto_core_updates', '__return_false' );
 add_filter( 'allow_minor_auto_core_updates', '__return_false' );
 add_filter( 'allow_dev_auto_core_updates', '__return_false' );
+
+/**
+ * Подключение скриптов и стилей для админки
+ */
+function gociss_admin_enqueue( $hook ) {
+	// Только на страницах редактирования
+	if ( ! in_array( $hook, array( 'post.php', 'post-new.php' ), true ) ) {
+		return;
+	}
+	
+	wp_enqueue_style(
+		'gociss-admin-css',
+		GOCISS_THEME_URI . '/assets/css/admin.css',
+		array(),
+		GOCISS_THEME_VERSION
+	);
+	
+	wp_enqueue_script(
+		'gociss-admin-js',
+		GOCISS_THEME_URI . '/assets/js/admin.js',
+		array( 'jquery' ),
+		GOCISS_THEME_VERSION,
+		true
+	);
+}
+add_action( 'admin_enqueue_scripts', 'gociss_admin_enqueue' );

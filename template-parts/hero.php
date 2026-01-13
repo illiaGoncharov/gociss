@@ -15,7 +15,7 @@ $hero_title         = function_exists( 'get_field' ) ? get_field( 'gociss_hero_t
 $hero_description   = function_exists( 'get_field' ) ? get_field( 'gociss_hero_description' ) : '';
 $hero_btn_primary   = function_exists( 'get_field' ) ? get_field( 'gociss_hero_btn_primary' ) : '';
 $hero_btn_secondary = function_exists( 'get_field' ) ? get_field( 'gociss_hero_btn_secondary' ) : '';
-$hero_stats         = function_exists( 'get_field' ) ? get_field( 'gociss_hero_stats' ) : '';
+// Статистика hero скрыта через CSS
 
 // Собираем слайды из отдельных полей image в массив
 $hero_gallery = array();
@@ -72,31 +72,21 @@ if ( ! $hero_label ) {
 					<?php endif; ?>
 				</div>
 
-				<?php if ( $hero_stats && is_array( $hero_stats ) && count( $hero_stats ) > 0 ) : ?>
-					<div class="hero__stats">
-						<?php foreach ( $hero_stats as $stat ) : ?>
-							<div class="hero__stat">
-								<span class="hero__stat-number"><?php echo esc_html( $stat['number'] ); ?></span>
-								<span class="hero__stat-label"><?php echo esc_html( $stat['label'] ); ?></span>
-							</div>
-						<?php endforeach; ?>
+				<!-- Статистика скрыта через CSS -->
+				<div class="hero__stats">
+					<div class="hero__stat">
+						<span class="hero__stat-number">5000+</span>
+						<span class="hero__stat-label">Выданных сертификатов</span>
 					</div>
-				<?php else : ?>
-					<div class="hero__stats">
-						<div class="hero__stat">
-							<span class="hero__stat-number">5000+</span>
-							<span class="hero__stat-label">Выданных сертификатов</span>
-						</div>
-						<div class="hero__stat">
-							<span class="hero__stat-number">15+</span>
-							<span class="hero__stat-label">Лет на рынке</span>
-						</div>
-						<div class="hero__stat">
-							<span class="hero__stat-number">1200+</span>
-							<span class="hero__stat-label">Клиентов</span>
-						</div>
+					<div class="hero__stat">
+						<span class="hero__stat-number">15+</span>
+						<span class="hero__stat-label">Лет на рынке</span>
 					</div>
-				<?php endif; ?>
+					<div class="hero__stat">
+						<span class="hero__stat-number">1200+</span>
+						<span class="hero__stat-label">Клиентов</span>
+					</div>
+				</div>
 			</div>
 
 			<div class="hero__image">

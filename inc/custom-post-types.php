@@ -207,12 +207,155 @@ function gociss_register_service_category_taxonomy() {
 add_action( 'init', 'gociss_register_service_category_taxonomy', 0 );
 
 /**
+ * Регистрация типа записи "FAQ"
+ */
+function gociss_register_faq_post_type() {
+	$labels = array(
+		'name'                  => _x( 'FAQ', 'Post Type General Name', 'gociss' ),
+		'singular_name'         => _x( 'Вопрос FAQ', 'Post Type Singular Name', 'gociss' ),
+		'menu_name'             => __( 'FAQ', 'gociss' ),
+		'name_admin_bar'        => __( 'Вопрос FAQ', 'gociss' ),
+		'archives'              => __( 'Архив FAQ', 'gociss' ),
+		'all_items'             => __( 'Все вопросы', 'gociss' ),
+		'add_new_item'          => __( 'Добавить вопрос', 'gociss' ),
+		'add_new'               => __( 'Добавить вопрос', 'gociss' ),
+		'new_item'              => __( 'Новый вопрос', 'gociss' ),
+		'edit_item'             => __( 'Редактировать вопрос', 'gociss' ),
+		'update_item'           => __( 'Обновить вопрос', 'gociss' ),
+		'view_item'             => __( 'Просмотреть вопрос', 'gociss' ),
+		'search_items'          => __( 'Искать вопросы', 'gociss' ),
+		'not_found'             => __( 'Вопросы не найдены', 'gociss' ),
+		'not_found_in_trash'    => __( 'Не найдено в корзине', 'gociss' ),
+	);
+
+	$args = array(
+		'label'                 => __( 'FAQ', 'gociss' ),
+		'description'           => __( 'Часто задаваемые вопросы', 'gociss' ),
+		'labels'                => $labels,
+		'supports'              => array( 'title', 'editor' ),
+		'hierarchical'          => false,
+		'public'                => false,
+		'show_ui'               => true,
+		'show_in_menu'          => true,
+		'menu_position'         => 7,
+		'menu_icon'             => 'dashicons-format-chat',
+		'show_in_admin_bar'     => true,
+		'show_in_nav_menus'     => false,
+		'can_export'            => true,
+		'has_archive'           => false,
+		'exclude_from_search'   => true,
+		'publicly_queryable'    => false,
+		'capability_type'       => 'post',
+		'show_in_rest'          => false,
+	);
+
+	register_post_type( 'gociss_faq', $args );
+}
+add_action( 'init', 'gociss_register_faq_post_type', 0 );
+
+/**
+ * Регистрация таксономии "Контекст FAQ"
+ * Для привязки вопросов к главной странице или конкретным услугам
+ */
+function gociss_register_faq_context_taxonomy() {
+	$labels = array(
+		'name'                       => _x( 'Контекст FAQ', 'Taxonomy General Name', 'gociss' ),
+		'singular_name'              => _x( 'Контекст', 'Taxonomy Singular Name', 'gociss' ),
+		'menu_name'                  => __( 'Контекст', 'gociss' ),
+		'all_items'                  => __( 'Все контексты', 'gociss' ),
+		'new_item_name'              => __( 'Новый контекст', 'gociss' ),
+		'add_new_item'               => __( 'Добавить контекст', 'gociss' ),
+		'edit_item'                  => __( 'Редактировать контекст', 'gociss' ),
+		'update_item'                => __( 'Обновить контекст', 'gociss' ),
+		'view_item'                  => __( 'Просмотреть контекст', 'gociss' ),
+		'search_items'               => __( 'Искать контексты', 'gociss' ),
+		'not_found'                  => __( 'Контексты не найдены', 'gociss' ),
+	);
+
+	$args = array(
+		'labels'            => $labels,
+		'hierarchical'      => true,
+		'public'            => false,
+		'show_ui'           => true,
+		'show_admin_column' => true,
+		'show_in_nav_menus' => false,
+		'show_tagcloud'     => false,
+		'show_in_rest'      => false,
+	);
+
+	register_taxonomy( 'gociss_faq_context', array( 'gociss_faq' ), $args );
+}
+add_action( 'init', 'gociss_register_faq_context_taxonomy', 0 );
+
+/**
+ * Создать базовые контексты FAQ при активации темы
+ */
+function gociss_create_default_faq_contexts() {
+	// Создаём контекст "Главная страница" если его нет
+	if ( ! term_exists( 'homepage', 'gociss_faq_context' ) ) {
+		wp_insert_term(
+			'Главная страница',
+			'gociss_faq_context',
+			array( 'slug' => 'homepage' )
+		);
+	}
+}
+add_action( 'after_switch_theme', 'gociss_create_default_faq_contexts' );
+add_action( 'init', 'gociss_create_default_faq_contexts', 99 );
+
+/**
+ * Автоматически создавать контекст FAQ при создании услуги
+ */
+function gociss_create_faq_context_for_service( $post_id, $post, $update ) {
+	// Только для новых услуг
+	if ( $update || $post->post_type !== 'gociss_service' ) {
+		return;
+	}
+
+	// Создаём термин с slug = ID услуги
+	$term_slug = 'service-' . $post_id;
+	$term_name = 'Услуга: ' . $post->post_title;
+
+	if ( ! term_exists( $term_slug, 'gociss_faq_context' ) ) {
+		wp_insert_term(
+			$term_name,
+			'gociss_faq_context',
+			array( 'slug' => $term_slug )
+		);
+	}
+}
+add_action( 'wp_insert_post', 'gociss_create_faq_context_for_service', 10, 3 );
+
+/**
+ * Обновить название контекста FAQ при обновлении услуги
+ */
+function gociss_update_faq_context_for_service( $post_id, $post, $update ) {
+	if ( ! $update || $post->post_type !== 'gociss_service' ) {
+		return;
+	}
+
+	$term_slug = 'service-' . $post_id;
+	$term = get_term_by( 'slug', $term_slug, 'gociss_faq_context' );
+
+	if ( $term ) {
+		wp_update_term(
+			$term->term_id,
+			'gociss_faq_context',
+			array( 'name' => 'Услуга: ' . $post->post_title )
+		);
+	}
+}
+add_action( 'wp_insert_post', 'gociss_update_faq_context_for_service', 10, 3 );
+
+/**
  * Сброс правил перезаписи при активации темы
  * Необходимо для корректной работы URL услуг
  */
 function gociss_flush_rewrite_rules_on_activation() {
 	gociss_register_service_post_type();
 	gociss_register_service_category_taxonomy();
+	gociss_register_faq_post_type();
+	gociss_register_faq_context_taxonomy();
 	flush_rewrite_rules();
 }
 add_action( 'after_switch_theme', 'gociss_flush_rewrite_rules_on_activation' );

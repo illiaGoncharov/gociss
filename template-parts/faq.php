@@ -1,6 +1,6 @@
 <?php
 /**
- * Секция FAQ
+ * Секция FAQ (фиксированные поля ACF)
  *
  * @package Gociss
  */
@@ -11,9 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 $faq_title    = function_exists( 'get_field' ) ? get_field( 'gociss_faq_title' ) : '';
 $faq_subtitle = function_exists( 'get_field' ) ? get_field( 'gociss_faq_subtitle' ) : '';
-$faq_items    = function_exists( 'get_field' ) ? get_field( 'gociss_faq_items' ) : '';
 
-// Заглушки
 if ( ! $faq_title ) {
 	$faq_title = 'Часто задаваемые вопросы';
 }
@@ -21,7 +19,21 @@ if ( ! $faq_subtitle ) {
 	$faq_subtitle = 'Ответы на самые популярные вопросы о сертификации';
 }
 
-// Заглушки вопросов
+// Собираем FAQ из фиксированных полей
+$faqs = array();
+for ( $i = 1; $i <= 8; $i++ ) {
+	$question = function_exists( 'get_field' ) ? get_field( 'gociss_faq_' . $i . '_question' ) : '';
+	$answer   = function_exists( 'get_field' ) ? get_field( 'gociss_faq_' . $i . '_answer' ) : '';
+
+	if ( $question && $answer ) {
+		$faqs[] = array(
+			'question' => $question,
+			'answer'   => $answer,
+		);
+	}
+}
+
+// Заглушки, если нет данных
 $default_faqs = array(
 	array(
 		'question' => 'Сколько времени занимает получение сертификата ISO 9001?',
@@ -49,22 +61,17 @@ $default_faqs = array(
 	),
 );
 
-$faqs_to_show = ( $faq_items && is_array( $faq_items ) && count( $faq_items ) > 0 ) ? $faq_items : $default_faqs;
+$faqs_to_show = ! empty( $faqs ) ? $faqs : $default_faqs;
 ?>
 
 <section class="faq" id="faq">
 	<div class="container">
-		<?php if ( $faq_title ) : ?>
-			<h2 class="faq__title"><?php echo esc_html( $faq_title ); ?></h2>
-		<?php endif; ?>
-
-		<?php if ( $faq_subtitle ) : ?>
-			<p class="faq__subtitle"><?php echo esc_html( $faq_subtitle ); ?></p>
-		<?php endif; ?>
+		<h2 class="faq__title"><?php echo esc_html( $faq_title ); ?></h2>
+		<p class="faq__subtitle"><?php echo esc_html( $faq_subtitle ); ?></p>
 
 		<div class="faq__list">
-				<?php
-				$index = 0;
+			<?php
+			$index = 0;
 			foreach ( $faqs_to_show as $faq_item ) :
 				$index++;
 				$is_open = ( 1 === $index ) ? 'is-open' : '';
@@ -72,23 +79,19 @@ $faqs_to_show = ( $faq_items && is_array( $faq_items ) && count( $faq_items ) > 
 				<div class="faq__item <?php echo esc_attr( $is_open ); ?>">
 					<button class="faq__question" aria-expanded="<?php echo ( 1 === $index ) ? 'true' : 'false'; ?>">
 						<span class="faq__question-text"><?php echo esc_html( $faq_item['question'] ); ?></span>
-					<span class="faq__icon">
-						<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-							<path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-						</svg>
-					</span>
+						<span class="faq__icon">
+							<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+							</svg>
+						</span>
 					</button>
 					<div class="faq__answer">
-					<div class="faq__answer-inner">
-						<?php if ( isset( $faq_item['answer'] ) ) : ?>
-							<p><?php echo wp_kses_post( $faq_item['answer'] ); ?></p>
-						<?php endif; ?>
-					</div>
+						<div class="faq__answer-inner">
+							<?php echo wp_kses_post( $faq_item['answer'] ); ?>
+						</div>
 					</div>
 				</div>
-				<?php endforeach; ?>
+			<?php endforeach; ?>
 		</div>
 	</div>
 </section>
-
-
