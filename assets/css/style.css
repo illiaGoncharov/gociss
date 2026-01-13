@@ -569,13 +569,14 @@ body {
     font-family: var(--font-primary);
 }
 
-.header-services__item:hover {
-    /* background-color: rgba(255, 255, 255, 0.1); */
+/* Закомментированные стили для header-services__item */
+/* .header-services__item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
 .header-services__item--all {
-    /* background-color: rgba(255, 255, 255, 0.1); */
-}
+    background-color: rgba(255, 255, 255, 0.1);
+} */
 
 .header-services__icon {
     width: 16px;
@@ -714,9 +715,13 @@ body {
 }
 
 .hero__img {
-    width: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
     height: auto;
+    object-fit: contain;
     border-radius: 8px;
+    display: block;
 }
 
 /* Hero слайдер */
@@ -728,7 +733,11 @@ body {
 .hero__slides {
     position: relative;
     width: 100%;
-    overflow: hidden;
+    min-height: 400px;
+    max-height: 600px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .hero__slide {
@@ -736,9 +745,16 @@ body {
     top: 0;
     left: 0;
     width: 100%;
+    height: 100%;
+    max-height: 600px;
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.6s ease, visibility 0.6s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
 }
 
 .hero__slide:first-child {
@@ -750,74 +766,41 @@ body {
     visibility: visible;
 }
 
-/* Индикаторы (точки) */
+/* Индикаторы (точки) - скрыты */
 .hero__dots {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 20px;
+    display: none;
 }
 
-.hero__dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    border: 2px solid var(--color-primary);
-    background: transparent;
-    cursor: pointer;
-    padding: 0;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-.hero__dot:hover {
-    transform: scale(1.2);
-}
-
-.hero__dot.is-active {
-    background: var(--color-primary);
-}
-
-/* Кнопки навигации слайдера */
+/* Невидимые кликабельные зоны навигации */
 .hero__nav {
     position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.9);
+    top: 0;
+    bottom: 0;
+    width: 25%;
+    background: transparent;
     border: none;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--color-primary);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    transition: all 0.3s ease;
+    padding: 0;
+    margin: 0;
+    outline: none;
     z-index: 10;
 }
 
-.hero__nav:hover {
-    background: var(--color-primary);
-    color: #fff;
-    transform: translateY(-50%) scale(1.1);
-}
-
-.hero__nav:active {
-    transform: translateY(-50%) scale(0.95);
+.hero__nav:disabled {
+    cursor: default;
+    opacity: 0.3;
 }
 
 .hero__nav--prev {
-    left: 10px;
+    left: 0;
 }
 
 .hero__nav--next {
-    right: 10px;
+    right: 0;
 }
 
 .hero__nav svg {
-    width: 24px;
-    height: 24px;
+    display: none;
 }
 
 /* Placeholder для изображения */
@@ -887,22 +870,17 @@ body {
         order: -1;
     }
 
+    .hero__slides {
+        min-height: 500px;
+        max-height: 500px;
+    }
+
+    .hero__slide {
+        max-height: 500px;
+    }
+
     .hero__nav {
-        width: 36px;
-        height: 36px;
-    }
-
-    .hero__nav svg {
-        width: 20px;
-        height: 20px;
-    }
-
-    .hero__nav--prev {
-        left: 5px;
-    }
-
-    .hero__nav--next {
-        right: 5px;
+        width: 15%;
     }
 }
 
@@ -930,14 +908,17 @@ body {
         font-size: 14px;
     }
 
-    .hero__nav {
-        width: 32px;
-        height: 32px;
+    .hero__slides {
+        min-height: 400px;
+        max-height: 400px;
     }
 
-    .hero__nav svg {
-        width: 18px;
-        height: 18px;
+    .hero__slide {
+        max-height: 400px;
+    }
+
+    .hero__nav {
+        width: 15%;
     }
 }
 

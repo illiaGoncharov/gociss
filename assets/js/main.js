@@ -135,7 +135,6 @@
         }
 
         const slides = slider.querySelectorAll('.hero__slide');
-        const dots = slider.querySelectorAll('.hero__dot');
         const prevBtn = slider.querySelector('.hero__nav--prev');
         const nextBtn = slider.querySelector('.hero__nav--next');
 
@@ -154,14 +153,10 @@
             slides.forEach(function(slide) {
                 slide.classList.remove('is-active');
             });
-            dots.forEach(function(dot) {
-                dot.classList.remove('is-active');
-            });
 
             // Добавляем активный класс нужному слайду
             currentIndex = index;
             slides[currentIndex].classList.add('is-active');
-            dots[currentIndex].classList.add('is-active');
         }
 
         // Следующий слайд
@@ -192,17 +187,7 @@
             }
         }
 
-        // Клик по точкам
-        dots.forEach(function(dot) {
-            dot.addEventListener('click', function() {
-                const slideIndex = parseInt(dot.getAttribute('data-slide'), 10);
-                goToSlide(slideIndex);
-                // Перезапускаем таймер после ручного переключения
-                startAutoplay();
-            });
-        });
-
-        // Клик по кнопкам навигации
+        // Клик по невидимым кнопкам навигации
         if (prevBtn) {
             prevBtn.addEventListener('click', function() {
                 prevSlide();

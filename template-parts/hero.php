@@ -103,6 +103,11 @@ if ( ! $hero_label ) {
 				<?php if ( $hero_gallery && is_array( $hero_gallery ) && count( $hero_gallery ) > 0 ) : ?>
 					<!-- Слайдер изображений -->
 					<div class="hero__slider" data-slider="hero">
+						<?php if ( count( $hero_gallery ) > 1 ) : ?>
+							<!-- Невидимая кликабельная зона слева -->
+							<button type="button" class="hero__nav hero__nav--prev" aria-label="Предыдущий слайд"></button>
+						<?php endif; ?>
+
 						<div class="hero__slides">
 							<?php foreach ( $hero_gallery as $index => $image ) : ?>
 								<div class="hero__slide<?php echo 0 === $index ? ' is-active' : ''; ?>">
@@ -120,29 +125,10 @@ if ( ! $hero_label ) {
 								</div>
 							<?php endforeach; ?>
 						</div>
+
 						<?php if ( count( $hero_gallery ) > 1 ) : ?>
-							<!-- Кнопки навигации -->
-							<button type="button" class="hero__nav hero__nav--prev" aria-label="Предыдущий слайд">
-								<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-									<path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-								</svg>
-							</button>
-							<button type="button" class="hero__nav hero__nav--next" aria-label="Следующий слайд">
-								<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-									<path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-								</svg>
-							</button>
-							<!-- Точки индикаторы -->
-							<div class="hero__dots">
-								<?php foreach ( $hero_gallery as $index => $image ) : ?>
-									<button
-										type="button"
-										class="hero__dot<?php echo 0 === $index ? ' is-active' : ''; ?>"
-										data-slide="<?php echo esc_attr( $index ); ?>"
-										aria-label="<?php echo esc_attr( sprintf( 'Слайд %d', $index + 1 ) ); ?>"
-									></button>
-								<?php endforeach; ?>
-							</div>
+							<!-- Невидимая кликабельная зона справа -->
+							<button type="button" class="hero__nav hero__nav--next" aria-label="Следующий слайд"></button>
 						<?php endif; ?>
 					</div>
 				<?php else : ?>
