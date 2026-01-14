@@ -16,6 +16,7 @@
         initNewsSlider();
         initSearch();
         initMobileMenu();
+        initScrollToTop();
         // initInteractiveMap(); // Карта теперь статичная PNG
         // initServicesMenu(); // Услуги теперь в мобильном меню
     });
@@ -535,6 +536,49 @@
                 tooltip.style.top = y + 'px';
             });
         });
+    }
+
+    /**
+     * Инициализация кнопки "Наверх"
+     */
+    function initScrollToTop() {
+        const scrollToTopBtn = document.getElementById('scrollToTop');
+
+        if (!scrollToTopBtn) {
+            return;
+        }
+
+        // Показываем/скрываем кнопку при скролле
+        function toggleScrollBtn() {
+            if (window.scrollY > 400) {
+                scrollToTopBtn.classList.add('is-visible');
+            } else {
+                scrollToTopBtn.classList.remove('is-visible');
+            }
+        }
+
+        // Слушаем скролл с throttle для производительности
+        let ticking = false;
+        window.addEventListener('scroll', function() {
+            if (!ticking) {
+                window.requestAnimationFrame(function() {
+                    toggleScrollBtn();
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        });
+
+        // Клик по кнопке — плавный скролл наверх
+        scrollToTopBtn.addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Проверяем начальное состояние
+        toggleScrollBtn();
     }
 
     /**

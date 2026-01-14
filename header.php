@@ -131,8 +131,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 					if ( ! $iso_category ) {
 						$iso_category = get_term_by( 'slug', 'iso', 'gociss_service_cat' );
 					}
-					$iso_link = $iso_category && ! is_wp_error( $iso_category ) 
-						? get_term_link( $iso_category ) 
+					$iso_link = $iso_category && ! is_wp_error( $iso_category )
+						? get_term_link( $iso_category )
 						: get_post_type_archive_link( 'gociss_service' );
 					?>
 					<a href="<?php echo esc_url( $iso_link ); ?>" class="header-services__item">
@@ -230,8 +230,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 						if ( ! $iso_category_mobile ) {
 							$iso_category_mobile = get_term_by( 'slug', 'iso', 'gociss_service_cat' );
 						}
-						$iso_link_mobile = $iso_category_mobile && ! is_wp_error( $iso_category_mobile ) 
-							? get_term_link( $iso_category_mobile ) 
+						$iso_link_mobile = $iso_category_mobile && ! is_wp_error( $iso_category_mobile )
+							? get_term_link( $iso_category_mobile )
 							: get_post_type_archive_link( 'gociss_service' );
 						?>
 						<a href="<?php echo esc_url( $iso_link_mobile ); ?>" class="header-mobile-menu__services-item">

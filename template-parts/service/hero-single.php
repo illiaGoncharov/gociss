@@ -1,6 +1,7 @@
 <?php
 /**
  * Hero секция для страницы услуги (Custom Post Type)
+ * Поддерживает мультирегиональность
  *
  * @package Gociss
  */
@@ -13,6 +14,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 $service_banner     = function_exists( 'get_field' ) ? get_field( 'gociss_service_hero_image' ) : '';
 $service_subtitle   = function_exists( 'get_field' ) ? get_field( 'gociss_service_hero_subtitle' ) : '';
 $service_short_desc = function_exists( 'get_field' ) ? get_field( 'gociss_service_short_desc' ) : '';
+
+// Мультирегиональность: получаем текущий регион из URL
+$current_region = function_exists( 'gociss_get_current_region' ) ? gociss_get_current_region() : null;
+$region_name    = $current_region ? $current_region->name : '';
 
 // Получаем категории услуги для breadcrumbs
 $service_terms = get_the_terms( get_the_ID(), 'gociss_service_cat' );
@@ -27,8 +32,9 @@ if ( $service_terms && ! is_wp_error( $service_terms ) ) {
 	}
 }
 
-// Заглушки
-$hero_title = get_the_title() . ' в аккредитованном органе<br>без посредников и переплат';
+// Формируем заголовок с учётом региона
+$title_suffix = $region_name ? ' в ' . $region_name : '';
+$hero_title   = get_the_title() . $title_suffix . ' в аккредитованном органе<br>без посредников и переплат';
 
 $hero_bullets = array(
 	'Государственная аккредитация',
@@ -66,13 +72,19 @@ if ( $service_banner && ! empty( $service_banner['url'] ) ) {
 				<span class="breadcrumbs__separator">/</span>
 				<a href="<?php echo esc_url( get_term_link( $parent_term ) ); ?>"><?php echo esc_html( $parent_term->name ); ?></a>
 			<?php endif; ?>
-			<?php if ( $primary_term && ! is_wp_error( $primary_term ) ) : ?>
-				<span class="breadcrumbs__separator">/</span>
-				<a href="<?php echo esc_url( get_term_link( $primary_term ) ); ?>"><?php echo esc_html( $primary_term->name ); ?></a>
-			<?php endif; ?>
+		<?php if ( $primary_term && ! is_wp_error( $primary_term ) ) : ?>
 			<span class="breadcrumbs__separator">/</span>
+			<a href="<?php echo esc_url( get_term_link( $primary_term ) ); ?>"><?php echo esc_html( $primary_term->name ); ?></a>
+		<?php endif; ?>
+		<span class="breadcrumbs__separator">/</span>
+		<?php if ( $current_region ) : ?>
+			<a href="<?php echo esc_url( get_permalink() ); ?>"><?php echo esc_html( get_the_title() ); ?></a>
+			<span class="breadcrumbs__separator">/</span>
+			<span class="breadcrumbs__current"><?php echo esc_html( $current_region->name ); ?></span>
+		<?php else : ?>
 			<span class="breadcrumbs__current"><?php echo esc_html( get_the_title() ); ?></span>
-		</nav>
+		<?php endif; ?>
+	</nav>
 	</div>
 
 	<!-- Hero баннер с фоновым изображением и контентом (на всю ширину) -->
@@ -132,16 +144,51 @@ if ( $service_banner && ! empty( $service_banner['url'] ) ) {
 					?>
 				</div>
 
-				<a href="#form" class="service-about__btn">
-					Бесплатная консультация
-				</a>
-			</div>
+			<a href="#form" class="service-about__btn">
+				Бесплатная консультация
+			</a>
+		</div>
 
-			<?php if ( has_post_thumbnail() ) : ?>
-			<div class="service-about__image">
-				<?php the_post_thumbnail( 'large', array( 'class' => 'service-about__cert-img' ) ); ?>
-			</div>
-			<?php endif; ?>
+		<?php if ( has_post_thumbnail() ) : ?>
+		<div class="service-about__image">
+			<?php the_post_thumbnail( 'large', array( 'class' => 'service-about__cert-img' ) ); ?>
+		</div>
+		<?php endif; ?>
+	</div>
+</div>
+</section>
+<?php endif; ?>
+
+<?php
+// Блок выбора региона (показываем только если есть регионы)
+$all_regions = get_terms(
+	array(
+		'taxonomy'   => 'gociss_region',
+		'hide_empty' => false,
+	)
+);
+
+if ( $all_regions && ! is_wp_error( $all_regions ) && count( $all_regions ) > 0 ) :
+?>
+<section class="service-regions" id="regions">
+	<div class="container">
+		<h2 class="service-regions__title">Выберите ваш город</h2>
+		<p class="service-regions__subtitle">Получите <?php echo esc_html( mb_strtolower( get_the_title() ) ); ?> в вашем регионе</p>
+
+		<div class="service-regions__grid">
+			<?php foreach ( $all_regions as $region ) : ?>
+				<?php
+				$region_url       = gociss_get_service_region_url( get_the_ID(), $region->slug );
+				$is_current       = $current_region && $current_region->term_id === $region->term_id;
+				$item_class       = 'service-regions__item' . ( $is_current ? ' is-current' : '' );
+				?>
+				<a href="<?php echo esc_url( $region_url ); ?>" class="<?php echo esc_attr( $item_class ); ?>">
+					<span class="service-regions__item-name"><?php echo esc_html( $region->name ); ?></span>
+					<?php if ( $is_current ) : ?>
+						<span class="service-regions__item-badge">Текущий</span>
+					<?php endif; ?>
+				</a>
+			<?php endforeach; ?>
 		</div>
 	</div>
 </section>

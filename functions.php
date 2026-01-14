@@ -11,7 +11,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Константы темы
-define( 'GOCISS_THEME_VERSION', '1.1.2' );
+define( 'GOCISS_THEME_VERSION', '1.1.3' );
+
+// Временный код для сброса rewrite rules (удалить после первой загрузки)
+if ( get_option( 'gociss_rewrite_version' ) !== '1.1.3' ) {
+	add_action( 'init', function() {
+		flush_rewrite_rules();
+		update_option( 'gociss_rewrite_version', '1.1.3' );
+	}, 999 );
+}
 define( 'GOCISS_THEME_PATH', get_template_directory() );
 define( 'GOCISS_THEME_URI', get_template_directory_uri() );
 

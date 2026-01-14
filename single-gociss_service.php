@@ -1,6 +1,7 @@
 <?php
 /**
  * Шаблон отдельной услуги (Custom Post Type)
+ * Поддерживает мультирегиональность: /uslugi/{услуга}/{регион}
  *
  * @package Gociss
  */
@@ -22,6 +23,9 @@ $primary_term  = null;
 if ( $service_terms && ! is_wp_error( $service_terms ) ) {
 	$primary_term = $service_terms[0];
 }
+
+// Мультирегиональность: получаем текущий регион из URL
+$current_region = function_exists( 'gociss_get_current_region' ) ? gociss_get_current_region() : null;
 ?>
 
 <main class="service-single">
@@ -64,4 +68,5 @@ if ( $service_terms && ! is_wp_error( $service_terms ) ) {
 </main>
 
 <?php get_footer(); ?>
+
 
