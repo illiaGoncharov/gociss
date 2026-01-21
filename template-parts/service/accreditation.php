@@ -66,22 +66,6 @@ if ( ! $accreditation_text ) {
 
 <section class="accreditation" id="accreditation">
 	<div class="container">
-		<!-- Информационные блоки -->
-		<?php if ( ! empty( $accreditation_info_blocks ) ) : ?>
-			<div class="accreditation__info-blocks">
-				<?php foreach ( $accreditation_info_blocks as $block ) : ?>
-					<?php if ( ! empty( $block['title'] ) ) : ?>
-						<div class="accreditation__info-block">
-							<h3 class="accreditation__info-title"><?php echo esc_html( $block['title'] ); ?></h3>
-							<?php if ( ! empty( $block['description'] ) ) : ?>
-								<p class="accreditation__info-desc"><?php echo esc_html( $block['description'] ); ?></p>
-							<?php endif; ?>
-						</div>
-					<?php endif; ?>
-				<?php endforeach; ?>
-			</div>
-		<?php endif; ?>
-
 		<!-- Основной блок -->
 		<div class="accreditation__main">
 			<!-- Изображение сертификата -->
@@ -122,6 +106,7 @@ if ( ! $accreditation_text ) {
 		</div>
 	</div>
 </section>
+
 
 
 

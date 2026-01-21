@@ -3319,6 +3319,21 @@ function gociss_register_region_acf_fields() {
 			'key'                   => 'group_gociss_region_content',
 			'title'                 => 'Региональные настройки контента',
 			'fields'                => array(
+				// ========== ОСНОВНЫЕ НАСТРОЙКИ ==========
+				array(
+					'key'          => 'field_gociss_region_general_tab',
+					'label'        => 'Общие',
+					'name'         => '',
+					'type'         => 'tab',
+					'placement'    => 'top',
+				),
+				array(
+					'key'          => 'field_gociss_region_name_prepositional',
+					'label'        => 'Название в предложном падеже',
+					'name'         => 'gociss_region_name_prepositional',
+					'type'         => 'text',
+					'instructions' => 'Например: "Санкт-Петербурге", "Москве", "Новосибирске". Используется в заголовках вида "в [городе]"',
+				),
 				// ========== HERO СЕКЦИЯ ==========
 				array(
 					'key'          => 'field_gociss_region_hero_tab',

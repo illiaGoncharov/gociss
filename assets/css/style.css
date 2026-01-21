@@ -4059,7 +4059,8 @@ body {
     align-items: center;
     flex-wrap: wrap;
     gap: 8px;
-    padding: 20px 0;
+    padding: 12px 0;
+    margin-bottom: 0;
     font-size: 16px;
     font-family: var(--font-primary);
 }
@@ -4134,7 +4135,7 @@ body {
 .service-banner__hero {
     position: relative;
     min-height: 670px;
-    padding: 48px 0;
+    padding: 20px 0 48px;
     background-color: #F3F4F6;
     background-size: cover;
     background-position: right 15%;
@@ -4173,6 +4174,18 @@ body {
     line-height: 1.25;
     margin-bottom: 24px;
     font-family: var(--font-primary);
+}
+
+/* Плашка региона в заголовке */
+.service-banner__region {
+    display: inline-block;
+    background-color: rgba(255, 255, 255, 0.9);
+    color: #051945;
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-weight: 700;
+    white-space: nowrap;
+    margin-right: 8px;
 }
 
 /* Список буллетов */
@@ -5424,8 +5437,8 @@ body {
     margin: 0 0 24px;
 }
 
-/* Хлебные крошки */
-.breadcrumbs {
+/* Хлебные крошки (архив услуг) */
+.services-archive .breadcrumbs {
     font-family: var(--font-primary);
     font-size: 14px;
     margin-bottom: 32px;

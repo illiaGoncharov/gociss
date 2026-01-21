@@ -43,9 +43,39 @@ if ( ! empty( $regional_hero_title ) ) {
 	// Используем полностью кастомный региональный заголовок
 	$hero_title = $regional_hero_title;
 } else {
-	// Автогенерация заголовка с названием региона
-	$title_suffix = $region_name ? ' в ' . $region_name : '';
-	$hero_title   = get_the_title() . $title_suffix . ' в аккредитованном органе<br>без посредников и переплат';
+	// Получаем название региона в предложном падеже
+	$region_prepositional = '';
+	if ( $current_region && function_exists( 'get_field' ) ) {
+		$region_prepositional = get_field( 'gociss_region_name_prepositional', 'term_' . $current_region->term_id );
+	}
+	// Если не заполнено ACF поле — используем маппинг популярных городов
+	if ( empty( $region_prepositional ) && $region_name ) {
+		$cities_map = array(
+			'Санкт-Петербург' => 'Санкт-Петербурге',
+			'Москва'          => 'Москве',
+			'Новосибирск'     => 'Новосибирске',
+			'Екатеринбург'    => 'Екатеринбурге',
+			'Казань'          => 'Казани',
+			'Нижний Новгород' => 'Нижнем Новгороде',
+			'Челябинск'       => 'Челябинске',
+			'Самара'          => 'Самаре',
+			'Омск'            => 'Омске',
+			'Ростов-на-Дону'  => 'Ростове-на-Дону',
+			'Уфа'             => 'Уфе',
+			'Красноярск'      => 'Красноярске',
+			'Воронеж'         => 'Воронеже',
+			'Пермь'           => 'Перми',
+			'Волгоград'       => 'Волгограде',
+		);
+		$region_prepositional = isset( $cities_map[ $region_name ] ) ? $cities_map[ $region_name ] : $region_name;
+	}
+
+	// Формируем заголовок
+	if ( $region_prepositional ) {
+		$hero_title = get_the_title() . ' в ' . $region_prepositional . ' в аккредитованном органе<br>без посредников и переплат';
+	} else {
+		$hero_title = get_the_title() . ' в аккредитованном органе<br>без посредников и переплат';
+	}
 }
 
 // Проверяем региональный подзаголовок
@@ -180,38 +210,4 @@ if ( $service_banner && ! empty( $service_banner['url'] ) ) {
 </section>
 <?php endif; ?>
 
-<?php
-// Блок выбора региона (показываем только если есть регионы)
-$all_regions = get_terms(
-	array(
-		'taxonomy'   => 'gociss_region',
-		'hide_empty' => false,
-	)
-);
-
-if ( $all_regions && ! is_wp_error( $all_regions ) && count( $all_regions ) > 0 ) :
-?>
-<section class="service-regions" id="regions">
-	<div class="container">
-		<h2 class="service-regions__title">Выберите ваш город</h2>
-		<p class="service-regions__subtitle">Получите <?php echo esc_html( mb_strtolower( get_the_title() ) ); ?> в вашем регионе</p>
-
-		<div class="service-regions__grid">
-			<?php foreach ( $all_regions as $region ) : ?>
-				<?php
-				$region_url       = gociss_get_service_region_url( get_the_ID(), $region->slug );
-				$is_current       = $current_region && $current_region->term_id === $region->term_id;
-				$item_class       = 'service-regions__item' . ( $is_current ? ' is-current' : '' );
-				?>
-				<a href="<?php echo esc_url( $region_url ); ?>" class="<?php echo esc_attr( $item_class ); ?>">
-					<span class="service-regions__item-name"><?php echo esc_html( $region->name ); ?></span>
-					<?php if ( $is_current ) : ?>
-						<span class="service-regions__item-badge">Текущий</span>
-					<?php endif; ?>
-				</a>
-			<?php endforeach; ?>
-		</div>
-	</div>
-</section>
-<?php endif; ?>
 
