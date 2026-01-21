@@ -33,6 +33,9 @@ $current_region = function_exists( 'gociss_get_current_region' ) ? gociss_get_cu
 	// Hero секция для кастомного типа записей
 	get_template_part( 'template-parts/service/hero-single' );
 
+	// Секция примера сертификата с расшифровкой
+	get_template_part( 'template-parts/service/cert-example' );
+
 	// Секция аккредитации (если включена)
 	if ( $show_accreditation ) {
 		get_template_part( 'template-parts/service/accreditation' );

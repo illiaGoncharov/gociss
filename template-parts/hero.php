@@ -11,6 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 // Проверяем наличие ACF перед использованием
 $hero_label         = function_exists( 'get_field' ) ? get_field( 'gociss_hero_label' ) : '';
+$hero_label_url     = function_exists( 'get_field' ) ? get_field( 'gociss_hero_label_url' ) : '';
 $hero_title         = function_exists( 'get_field' ) ? get_field( 'gociss_hero_title' ) : '';
 $hero_description   = function_exists( 'get_field' ) ? get_field( 'gociss_hero_description' ) : '';
 $hero_btn_primary   = function_exists( 'get_field' ) ? get_field( 'gociss_hero_btn_primary' ) : '';
@@ -44,9 +45,15 @@ if ( ! $hero_label ) {
 	<div class="container">
 		<div class="hero__content">
 			<div class="hero__text">
-				<?php if ( $hero_label ) : ?>
+			<?php if ( $hero_label ) : ?>
+				<?php if ( $hero_label_url ) : ?>
+					<a href="<?php echo esc_url( $hero_label_url ); ?>" class="hero__label hero__label--link" target="_blank" rel="noopener noreferrer">
+						<?php echo esc_html( $hero_label ); ?>
+					</a>
+				<?php else : ?>
 					<span class="hero__label"><?php echo esc_html( $hero_label ); ?></span>
 				<?php endif; ?>
+			<?php endif; ?>
 
 				<h1 class="hero__title"><?php echo esc_html( $hero_title ); ?></h1>
 

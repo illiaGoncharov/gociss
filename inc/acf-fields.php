@@ -45,13 +45,20 @@ function gociss_register_acf_fields() {
 		array(
 			'key'                   => 'group_gociss_hero',
 			'title'                 => 'Hero секция',
-			'fields'                => array(
+			'fields'                => 			array(
 				array(
 					'key'               => 'field_gociss_hero_label',
 					'label'             => 'Метка',
 					'name'              => 'gociss_hero_label',
 					'type'              => 'text',
 					'default_value'     => 'Аккредитованный орган по сертификации',
+				),
+				array(
+					'key'               => 'field_gociss_hero_label_url',
+					'label'             => 'Ссылка для метки',
+					'name'              => 'gociss_hero_label_url',
+					'type'              => 'url',
+					'instructions'      => 'Если заполнено, метка станет кликабельной ссылкой. Например: https://aq-spb.ru/akr/',
 				),
 				array(
 					'key'               => 'field_gociss_hero_title',
@@ -3107,6 +3114,153 @@ function gociss_register_service_acf_fields() {
 			'style'                 => 'default',
 			'label_placement'       => 'top',
 			'instruction_placement' => 'label',
+		)
+	);
+
+	// Секция "Пример сертификата с расшифровкой" для услуги
+	acf_add_local_field_group(
+		array(
+			'key'                   => 'group_gociss_service_cert_example',
+			'title'                 => 'Секция "Пример сертификата"',
+			'fields'                => array(
+				array(
+					'key'               => 'field_gociss_service_cert_title',
+					'label'             => 'Заголовок секции',
+					'name'              => 'gociss_service_cert_title',
+					'type'              => 'text',
+					'instructions'      => 'Например: "Сертификат ISO 45001". Если не заполнено, используется название услуги',
+				),
+				array(
+					'key'               => 'field_gociss_service_cert_description',
+					'label'             => 'Описание сертификата',
+					'name'              => 'gociss_service_cert_description',
+					'type'              => 'wysiwyg',
+					'instructions'      => 'Текстовое описание сертификата (несколько абзацев)',
+					'toolbar'           => 'basic',
+					'media_upload'      => 0,
+				),
+				array(
+					'key'               => 'field_gociss_service_cert_btn_text',
+					'label'             => 'Текст кнопки',
+					'name'              => 'gociss_service_cert_btn_text',
+					'type'              => 'text',
+					'default_value'     => 'Бесплатная консультация',
+					'instructions'      => 'Кнопка ведёт на форму (#form)',
+				),
+				array(
+					'key'               => 'field_gociss_service_cert_image',
+					'label'             => 'Изображение сертификата с метками',
+					'name'              => 'gociss_service_cert_image',
+					'type'              => 'image',
+					'instructions'      => 'Изображение сертификата с нумерованными метками (1, 2, 3, 4). Рекомендуемый размер: 400x550px',
+					'return_format'     => 'array',
+					'preview_size'      => 'medium',
+				),
+				// Пункт 1
+				array(
+					'key'          => 'field_gociss_service_cert_point_1',
+					'label'        => 'Пункт 1',
+					'name'         => 'gociss_service_cert_point_1',
+					'type'         => 'group',
+					'layout'       => 'block',
+					'sub_fields'   => array(
+						array(
+							'key'   => 'field_gociss_service_cert_point_1_title',
+							'label' => 'Заголовок',
+							'name'  => 'title',
+							'type'  => 'text',
+						),
+						array(
+							'key'   => 'field_gociss_service_cert_point_1_desc',
+							'label' => 'Описание',
+							'name'  => 'description',
+							'type'  => 'textarea',
+							'rows'  => 3,
+						),
+					),
+				),
+				// Пункт 2
+				array(
+					'key'          => 'field_gociss_service_cert_point_2',
+					'label'        => 'Пункт 2',
+					'name'         => 'gociss_service_cert_point_2',
+					'type'         => 'group',
+					'layout'       => 'block',
+					'sub_fields'   => array(
+						array(
+							'key'   => 'field_gociss_service_cert_point_2_title',
+							'label' => 'Заголовок',
+							'name'  => 'title',
+							'type'  => 'text',
+						),
+						array(
+							'key'   => 'field_gociss_service_cert_point_2_desc',
+							'label' => 'Описание',
+							'name'  => 'description',
+							'type'  => 'textarea',
+							'rows'  => 3,
+						),
+					),
+				),
+				// Пункт 3
+				array(
+					'key'          => 'field_gociss_service_cert_point_3',
+					'label'        => 'Пункт 3',
+					'name'         => 'gociss_service_cert_point_3',
+					'type'         => 'group',
+					'layout'       => 'block',
+					'sub_fields'   => array(
+						array(
+							'key'   => 'field_gociss_service_cert_point_3_title',
+							'label' => 'Заголовок',
+							'name'  => 'title',
+							'type'  => 'text',
+						),
+						array(
+							'key'   => 'field_gociss_service_cert_point_3_desc',
+							'label' => 'Описание',
+							'name'  => 'description',
+							'type'  => 'textarea',
+							'rows'  => 3,
+						),
+					),
+				),
+				// Пункт 4
+				array(
+					'key'          => 'field_gociss_service_cert_point_4',
+					'label'        => 'Пункт 4',
+					'name'         => 'gociss_service_cert_point_4',
+					'type'         => 'group',
+					'layout'       => 'block',
+					'sub_fields'   => array(
+						array(
+							'key'   => 'field_gociss_service_cert_point_4_title',
+							'label' => 'Заголовок',
+							'name'  => 'title',
+							'type'  => 'text',
+						),
+						array(
+							'key'   => 'field_gociss_service_cert_point_4_desc',
+							'label' => 'Описание',
+							'name'  => 'description',
+							'type'  => 'textarea',
+							'rows'  => 3,
+						),
+					),
+				),
+			),
+			'location'              => array(
+				array(
+					array(
+						'param'    => 'post_type',
+						'operator' => '==',
+						'value'    => 'gociss_service',
+					),
+				),
+			),
+			'menu_order'            => 2,
+			'position'              => 'normal',
+			'style'                 => 'default',
 		)
 	);
 

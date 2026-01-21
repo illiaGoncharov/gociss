@@ -621,6 +621,18 @@ body {
     margin-bottom: 1.5rem;
 }
 
+/* Кликабельная метка-ссылка */
+.hero__label--link {
+    text-decoration: none;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    cursor: pointer;
+}
+
+.hero__label--link:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-color: var(--color-white);
+}
+
 .hero__title {
     font-size: 48px;
     font-weight: 700;
@@ -715,11 +727,9 @@ body {
 }
 
 .hero__img {
-    max-width: 100%;
-    max-height: 100%;
-    width: auto;
-    height: auto;
-    object-fit: contain;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
     border-radius: 8px;
     display: block;
 }
@@ -733,8 +743,8 @@ body {
 .hero__slides {
     position: relative;
     width: 100%;
-    min-height: 400px;
-    max-height: 600px;
+    min-height: 500px;
+    max-height: 750px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -746,7 +756,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    max-height: 600px;
+    max-height: 750px;
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.6s ease, visibility 0.6s ease;
@@ -871,12 +881,12 @@ body {
     }
 
     .hero__slides {
-        min-height: 500px;
-        max-height: 500px;
+        min-height: 600px;
+        max-height: 700px;
     }
 
     .hero__slide {
-        max-height: 500px;
+        max-height: 700px;
     }
 
     .hero__nav {
@@ -909,12 +919,12 @@ body {
     }
 
     .hero__slides {
-        min-height: 400px;
-        max-height: 400px;
+        min-height: 450px;
+        max-height: 550px;
     }
 
     .hero__slide {
-        max-height: 400px;
+        max-height: 550px;
     }
 
     .hero__nav {
@@ -6648,6 +6658,212 @@ body {
 
     .service-regions__grid {
         grid-template-columns: 1fr 1fr;
+    }
+}
+
+/* ==========================================================================
+   Секция примера сертификата с расшифровкой (.service-cert-example)
+   ========================================================================== */
+
+.service-cert-example {
+    padding: 60px 0;
+    background-color: var(--color-white);
+}
+
+.service-cert-example__content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: start;
+    margin-bottom: 50px;
+}
+
+/* Левая колонка: текст */
+.service-cert-example__text {
+    display: flex;
+    flex-direction: column;
+}
+
+.service-cert-example__title {
+    font-family: var(--font-primary);
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: 24px;
+    line-height: 1.2;
+}
+
+.service-cert-example__description {
+    font-family: var(--font-primary);
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--color-text-light);
+    margin-bottom: 32px;
+}
+
+.service-cert-example__description p {
+    margin-bottom: 16px;
+}
+
+.service-cert-example__description p:last-child {
+    margin-bottom: 0;
+}
+
+.service-cert-example__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px 32px;
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    font-family: var(--font-primary);
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    align-self: flex-start;
+}
+
+.service-cert-example__btn:hover {
+    background-color: var(--color-primary-dark);
+    transform: translateY(-2px);
+}
+
+/* Правая колонка: изображение */
+.service-cert-example__image {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.service-cert-example__cert-img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+}
+
+/* Блоки с расшифровкой пунктов */
+.service-cert-example__points {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    padding-top: 40px;
+    border-top: 1px solid var(--color-border);
+}
+
+.service-cert-example__point {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px;
+    background-color: var(--color-bg-light);
+    border-radius: 12px;
+    transition: box-shadow 0.3s ease;
+}
+
+.service-cert-example__point:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.service-cert-example__point-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    font-family: var(--font-primary);
+    font-size: 16px;
+    font-weight: 700;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.service-cert-example__point-content {
+    flex: 1;
+}
+
+.service-cert-example__point-title {
+    font-family: var(--font-primary);
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: 8px;
+    line-height: 1.3;
+}
+
+.service-cert-example__point-desc {
+    font-family: var(--font-primary);
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--color-text-light);
+    margin: 0;
+}
+
+/* Адаптив секции примера сертификата */
+@media (max-width: 1024px) {
+    .service-cert-example__content {
+        gap: 40px;
+    }
+
+    .service-cert-example__points {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .service-cert-example {
+        padding: 40px 0;
+    }
+
+    .service-cert-example__content {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        margin-bottom: 40px;
+    }
+
+    .service-cert-example__title {
+        font-size: 26px;
+    }
+
+    .service-cert-example__image {
+        order: -1;
+    }
+
+    .service-cert-example__cert-img {
+        max-width: 300px;
+    }
+
+    .service-cert-example__points {
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .service-cert-example__title {
+        font-size: 22px;
+    }
+
+    .service-cert-example__description {
+        font-size: 15px;
+    }
+
+    .service-cert-example__btn {
+        width: 100%;
+        padding: 14px 24px;
+    }
+
+    .service-cert-example__points {
+        grid-template-columns: 1fr;
+    }
+
+    .service-cert-example__point {
+        flex-direction: row;
+        align-items: flex-start;
     }
 }
 

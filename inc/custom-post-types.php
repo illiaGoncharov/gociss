@@ -149,10 +149,7 @@ function gociss_register_service_post_type() {
 		'publicly_queryable'    => true,
 		'capability_type'       => 'post',
 		'show_in_rest'          => false,
-		'rewrite'               => array(
-			'slug'       => 'uslugi',
-			'with_front' => false,
-		),
+		'rewrite'               => false, // Отключаем стандартный rewrite, используем кастомные правила
 	);
 
 	register_post_type( 'gociss_service', $args );
@@ -369,8 +366,22 @@ add_action( 'after_switch_theme', 'gociss_create_default_regions' );
 add_action( 'init', 'gociss_create_default_regions', 99 );
 
 /**
+ * Фильтр для генерации правильных permalink услуг
+ * URL формат: /{service-slug}/ вместо /uslugi/{service-slug}/
+ */
+function gociss_service_permalink( $post_link, $post ) {
+	if ( $post->post_type !== 'gociss_service' ) {
+		return $post_link;
+	}
+
+	return home_url( '/' . $post->post_name . '/' );
+}
+add_filter( 'post_type_link', 'gociss_service_permalink', 10, 2 );
+
+/**
  * Хелпер: получить URL услуги для конкретного региона
- * URL формат: /uslugi/{service-slug}/{region-slug}/
+ * URL формат: /{service-slug}/{region-slug}/
+ * Например: /iso-45001/spb/
  *
  * @param int|WP_Post $service ID или объект услуги
  * @param string $region_slug Slug региона
@@ -382,7 +393,7 @@ function gociss_get_service_region_url( $service, $region_slug ) {
 		return '';
 	}
 
-	return home_url( '/uslugi/' . $service->post_name . '/' . $region_slug . '/' );
+	return home_url( '/' . $service->post_name . '/' . $region_slug . '/' );
 }
 
 /**
@@ -402,17 +413,64 @@ function gociss_get_current_region() {
 
 /**
  * Rewrite правила для мультирегиональности
- * URL: /uslugi/{service}/{region}/
+ * URL: /{service}/ и /{service}/{region}/
+ * Например: /iso-45001/ и /iso-45001/spb/
  */
 function gociss_add_service_rewrite_rules() {
-	// Правило для региональных страниц услуг: /uslugi/{service}/{region}/
+	// Правило для региональных страниц: /{service}/{region}/
 	add_rewrite_rule(
-		'^uslugi/([^/]+)/([^/]+)/?$',
-		'index.php?gociss_service=$matches[1]&gociss_region=$matches[2]',
+		'^([^/]+)/([^/]+)/?$',
+		'index.php?gociss_service_check=$matches[1]&gociss_region=$matches[2]',
+		'top'
+	);
+
+	// Правило для обычных страниц услуг: /{service}/
+	add_rewrite_rule(
+		'^([^/]+)/?$',
+		'index.php?gociss_service_check=$matches[1]',
 		'top'
 	);
 }
 add_action( 'init', 'gociss_add_service_rewrite_rules', 99 );
+
+/**
+ * Добавляем query var для проверки услуги
+ */
+function gociss_add_service_check_query_var( $vars ) {
+	$vars[] = 'gociss_service_check';
+	return $vars;
+}
+add_filter( 'query_vars', 'gociss_add_service_check_query_var' );
+
+/**
+ * Request filter для проверки и конвертации URL услуги
+ * Проверяет, является ли slug услугой, и если да - устанавливает правильные query vars
+ */
+function gociss_parse_service_request( $query_vars ) {
+	// Проверяем, есть ли наш специальный query var
+	if ( empty( $query_vars['gociss_service_check'] ) ) {
+		return $query_vars;
+	}
+
+	$slug = $query_vars['gociss_service_check'];
+
+	// Проверяем, существует ли услуга с таким slug
+	$service = get_page_by_path( $slug, OBJECT, 'gociss_service' );
+
+	if ( $service && $service->post_status === 'publish' ) {
+		// Это услуга! Устанавливаем правильные query vars
+		unset( $query_vars['gociss_service_check'] );
+		$query_vars['gociss_service'] = $slug;
+		$query_vars['post_type'] = 'gociss_service';
+		$query_vars['name'] = $slug;
+	} else {
+		// Не услуга - убираем наш query var, пусть WordPress обработает как обычно
+		unset( $query_vars['gociss_service_check'] );
+	}
+
+	return $query_vars;
+}
+add_filter( 'request', 'gociss_parse_service_request' );
 
 /**
  * Регистрация типа записи "Статьи"
