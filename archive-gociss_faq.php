@@ -157,3 +157,5 @@ $faq_categories = get_terms(
 <?php get_footer(); ?>
 
 
+
+

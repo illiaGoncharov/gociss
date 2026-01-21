@@ -3305,6 +3305,266 @@ function gociss_register_service_acf_fields() {
 add_action( 'acf/init', 'gociss_register_service_acf_fields' );
 
 /**
+ * Регистрация ACF полей для таксономии "Регионы" (мультирегиональность)
+ * Эти поля позволяют переопределить контент секций для конкретного региона
+ */
+function gociss_register_region_acf_fields() {
+	if ( ! function_exists( 'acf_add_local_field_group' ) ) {
+		return;
+	}
+
+	// Региональные настройки контента
+	acf_add_local_field_group(
+		array(
+			'key'                   => 'group_gociss_region_content',
+			'title'                 => 'Региональные настройки контента',
+			'fields'                => array(
+				// ========== HERO СЕКЦИЯ ==========
+				array(
+					'key'          => 'field_gociss_region_hero_tab',
+					'label'        => 'Hero секция',
+					'name'         => '',
+					'type'         => 'tab',
+					'placement'    => 'top',
+				),
+				array(
+					'key'          => 'field_gociss_region_hero_title',
+					'label'        => 'Заголовок Hero',
+					'name'         => 'gociss_region_hero_title',
+					'type'         => 'text',
+					'instructions' => 'Оставьте пустым, чтобы использовать заголовок из услуги',
+				),
+				array(
+					'key'          => 'field_gociss_region_hero_subtitle',
+					'label'        => 'Подзаголовок Hero',
+					'name'         => 'gociss_region_hero_subtitle',
+					'type'         => 'textarea',
+					'rows'         => 2,
+					'instructions' => 'Оставьте пустым, чтобы использовать подзаголовок из услуги',
+				),
+
+				// ========== PRICING СЕКЦИЯ ==========
+				array(
+					'key'          => 'field_gociss_region_pricing_tab',
+					'label'        => 'Цены',
+					'name'         => '',
+					'type'         => 'tab',
+					'placement'    => 'top',
+				),
+				array(
+					'key'          => 'field_gociss_region_pricing_title',
+					'label'        => 'Заголовок секции цен',
+					'name'         => 'gociss_region_pricing_title',
+					'type'         => 'text',
+					'instructions' => 'Например: "Стоимость сертификации в Москве"',
+				),
+				array(
+					'key'          => 'field_gociss_region_pricing_subtitle',
+					'label'        => 'Подзаголовок секции цен',
+					'name'         => 'gociss_region_pricing_subtitle',
+					'type'         => 'textarea',
+					'rows'         => 2,
+				),
+				// Цены - карточка 1
+				array(
+					'key'          => 'field_gociss_region_price_1',
+					'label'        => 'Цена карточки 1',
+					'name'         => 'gociss_region_price_1',
+					'type'         => 'text',
+					'instructions' => 'Например: "от 18 000 ₽". Оставьте пустым для общей цены',
+				),
+				// Цены - карточка 2
+				array(
+					'key'          => 'field_gociss_region_price_2',
+					'label'        => 'Цена карточки 2',
+					'name'         => 'gociss_region_price_2',
+					'type'         => 'text',
+				),
+				// Цены - карточка 3
+				array(
+					'key'          => 'field_gociss_region_price_3',
+					'label'        => 'Цена карточки 3',
+					'name'         => 'gociss_region_price_3',
+					'type'         => 'text',
+				),
+				// Цены - карточка 4
+				array(
+					'key'          => 'field_gociss_region_price_4',
+					'label'        => 'Цена карточки 4',
+					'name'         => 'gociss_region_price_4',
+					'type'         => 'text',
+				),
+
+				// ========== PROCESS СЕКЦИЯ ==========
+				array(
+					'key'          => 'field_gociss_region_process_tab',
+					'label'        => 'Процесс',
+					'name'         => '',
+					'type'         => 'tab',
+					'placement'    => 'top',
+				),
+				array(
+					'key'          => 'field_gociss_region_process_title',
+					'label'        => 'Заголовок секции процесса',
+					'name'         => 'gociss_region_process_title',
+					'type'         => 'text',
+				),
+				array(
+					'key'          => 'field_gociss_region_process_subtitle',
+					'label'        => 'Подзаголовок секции процесса',
+					'name'         => 'gociss_region_process_subtitle',
+					'type'         => 'textarea',
+					'rows'         => 2,
+				),
+
+				// ========== FAQ СЕКЦИЯ ==========
+				array(
+					'key'          => 'field_gociss_region_faq_tab',
+					'label'        => 'FAQ',
+					'name'         => '',
+					'type'         => 'tab',
+					'placement'    => 'top',
+				),
+				array(
+					'key'          => 'field_gociss_region_faq_title',
+					'label'        => 'Заголовок секции FAQ',
+					'name'         => 'gociss_region_faq_title',
+					'type'         => 'text',
+				),
+				array(
+					'key'          => 'field_gociss_region_faq_subtitle',
+					'label'        => 'Подзаголовок секции FAQ',
+					'name'         => 'gociss_region_faq_subtitle',
+					'type'         => 'textarea',
+					'rows'         => 2,
+				),
+				// FAQ вопросы 1-8
+				array(
+					'key'          => 'field_gociss_region_faq_1_q',
+					'label'        => 'Вопрос 1',
+					'name'         => 'gociss_region_faq_1_question',
+					'type'         => 'text',
+					'instructions' => 'Региональный вопрос. Оставьте пустым для общего',
+				),
+				array(
+					'key'          => 'field_gociss_region_faq_1_a',
+					'label'        => 'Ответ 1',
+					'name'         => 'gociss_region_faq_1_answer',
+					'type'         => 'textarea',
+					'rows'         => 3,
+				),
+				array(
+					'key'          => 'field_gociss_region_faq_2_q',
+					'label'        => 'Вопрос 2',
+					'name'         => 'gociss_region_faq_2_question',
+					'type'         => 'text',
+				),
+				array(
+					'key'          => 'field_gociss_region_faq_2_a',
+					'label'        => 'Ответ 2',
+					'name'         => 'gociss_region_faq_2_answer',
+					'type'         => 'textarea',
+					'rows'         => 3,
+				),
+				array(
+					'key'          => 'field_gociss_region_faq_3_q',
+					'label'        => 'Вопрос 3',
+					'name'         => 'gociss_region_faq_3_question',
+					'type'         => 'text',
+				),
+				array(
+					'key'          => 'field_gociss_region_faq_3_a',
+					'label'        => 'Ответ 3',
+					'name'         => 'gociss_region_faq_3_answer',
+					'type'         => 'textarea',
+					'rows'         => 3,
+				),
+				array(
+					'key'          => 'field_gociss_region_faq_4_q',
+					'label'        => 'Вопрос 4',
+					'name'         => 'gociss_region_faq_4_question',
+					'type'         => 'text',
+				),
+				array(
+					'key'          => 'field_gociss_region_faq_4_a',
+					'label'        => 'Ответ 4',
+					'name'         => 'gociss_region_faq_4_answer',
+					'type'         => 'textarea',
+					'rows'         => 3,
+				),
+				array(
+					'key'          => 'field_gociss_region_faq_5_q',
+					'label'        => 'Вопрос 5',
+					'name'         => 'gociss_region_faq_5_question',
+					'type'         => 'text',
+				),
+				array(
+					'key'          => 'field_gociss_region_faq_5_a',
+					'label'        => 'Ответ 5',
+					'name'         => 'gociss_region_faq_5_answer',
+					'type'         => 'textarea',
+					'rows'         => 3,
+				),
+				array(
+					'key'          => 'field_gociss_region_faq_6_q',
+					'label'        => 'Вопрос 6',
+					'name'         => 'gociss_region_faq_6_question',
+					'type'         => 'text',
+				),
+				array(
+					'key'          => 'field_gociss_region_faq_6_a',
+					'label'        => 'Ответ 6',
+					'name'         => 'gociss_region_faq_6_answer',
+					'type'         => 'textarea',
+					'rows'         => 3,
+				),
+				array(
+					'key'          => 'field_gociss_region_faq_7_q',
+					'label'        => 'Вопрос 7',
+					'name'         => 'gociss_region_faq_7_question',
+					'type'         => 'text',
+				),
+				array(
+					'key'          => 'field_gociss_region_faq_7_a',
+					'label'        => 'Ответ 7',
+					'name'         => 'gociss_region_faq_7_answer',
+					'type'         => 'textarea',
+					'rows'         => 3,
+				),
+				array(
+					'key'          => 'field_gociss_region_faq_8_q',
+					'label'        => 'Вопрос 8',
+					'name'         => 'gociss_region_faq_8_question',
+					'type'         => 'text',
+				),
+				array(
+					'key'          => 'field_gociss_region_faq_8_a',
+					'label'        => 'Ответ 8',
+					'name'         => 'gociss_region_faq_8_answer',
+					'type'         => 'textarea',
+					'rows'         => 3,
+				),
+			),
+			'location'              => array(
+				array(
+					array(
+						'param'    => 'taxonomy',
+						'operator' => '==',
+						'value'    => 'gociss_region',
+					),
+				),
+			),
+			'menu_order'            => 0,
+			'position'              => 'normal',
+			'style'                 => 'default',
+			'label_placement'       => 'top',
+			'instruction_placement' => 'label',
+		)
+	);
+}
+add_action( 'acf/init', 'gociss_register_region_acf_fields' );
+
+/**
  * Регистрация страницы настроек ACF
  */
 function gociss_add_options_page() {

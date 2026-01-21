@@ -1,6 +1,7 @@
 <?php
 /**
  * Секция стоимости услуги
+ * Поддерживает региональные значения
  *
  * @package Gociss
  */
@@ -9,9 +10,31 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-// Получаем данные из ACF
-$pricing_title    = function_exists( 'get_field' ) ? get_field( 'gociss_service_pricing_title' ) : '';
-$pricing_subtitle = function_exists( 'get_field' ) ? get_field( 'gociss_service_pricing_subtitle' ) : '';
+// Получаем данные с учётом региона (региональное значение или fallback на общее)
+$pricing_title = '';
+if ( function_exists( 'gociss_get_regional_field' ) ) {
+	$pricing_title = gociss_get_regional_field( 'gociss_region_pricing_title', 'gociss_service_pricing_title' );
+} elseif ( function_exists( 'get_field' ) ) {
+	$pricing_title = get_field( 'gociss_service_pricing_title' );
+}
+
+// DEBUG: временная отладка (удалить после проверки)
+if ( current_user_can( 'manage_options' ) && isset( $_GET['debug'] ) ) {
+	$debug_region = gociss_get_current_region();
+	echo '<!-- DEBUG pricing: region = ' . ( $debug_region ? esc_html( $debug_region->name . ' (ID: ' . $debug_region->term_id . ')' ) : 'null' ) . ' -->';
+	if ( $debug_region && function_exists( 'get_field' ) ) {
+		$debug_value = get_field( 'gociss_region_pricing_title', 'term_' . $debug_region->term_id );
+		echo '<!-- DEBUG pricing: regional_title = ' . esc_html( $debug_value ?: 'empty' ) . ' -->';
+	}
+	echo '<!-- DEBUG pricing: final_title = ' . esc_html( $pricing_title ?: 'empty' ) . ' -->';
+}
+
+$pricing_subtitle = function_exists( 'gociss_get_regional_field' )
+	? gociss_get_regional_field( 'gociss_region_pricing_subtitle', 'gociss_service_pricing_subtitle' )
+	: ( function_exists( 'get_field' ) ? get_field( 'gociss_service_pricing_subtitle' ) : '' );
+
+// Получаем текущий регион для региональных цен
+$current_region = function_exists( 'gociss_get_current_region' ) ? gociss_get_current_region() : null;
 
 // Собираем карточки из отдельных group полей
 $pricing_items = array();
@@ -108,9 +131,21 @@ if ( empty( $pricing_items ) ) {
 						<p class="service-pricing__card-description"><?php echo esc_html( $item['description'] ); ?></p>
 					<?php endif; ?>
 
-					<!-- Цена -->
-					<?php if ( ! empty( $item['price'] ) ) : ?>
-						<div class="service-pricing__card-price"><?php echo esc_html( $item['price'] ); ?></div>
+					<!-- Цена (с учётом региона) -->
+					<?php
+					$card_number   = $card_index + 1;
+					$regional_price = '';
+
+					// Проверяем региональную цену для этой карточки
+					if ( $current_region && function_exists( 'get_field' ) ) {
+						$regional_price = get_field( 'gociss_region_price_' . $card_number, 'term_' . $current_region->term_id );
+					}
+
+					// Используем региональную цену или общую
+					$display_price = ! empty( $regional_price ) ? $regional_price : ( ! empty( $item['price'] ) ? $item['price'] : '' );
+					?>
+					<?php if ( ! empty( $display_price ) ) : ?>
+						<div class="service-pricing__card-price"><?php echo esc_html( $display_price ); ?></div>
 					<?php endif; ?>
 
 					<!-- Кнопка -->

@@ -1,6 +1,7 @@
 <?php
 /**
  * Секция процесса получения сертификата
+ * Поддерживает региональные значения
  *
  * @package Gociss
  */
@@ -9,9 +10,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-// Получаем данные из ACF
-$process_title    = function_exists( 'get_field' ) ? get_field( 'gociss_service_process_title' ) : '';
-$process_subtitle = function_exists( 'get_field' ) ? get_field( 'gociss_service_process_subtitle' ) : '';
+// Получаем данные с учётом региона (региональное значение или fallback на общее)
+$process_title    = function_exists( 'gociss_get_regional_field' )
+	? gociss_get_regional_field( 'gociss_region_process_title', 'gociss_service_process_title' )
+	: ( function_exists( 'get_field' ) ? get_field( 'gociss_service_process_title' ) : '' );
+
+$process_subtitle = function_exists( 'gociss_get_regional_field' )
+	? gociss_get_regional_field( 'gociss_region_process_subtitle', 'gociss_service_process_subtitle' )
+	: ( function_exists( 'get_field' ) ? get_field( 'gociss_service_process_subtitle' ) : '' );
 
 // Собираем шаги из отдельных group полей
 $process_steps = array();

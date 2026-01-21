@@ -1,8 +1,9 @@
 <?php
 /**
  * Секция FAQ для страницы услуги
+ * Поддерживает региональные значения
  *
- * Использует 8 индивидуальных полей ACF
+ * Использует 8 индивидуальных полей ACF с fallback на региональные
  *
  * @package Gociss
  */
@@ -11,14 +12,40 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$faq_title    = 'Часто задаваемые вопросы';
-$faq_subtitle = 'Ответы на вопросы по данной услуге';
+// Получаем заголовки с учётом региона
+$faq_title = function_exists( 'gociss_get_regional_field' )
+	? gociss_get_regional_field( 'gociss_region_faq_title', '', 'Часто задаваемые вопросы' )
+	: 'Часто задаваемые вопросы';
 
-// Собираем FAQ из 8 индивидуальных полей
+$faq_subtitle = function_exists( 'gociss_get_regional_field' )
+	? gociss_get_regional_field( 'gociss_region_faq_subtitle', '', 'Ответы на вопросы по данной услуге' )
+	: 'Ответы на вопросы по данной услуге';
+
+// Получаем текущий регион
+$current_region = function_exists( 'gociss_get_current_region' ) ? gociss_get_current_region() : null;
+
+// Собираем FAQ из 8 индивидуальных полей с учётом региона
 $faq_items = array();
 for ( $i = 1; $i <= 8; $i++ ) {
-	$question = get_field( 'gociss_sfaq_' . $i . '_question' );
-	$answer   = get_field( 'gociss_sfaq_' . $i . '_answer' );
+	$question = '';
+	$answer   = '';
+
+	// Сначала проверяем региональные FAQ
+	if ( $current_region && function_exists( 'get_field' ) ) {
+		$regional_question = get_field( 'gociss_region_faq_' . $i . '_question', 'term_' . $current_region->term_id );
+		$regional_answer   = get_field( 'gociss_region_faq_' . $i . '_answer', 'term_' . $current_region->term_id );
+
+		if ( ! empty( $regional_question ) ) {
+			$question = $regional_question;
+			$answer   = $regional_answer;
+		}
+	}
+
+	// Fallback на общие FAQ из услуги
+	if ( empty( $question ) && function_exists( 'get_field' ) ) {
+		$question = get_field( 'gociss_sfaq_' . $i . '_question' );
+		$answer   = get_field( 'gociss_sfaq_' . $i . '_answer' );
+	}
 
 	// Достаточно вопроса — ответ может быть пустым
 	if ( ! empty( $question ) ) {

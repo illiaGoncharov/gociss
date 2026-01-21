@@ -6867,3 +6867,128 @@ body {
     }
 }
 
+/* ============================================
+   Переключатель регионов в хедере
+   ============================================ */
+
+.region-switcher {
+    position: relative;
+}
+
+.region-switcher__toggle {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    background: none;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+}
+
+.region-switcher__toggle:hover {
+    background-color: rgba(0, 82, 204, 0.05);
+    border-color: rgba(0, 82, 204, 0.1);
+}
+
+.region-switcher__toggle .location-icon {
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+.region-switcher__arrow {
+    color: var(--color-primary);
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+    align-self: center;
+    margin-left: 4px;
+}
+
+.region-switcher.is-open .region-switcher__arrow {
+    transform: rotate(180deg);
+}
+
+.region-switcher__dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    min-width: 220px;
+    background-color: var(--color-white);
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.2s ease;
+    z-index: 1000;
+    overflow: hidden;
+}
+
+.region-switcher.is-open .region-switcher__dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.region-switcher__list {
+    padding: 8px 0;
+    max-height: 320px;
+    overflow-y: auto;
+}
+
+.region-switcher__item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    font-family: var(--font-primary);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-text);
+    text-decoration: none;
+    transition: all 0.15s ease;
+}
+
+.region-switcher__item:hover {
+    background-color: rgba(0, 82, 204, 0.05);
+    color: var(--color-primary);
+}
+
+.region-switcher__item.is-current {
+    background-color: rgba(0, 82, 204, 0.08);
+    color: var(--color-primary);
+}
+
+.region-switcher__check {
+    color: var(--color-primary);
+    flex-shrink: 0;
+}
+
+/* Адаптив переключателя регионов */
+@media (max-width: 1200px) {
+    .region-switcher__toggle .location-content {
+        display: none;
+    }
+
+    .region-switcher__toggle {
+        padding: 8px;
+    }
+
+    .region-switcher__arrow {
+        display: none;
+    }
+
+    .region-switcher__dropdown {
+        left: auto;
+        right: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .region-switcher {
+        display: none;
+    }
+}
+

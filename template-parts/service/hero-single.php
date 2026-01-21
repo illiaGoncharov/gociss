@@ -33,8 +33,29 @@ if ( $service_terms && ! is_wp_error( $service_terms ) ) {
 }
 
 // Формируем заголовок с учётом региона
-$title_suffix = $region_name ? ' в ' . $region_name : '';
-$hero_title   = get_the_title() . $title_suffix . ' в аккредитованном органе<br>без посредников и переплат';
+// Сначала проверяем региональный заголовок, потом автогенерацию
+$regional_hero_title = '';
+if ( $current_region && function_exists( 'get_field' ) ) {
+	$regional_hero_title = get_field( 'gociss_region_hero_title', 'term_' . $current_region->term_id );
+}
+
+if ( ! empty( $regional_hero_title ) ) {
+	// Используем полностью кастомный региональный заголовок
+	$hero_title = $regional_hero_title;
+} else {
+	// Автогенерация заголовка с названием региона
+	$title_suffix = $region_name ? ' в ' . $region_name : '';
+	$hero_title   = get_the_title() . $title_suffix . ' в аккредитованном органе<br>без посредников и переплат';
+}
+
+// Проверяем региональный подзаголовок
+$regional_hero_subtitle = '';
+if ( $current_region && function_exists( 'get_field' ) ) {
+	$regional_hero_subtitle = get_field( 'gociss_region_hero_subtitle', 'term_' . $current_region->term_id );
+}
+if ( ! empty( $regional_hero_subtitle ) ) {
+	$service_subtitle = $regional_hero_subtitle;
+}
 
 $hero_bullets = array(
 	'Государственная аккредитация',

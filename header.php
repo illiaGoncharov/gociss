@@ -48,13 +48,65 @@ if ( ! defined( 'ABSPATH' ) ) {
 						<?php endif; ?>
 					</div>
 
-				<!-- Локация -->
-				<div class="header-top__location">
-					<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/ui_pin[blue].svg' ); ?>" alt="" class="location-icon" width="16" height="16">
-					<div class="location-content">
-						<span class="location-text">Санкт-Петербург</span>
-						<span class="location-note">Работаем по всей России</span>
+				<!-- Локация / Переключатель региона -->
+				<?php
+				$current_region = function_exists( 'gociss_get_current_region' ) ? gociss_get_current_region() : null;
+				$all_regions    = function_exists( 'gociss_get_all_regions' ) ? gociss_get_all_regions() : array();
+				$region_name    = $current_region ? $current_region->name : 'Санкт-Петербург';
+				?>
+				<div class="header-top__location region-switcher">
+					<button class="region-switcher__toggle" type="button" aria-expanded="false" aria-haspopup="true">
+						<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/ui_pin[blue].svg' ); ?>" alt="" class="location-icon" width="16" height="16">
+						<div class="location-content">
+							<span class="location-text"><?php echo esc_html( $region_name ); ?></span>
+							<span class="location-note">Работаем по всей России</span>
+						</div>
+						<svg class="region-switcher__arrow" width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+						</svg>
+					</button>
+					<?php if ( ! empty( $all_regions ) ) : ?>
+					<div class="region-switcher__dropdown">
+						<div class="region-switcher__list">
+							<?php foreach ( $all_regions as $region ) : ?>
+								<?php
+								$is_current = $current_region && $current_region->term_id === $region->term_id;
+
+								// Формируем URL для региона
+								$current_post = get_queried_object();
+								$is_service_page = false;
+								
+								// Проверяем, это ли страница услуги
+								if ( $current_post && isset( $current_post->post_type ) && $current_post->post_type === 'gociss_service' ) {
+									$is_service_page = true;
+								} elseif ( is_singular( 'gociss_service' ) ) {
+									$is_service_page = true;
+								}
+
+								if ( $is_service_page && function_exists( 'gociss_get_service_region_url' ) ) {
+									// Для страницы услуги - URL с регионом
+									$service_id = is_object( $current_post ) && isset( $current_post->ID ) ? $current_post->ID : get_the_ID();
+									$region_url = gociss_get_service_region_url( $service_id, $region->slug );
+								} else {
+									// Для других страниц - сохраняем выбор региона в cookie
+									$current_url = home_url( add_query_arg( array(), $_SERVER['REQUEST_URI'] ) );
+									$region_url  = add_query_arg( 'gociss_set_region', $region->slug, $current_url );
+								}
+
+								$item_class = 'region-switcher__item' . ( $is_current ? ' is-current' : '' );
+								?>
+								<a href="<?php echo esc_url( $region_url ); ?>" class="<?php echo esc_attr( $item_class ); ?>">
+									<?php echo esc_html( $region->name ); ?>
+									<?php if ( $is_current ) : ?>
+										<svg class="region-switcher__check" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+											<path d="M3 8L6.5 11.5L13 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+										</svg>
+									<?php endif; ?>
+								</a>
+							<?php endforeach; ?>
+						</div>
 					</div>
+					<?php endif; ?>
 				</div>
 
 					<!-- Главное меню -->

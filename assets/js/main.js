@@ -17,6 +17,7 @@
         initSearch();
         initMobileMenu();
         initScrollToTop();
+        initRegionSwitcher();
         // initInteractiveMap(); // Карта теперь статичная PNG
         // initServicesMenu(); // Услуги теперь в мобильном меню
     });
@@ -494,6 +495,56 @@
                 closeMobileMenu();
             });
         });
+    }
+
+    /**
+     * Инициализация переключателя регионов в хедере
+     */
+    function initRegionSwitcher() {
+        const switcher = document.querySelector('.region-switcher');
+        const toggle = document.querySelector('.region-switcher__toggle');
+        const dropdown = document.querySelector('.region-switcher__dropdown');
+
+        if (!switcher || !toggle) {
+            return;
+        }
+
+        // Открытие/закрытие по клику на кнопку
+        toggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const isOpen = switcher.classList.contains('is-open');
+            
+            if (isOpen) {
+                closeRegionSwitcher();
+            } else {
+                openRegionSwitcher();
+            }
+        });
+
+        // Закрытие по клику вне переключателя
+        document.addEventListener('click', function(e) {
+            if (!switcher.contains(e.target)) {
+                closeRegionSwitcher();
+            }
+        });
+
+        // Закрытие по Escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && switcher.classList.contains('is-open')) {
+                closeRegionSwitcher();
+            }
+        });
+
+        function openRegionSwitcher() {
+            switcher.classList.add('is-open');
+            toggle.setAttribute('aria-expanded', 'true');
+        }
+
+        function closeRegionSwitcher() {
+            switcher.classList.remove('is-open');
+            toggle.setAttribute('aria-expanded', 'false');
+        }
     }
 
     /**

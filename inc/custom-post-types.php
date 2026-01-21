@@ -340,6 +340,47 @@ function gociss_add_region_query_var( $vars ) {
 add_filter( 'query_vars', 'gociss_add_region_query_var' );
 
 /**
+ * Обработка выбора региона через параметр URL
+ * Сохраняет выбранный регион в cookie
+ */
+function gociss_handle_region_selection() {
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	if ( isset( $_GET['gociss_set_region'] ) ) {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$region_slug = sanitize_text_field( wp_unslash( $_GET['gociss_set_region'] ) );
+
+		// Проверяем, что такой регион существует
+		$region = get_term_by( 'slug', $region_slug, 'gociss_region' );
+		if ( $region && ! is_wp_error( $region ) ) {
+			// Сохраняем в cookie на 30 дней
+			setcookie( 'gociss_selected_region', $region_slug, time() + ( 30 * DAY_IN_SECONDS ), '/' );
+
+			// Редирект на текущую страницу без параметра
+			$redirect_url = remove_query_arg( 'gociss_set_region' );
+			wp_safe_redirect( $redirect_url );
+			exit;
+		}
+	}
+}
+add_action( 'template_redirect', 'gociss_handle_region_selection' );
+
+/**
+ * Получить выбранный регион из cookie (для страниц без региона в URL)
+ *
+ * @return WP_Term|null Объект региона или null
+ */
+function gociss_get_selected_region_from_cookie() {
+	if ( isset( $_COOKIE['gociss_selected_region'] ) ) {
+		$region_slug = sanitize_text_field( wp_unslash( $_COOKIE['gociss_selected_region'] ) );
+		$region      = get_term_by( 'slug', $region_slug, 'gociss_region' );
+		if ( $region && ! is_wp_error( $region ) ) {
+			return $region;
+		}
+	}
+	return null;
+}
+
+/**
  * Создаём базовые регионы при активации темы
  */
 function gociss_create_default_regions() {
@@ -397,18 +438,98 @@ function gociss_get_service_region_url( $service, $region_slug ) {
 }
 
 /**
- * Хелпер: получить текущий регион из URL
+ * Хелпер: получить текущий регион из URL или cookie
  *
+ * @param bool $url_only Если true - проверяет только URL, игнорирует cookie
  * @return WP_Term|null Объект региона или null
  */
-function gociss_get_current_region() {
+function gociss_get_current_region( $url_only = false ) {
+	// Сначала проверяем регион в URL (для страниц услуг)
 	$region_slug = get_query_var( 'gociss_region' );
-	if ( empty( $region_slug ) ) {
-		return null;
+	if ( ! empty( $region_slug ) ) {
+		$region = get_term_by( 'slug', $region_slug, 'gociss_region' );
+		if ( $region && ! is_wp_error( $region ) ) {
+			return $region;
+		}
 	}
 
-	$region = get_term_by( 'slug', $region_slug, 'gociss_region' );
-	return $region && ! is_wp_error( $region ) ? $region : null;
+	// Если не нашли в URL и разрешено проверять cookie
+	if ( ! $url_only && function_exists( 'gociss_get_selected_region_from_cookie' ) ) {
+		return gociss_get_selected_region_from_cookie();
+	}
+
+	return null;
+}
+
+/**
+ * Хелпер: получить значение поля с учётом региона
+ * Сначала проверяет региональное значение, если пусто - возвращает общее из услуги
+ *
+ * @param string $region_field_name Название поля в регионе (например: gociss_region_pricing_title)
+ * @param string $service_field_name Название поля в услуге (например: gociss_service_pricing_title)
+ * @param mixed  $default Значение по умолчанию, если оба поля пусты
+ * @return mixed Значение поля
+ */
+function gociss_get_regional_field( $region_field_name, $service_field_name = '', $default = '' ) {
+	if ( ! function_exists( 'get_field' ) ) {
+		return $default;
+	}
+
+	$region = gociss_get_current_region();
+
+	// Если есть регион - проверяем региональное значение
+	// ACF использует формат 'term_ID' для полей таксономий
+	if ( $region ) {
+		$regional_value = get_field( $region_field_name, 'term_' . $region->term_id );
+		if ( ! empty( $regional_value ) ) {
+			return $regional_value;
+		}
+	}
+
+	// Fallback на значение из услуги
+	if ( ! empty( $service_field_name ) ) {
+		$service_value = get_field( $service_field_name );
+		if ( ! empty( $service_value ) ) {
+			return $service_value;
+		}
+	}
+
+	return $default;
+}
+
+/**
+ * Хелпер: получить все регионы для переключателя
+ *
+ * @return array Массив объектов регионов
+ */
+function gociss_get_all_regions() {
+	$regions = get_terms(
+		array(
+			'taxonomy'   => 'gociss_region',
+			'hide_empty' => false,
+			'orderby'    => 'name',
+			'order'      => 'ASC',
+		)
+	);
+
+	return ( $regions && ! is_wp_error( $regions ) ) ? $regions : array();
+}
+
+/**
+ * Хелпер: получить URL текущей страницы для другого региона
+ *
+ * @param string $region_slug Slug региона
+ * @return string URL
+ */
+function gociss_get_current_page_region_url( $region_slug ) {
+	// Если это страница услуги
+	if ( is_singular( 'gociss_service' ) ) {
+		return gociss_get_service_region_url( get_the_ID(), $region_slug );
+	}
+
+	// Для других страниц - просто добавляем регион к текущему URL
+	$current_url = get_permalink();
+	return trailingslashit( $current_url ) . $region_slug . '/';
 }
 
 /**
