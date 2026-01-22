@@ -575,6 +575,16 @@ function gociss_parse_service_request( $query_vars ) {
 
 	$slug = $query_vars['gociss_service_check'];
 
+	// Сначала проверяем, не является ли это обычной страницей
+	$page = get_page_by_path( $slug, OBJECT, 'page' );
+	if ( $page && $page->post_status === 'publish' ) {
+		// Это страница! Устанавливаем query vars для страницы
+		unset( $query_vars['gociss_service_check'] );
+		$query_vars['page'] = '';
+		$query_vars['pagename'] = $slug;
+		return $query_vars;
+	}
+
 	// Проверяем, существует ли услуга с таким slug
 	$service = get_page_by_path( $slug, OBJECT, 'gociss_service' );
 
@@ -585,7 +595,7 @@ function gociss_parse_service_request( $query_vars ) {
 		$query_vars['post_type'] = 'gociss_service';
 		$query_vars['name'] = $slug;
 	} else {
-		// Не услуга - убираем наш query var, пусть WordPress обработает как обычно
+		// Не услуга и не страница - убираем наш query var
 		unset( $query_vars['gociss_service_check'] );
 	}
 
@@ -797,6 +807,8 @@ function gociss_flush_rewrite_rules_on_activation() {
 	gociss_register_faq_context_taxonomy();
 	gociss_register_article_post_type();
 	gociss_register_article_category_taxonomy();
+	gociss_register_certificate_post_type();
+	gociss_register_certificate_type_taxonomy();
 	flush_rewrite_rules();
 }
 add_action( 'after_switch_theme', 'gociss_flush_rewrite_rules_on_activation' );
@@ -823,4 +835,105 @@ function gociss_do_delayed_flush_rewrite() {
 	flush_rewrite_rules();
 }
 add_action( 'gociss_delayed_flush_rewrite', 'gociss_do_delayed_flush_rewrite' );
+
+/**
+ * Регистрация типа записи "Реестр сертификатов"
+ */
+function gociss_register_certificate_post_type() {
+	$labels = array(
+		'name'                  => _x( 'Реестр сертификатов', 'Post Type General Name', 'gociss' ),
+		'singular_name'         => _x( 'Сертификат', 'Post Type Singular Name', 'gociss' ),
+		'menu_name'             => __( 'Реестр', 'gociss' ),
+		'name_admin_bar'        => __( 'Сертификат', 'gociss' ),
+		'archives'              => __( 'Реестр сертификатов', 'gociss' ),
+		'all_items'             => __( 'Все сертификаты', 'gociss' ),
+		'add_new_item'          => __( 'Добавить сертификат', 'gociss' ),
+		'add_new'               => __( 'Добавить сертификат', 'gociss' ),
+		'new_item'              => __( 'Новый сертификат', 'gociss' ),
+		'edit_item'             => __( 'Редактировать сертификат', 'gociss' ),
+		'update_item'           => __( 'Обновить сертификат', 'gociss' ),
+		'view_item'             => __( 'Просмотреть сертификат', 'gociss' ),
+		'view_items'            => __( 'Просмотреть сертификаты', 'gociss' ),
+		'search_items'          => __( 'Искать сертификаты', 'gociss' ),
+		'not_found'             => __( 'Сертификаты не найдены', 'gociss' ),
+		'not_found_in_trash'    => __( 'Не найдено в корзине', 'gociss' ),
+	);
+
+	$args = array(
+		'label'                 => __( 'Сертификат', 'gociss' ),
+		'description'           => __( 'Реестр выданных сертификатов и удостоверений', 'gociss' ),
+		'labels'                => $labels,
+		'supports'              => array( 'title' ),
+		'taxonomies'            => array( 'gociss_certificate_type' ),
+		'hierarchical'          => false,
+		'public'                => false,
+		'show_ui'               => true,
+		'show_in_menu'          => true,
+		'menu_position'         => 9,
+		'menu_icon'             => 'dashicons-awards',
+		'show_in_admin_bar'     => true,
+		'show_in_nav_menus'     => false,
+		'can_export'            => true,
+		'has_archive'           => false,
+		'exclude_from_search'   => true,
+		'publicly_queryable'    => false,
+		'capability_type'       => 'post',
+		'show_in_rest'          => false,
+	);
+
+	register_post_type( 'gociss_certificate', $args );
+}
+add_action( 'init', 'gociss_register_certificate_post_type', 0 );
+
+/**
+ * Регистрация таксономии "Вид реестра" для сертификатов
+ */
+function gociss_register_certificate_type_taxonomy() {
+	$labels = array(
+		'name'                       => _x( 'Виды реестра', 'Taxonomy General Name', 'gociss' ),
+		'singular_name'              => _x( 'Вид реестра', 'Taxonomy Singular Name', 'gociss' ),
+		'menu_name'                  => __( 'Виды реестра', 'gociss' ),
+		'all_items'                  => __( 'Все виды', 'gociss' ),
+		'new_item_name'              => __( 'Новый вид', 'gociss' ),
+		'add_new_item'               => __( 'Добавить вид', 'gociss' ),
+		'edit_item'                  => __( 'Редактировать вид', 'gociss' ),
+		'update_item'                => __( 'Обновить вид', 'gociss' ),
+		'view_item'                  => __( 'Просмотреть вид', 'gociss' ),
+		'search_items'               => __( 'Искать виды', 'gociss' ),
+		'not_found'                  => __( 'Виды не найдены', 'gociss' ),
+	);
+
+	$args = array(
+		'labels'            => $labels,
+		'hierarchical'      => true,
+		'public'            => false,
+		'show_ui'           => true,
+		'show_admin_column' => true,
+		'show_in_nav_menus' => false,
+		'show_tagcloud'     => false,
+		'show_in_rest'      => false,
+	);
+
+	register_taxonomy( 'gociss_certificate_type', array( 'gociss_certificate' ), $args );
+}
+add_action( 'init', 'gociss_register_certificate_type_taxonomy', 0 );
+
+/**
+ * Создать базовые виды реестра при активации темы
+ */
+function gociss_create_default_certificate_types() {
+	$types = array(
+		'management' => 'Системы менеджмента, услуги, НОКС',
+		'personnel'  => 'Персонал',
+		'reputation' => 'Опыт и деловая репутация',
+	);
+
+	foreach ( $types as $slug => $name ) {
+		if ( ! term_exists( $slug, 'gociss_certificate_type' ) ) {
+			wp_insert_term( $name, 'gociss_certificate_type', array( 'slug' => $slug ) );
+		}
+	}
+}
+add_action( 'after_switch_theme', 'gociss_create_default_certificate_types' );
+add_action( 'init', 'gociss_create_default_certificate_types', 99 );
 

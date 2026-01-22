@@ -18,6 +18,7 @@
         initMobileMenu();
         initScrollToTop();
         initRegionSwitcher();
+        initRegistrySearch();
         // initInteractiveMap(); // Карта теперь статичная PNG
         // initServicesMenu(); // Услуги теперь в мобильном меню
     });
@@ -673,5 +674,242 @@
             clearTimeout(resizeTimer);
             resizeTimer = setTimeout(handleResize, 250);
         });
+    }
+
+    /**
+     * Инициализация поиска в реестре сертификатов
+     */
+    function initRegistrySearch() {
+        const searchForms = document.querySelectorAll('.registry-search-form');
+
+        if (!searchForms.length) {
+            return;
+        }
+
+        searchForms.forEach(function(form) {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                handleRegistrySearch(form);
+            });
+
+            // Поиск при нажатии на иконку
+            const searchIcon = form.querySelector('.registry-search-form__search-icon');
+            if (searchIcon) {
+                searchIcon.addEventListener('click', function() {
+                    handleRegistrySearch(form);
+                });
+            }
+
+            // Поиск при нажатии Enter в поле ввода
+            const input = form.querySelector('.registry-search-form__input');
+            if (input) {
+                input.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        handleRegistrySearch(form);
+                    }
+                });
+            }
+        });
+    }
+
+    /**
+     * Обработка AJAX-поиска сертификатов
+     *
+     * @param {HTMLFormElement} form Форма поиска
+     */
+    function handleRegistrySearch(form) {
+        const registryType = form.getAttribute('data-registry-type');
+        const input = form.querySelector('.registry-search-form__input');
+        const resultsContainer = document.getElementById('results-' + registryType);
+
+        if (!input || !resultsContainer) {
+            return;
+        }
+
+        const query = input.value.trim();
+
+        if (!query) {
+            showRegistryError(resultsContainer, 'Введите данные для поиска');
+            return;
+        }
+
+        if (query.length < 3) {
+            showRegistryError(resultsContainer, 'Введите минимум 3 символа');
+            return;
+        }
+
+        // Получаем nonce
+        const nonceField = form.querySelector('[name="registry_nonce_' + registryType + '"]');
+        const nonce = nonceField ? nonceField.value : '';
+
+        // Показываем лоадер
+        showRegistryLoader(resultsContainer);
+
+        // Создаём данные для запроса
+        const formData = new FormData();
+        formData.append('action', 'gociss_search_certificates');
+        formData.append('query', query);
+        formData.append('registry_type', registryType);
+        formData.append('nonce', nonce);
+
+        // Отправляем AJAX запрос
+        fetch(gocissAjax.ajaxurl, {
+            method: 'POST',
+            body: formData
+        })
+        .then(function(response) {
+            return response.json();
+        })
+        .then(function(data) {
+            if (data.success) {
+                showRegistryResults(resultsContainer, data.data.results, data.data.count);
+            } else {
+                showRegistryError(resultsContainer, data.data.message || 'Ничего не найдено');
+            }
+        })
+        .catch(function(error) {
+            showRegistryError(resultsContainer, 'Произошла ошибка. Попробуйте позже.');
+            console.error('Registry search error:', error);
+        });
+    }
+
+    /**
+     * Показать лоадер в результатах
+     *
+     * @param {HTMLElement} container Контейнер результатов
+     */
+    function showRegistryLoader(container) {
+        const loader = container.querySelector('.registry-search-results__loader');
+        const error = container.querySelector('.registry-search-results__error');
+        const count = container.querySelector('.registry-search-results__count');
+        const cards = container.querySelector('.registry-search-results__cards');
+
+        if (loader) loader.style.display = 'flex';
+        if (error) error.style.display = 'none';
+        if (count) count.style.display = 'none';
+        if (cards) cards.innerHTML = '';
+    }
+
+    /**
+     * Показать ошибку в результатах
+     *
+     * @param {HTMLElement} container Контейнер результатов
+     * @param {string} message Сообщение об ошибке
+     */
+    function showRegistryError(container, message) {
+        const loader = container.querySelector('.registry-search-results__loader');
+        const error = container.querySelector('.registry-search-results__error');
+        const count = container.querySelector('.registry-search-results__count');
+        const cards = container.querySelector('.registry-search-results__cards');
+
+        if (loader) loader.style.display = 'none';
+        if (error) {
+            error.style.display = 'block';
+            error.textContent = message;
+        }
+        if (count) count.style.display = 'none';
+        if (cards) cards.innerHTML = '';
+    }
+
+    /**
+     * Показать результаты поиска
+     *
+     * @param {HTMLElement} container Контейнер результатов
+     * @param {Array} results Массив результатов
+     * @param {number} totalCount Количество найденных
+     */
+    function showRegistryResults(container, results, totalCount) {
+        const loader = container.querySelector('.registry-search-results__loader');
+        const error = container.querySelector('.registry-search-results__error');
+        const countEl = container.querySelector('.registry-search-results__count');
+        const cards = container.querySelector('.registry-search-results__cards');
+
+        if (loader) loader.style.display = 'none';
+        if (error) error.style.display = 'none';
+
+        // Показываем количество
+        if (countEl) {
+            countEl.style.display = 'block';
+            countEl.textContent = 'Найдено: ' + totalCount + ' ' + getResultsWord(totalCount);
+        }
+
+        // Рендерим карточки
+        if (cards) {
+            cards.innerHTML = results.map(renderCertificateCard).join('');
+        }
+    }
+
+    /**
+     * Рендер карточки сертификата
+     *
+     * @param {Object} cert Данные сертификата
+     * @return {string} HTML карточки
+     */
+    function renderCertificateCard(cert) {
+        return `
+            <div class="registry-card">
+                <div class="registry-card__header">
+                    <h3 class="registry-card__company">${escapeHtml(cert.company)}</h3>
+                    <span class="registry-card__status ${cert.status_class}">${escapeHtml(cert.status_label)}</span>
+                </div>
+                <div class="registry-card__body">
+                    <div class="registry-card__row">
+                        <span class="registry-card__label">ИНН:</span>
+                        <span class="registry-card__value">${escapeHtml(cert.inn)}</span>
+                    </div>
+                    <div class="registry-card__row">
+                        <span class="registry-card__label">Сертификат:</span>
+                        <span class="registry-card__value">${escapeHtml(cert.type)}</span>
+                    </div>
+                    <div class="registry-card__row">
+                        <span class="registry-card__label">Рег. номер:</span>
+                        <span class="registry-card__value">${escapeHtml(cert.number)}</span>
+                    </div>
+                    <div class="registry-card__row">
+                        <span class="registry-card__label">Период действия:</span>
+                        <span class="registry-card__value">${escapeHtml(cert.date_start)} — ${escapeHtml(cert.date_end)}</span>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    /**
+     * Экранирование HTML
+     *
+     * @param {string} text Текст для экранирования
+     * @return {string} Экранированный текст
+     */
+    function escapeHtml(text) {
+        if (!text) return '';
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    /**
+     * Склонение слова "сертификат"
+     *
+     * @param {number} count Количество
+     * @return {string} Слово в правильной форме
+     */
+    function getResultsWord(count) {
+        const lastDigit = count % 10;
+        const lastTwoDigits = count % 100;
+
+        if (lastTwoDigits >= 11 && lastTwoDigits <= 19) {
+            return 'сертификатов';
+        }
+
+        if (lastDigit === 1) {
+            return 'сертификат';
+        }
+
+        if (lastDigit >= 2 && lastDigit <= 4) {
+            return 'сертификата';
+        }
+
+        return 'сертификатов';
     }
 })();

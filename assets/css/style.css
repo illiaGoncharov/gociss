@@ -7005,3 +7005,313 @@ body {
     }
 }
 
+/* ==========================================
+   РЕЕСТР СЕРТИФИКАТОВ
+   ========================================== */
+
+/* Страница реестра */
+.registry-page {
+    padding-bottom: 0;
+}
+
+/* Hero секция реестра */
+.registry-hero {
+    padding: 3rem 0 2rem;
+    text-align: center;
+}
+
+.registry-hero__title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin-bottom: 1rem;
+}
+
+.registry-hero__description {
+    font-size: 1.125rem;
+    color: var(--color-text-light);
+    max-width: 700px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+/* Секция поиска */
+.registry-search-section {
+    padding: 2rem 0 4rem;
+}
+
+.registry-search-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+}
+
+@media (max-width: 1024px) {
+    .registry-search-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .registry-search-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .registry-hero__title {
+        font-size: 1.75rem;
+    }
+
+    .registry-hero__description {
+        font-size: 1rem;
+    }
+}
+
+/* Блок поиска */
+.registry-search-block {
+    background: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: 16px;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.registry-search-block__header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.registry-search-block__title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    margin-bottom: 0.25rem;
+}
+
+.registry-search-block__subtitle {
+    font-size: 0.875rem;
+    color: var(--color-text-light);
+}
+
+/* Форма поиска */
+.registry-search-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.registry-search-form__input-wrapper {
+    position: relative;
+}
+
+.registry-search-form__input {
+    width: 100%;
+    padding: 0.875rem 3rem 0.875rem 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    font-family: var(--font-primary);
+    font-size: 0.9375rem;
+    color: var(--color-text);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.registry-search-form__input:focus {
+    outline: none;
+    border-color: var(--color-button);
+    box-shadow: 0 0 0 3px rgba(0, 82, 204, 0.1);
+}
+
+.registry-search-form__input::placeholder {
+    color: #9ca3af;
+}
+
+.registry-search-form__search-icon {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #9ca3af;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.registry-search-form__search-icon:hover {
+    color: var(--color-button);
+}
+
+.registry-search-form__hint {
+    font-size: 0.75rem;
+    color: var(--color-text-light);
+    text-align: center;
+    margin: -0.5rem 0 0;
+}
+
+.registry-search-form__submit {
+    width: 100%;
+    padding: 1rem;
+    font-size: 0.9375rem;
+}
+
+/* Результаты поиска */
+.registry-search-results {
+    margin-top: 1.5rem;
+}
+
+.registry-search-results__loader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 2rem;
+    color: var(--color-text-light);
+    font-size: 0.875rem;
+}
+
+.registry-search-results__spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--color-border);
+    border-top-color: var(--color-button);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.registry-search-results__error {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    padding: 1rem;
+    color: #dc2626;
+    font-size: 0.875rem;
+    text-align: center;
+}
+
+.registry-search-results__count {
+    font-size: 0.875rem;
+    color: var(--color-text-light);
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.registry-search-results__cards {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* Карточка сертификата */
+.registry-card {
+    background: #f8fafc;
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 1.25rem;
+    transition: box-shadow 0.2s ease;
+}
+
+.registry-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.registry-card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.registry-card__company {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    margin: 0;
+    line-height: 1.4;
+}
+
+.registry-card__status {
+    flex-shrink: 0;
+    padding: 0.25rem 0.75rem;
+    border-radius: 100px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.registry-card__status--active {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.registry-card__status--expired {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.registry-card__status--suspended {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.registry-card__status--renewed {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.registry-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.registry-card__row {
+    display: flex;
+    gap: 0.5rem;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+}
+
+.registry-card__label {
+    color: var(--color-text-light);
+    flex-shrink: 0;
+}
+
+.registry-card__value {
+    color: var(--color-text);
+    font-weight: 500;
+}
+
+/* Адаптив карточки */
+@media (max-width: 480px) {
+    .registry-search-block {
+        padding: 1.5rem;
+    }
+
+    .registry-card__header {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .registry-card__status {
+        align-self: flex-start;
+    }
+
+    .registry-card__row {
+        flex-direction: column;
+        gap: 0.125rem;
+    }
+}
+

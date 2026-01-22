@@ -112,26 +112,25 @@ if ( ! defined( 'ABSPATH' ) ) {
 					<!-- Главное меню -->
 					<nav class="header-top__nav">
 						<?php
-						if ( has_nav_menu( 'primary' ) ) {
-							wp_nav_menu(
-								array(
-									'theme_location' => 'primary',
-									'menu_id'        => 'primary-menu',
-									'container'      => false,
-									'menu_class'     => 'header-top__menu',
-								)
-							);
-						} else {
-							?>
-							<ul class="header-top__menu">
-								<li><a href="#about">О компании</a></li>
-								<li><a href="#accreditation">Аккредитация</a></li>
-								<li><a href="#registers">Реестры</a></li>
-								<li><a href="#blog">Блог</a></li>
-								<li><a href="#contacts">Контакты</a></li>
-							</ul>
-							<?php
-						}
+						wp_nav_menu(
+							array(
+								'theme_location'  => 'primary',
+								'menu_id'         => 'primary-menu',
+								'container'       => false,
+								'menu_class'      => 'header-top__menu',
+								'fallback_cb'     => function() {
+									?>
+									<ul class="header-top__menu">
+										<li><a href="<?php echo esc_url( home_url( '/o-kompanii/' ) ); ?>">О компании</a></li>
+										<li><a href="<?php echo esc_url( home_url( '/akkreditaciya/' ) ); ?>">Аккредитация</a></li>
+										<li><a href="<?php echo esc_url( home_url( '/reestr/' ) ); ?>">Реестры</a></li>
+										<li><a href="<?php echo esc_url( home_url( '/stati/' ) ); ?>">Блог</a></li>
+										<li><a href="<?php echo esc_url( home_url( '/kontakty/' ) ); ?>">Контакты</a></li>
+									</ul>
+									<?php
+								},
+							)
+						);
 						?>
 					</nav>
 
@@ -245,26 +244,25 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 				<nav class="header-mobile-menu__nav">
 					<?php
-					if ( has_nav_menu( 'primary' ) ) {
-						wp_nav_menu(
-							array(
-								'theme_location' => 'primary',
-								'menu_id'        => 'mobile-menu',
-								'container'      => false,
-								'menu_class'     => 'header-mobile-menu__list',
-							)
-						);
-					} else {
-						?>
-						<ul class="header-mobile-menu__list">
-							<li><a href="#about">О компании</a></li>
-							<li><a href="#accreditation">Аккредитация</a></li>
-							<li><a href="#registers">Реестры</a></li>
-							<li><a href="#blog">Блог</a></li>
-							<li><a href="#contacts">Контакты</a></li>
-						</ul>
-						<?php
-					}
+					wp_nav_menu(
+						array(
+							'theme_location'  => 'primary',
+							'menu_id'         => 'mobile-menu',
+							'container'       => false,
+							'menu_class'      => 'header-mobile-menu__list',
+							'fallback_cb'     => function() {
+								?>
+								<ul class="header-mobile-menu__list">
+									<li><a href="<?php echo esc_url( home_url( '/o-kompanii/' ) ); ?>">О компании</a></li>
+									<li><a href="<?php echo esc_url( home_url( '/akkreditaciya/' ) ); ?>">Аккредитация</a></li>
+									<li><a href="<?php echo esc_url( home_url( '/reestr/' ) ); ?>">Реестры</a></li>
+									<li><a href="<?php echo esc_url( home_url( '/stati/' ) ); ?>">Блог</a></li>
+									<li><a href="<?php echo esc_url( home_url( '/kontakty/' ) ); ?>">Контакты</a></li>
+								</ul>
+								<?php
+							},
+						)
+					);
 					?>
 				</nav>
 

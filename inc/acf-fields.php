@@ -3580,6 +3580,116 @@ function gociss_register_region_acf_fields() {
 add_action( 'acf/init', 'gociss_register_region_acf_fields' );
 
 /**
+ * Регистрация ACF полей для реестра сертификатов
+ */
+function gociss_register_certificate_acf_fields() {
+	if ( ! function_exists( 'acf_add_local_field_group' ) ) {
+		return;
+	}
+
+	acf_add_local_field_group(
+		array(
+			'key'                   => 'group_gociss_certificate',
+			'title'                 => 'Данные сертификата',
+			'fields'                => array(
+				array(
+					'key'          => 'field_gociss_cert_inn',
+					'label'        => 'ИНН организации',
+					'name'         => 'gociss_cert_inn',
+					'type'         => 'text',
+					'instructions' => 'ИНН или ОГРНИП организации',
+					'required'     => 1,
+				),
+				array(
+					'key'          => 'field_gociss_cert_company',
+					'label'        => 'Название компании',
+					'name'         => 'gociss_cert_company',
+					'type'         => 'text',
+					'instructions' => 'Полное название организации',
+					'required'     => 1,
+				),
+				array(
+					'key'          => 'field_gociss_cert_number',
+					'label'        => 'Номер сертификата',
+					'name'         => 'gociss_cert_number',
+					'type'         => 'text',
+					'instructions' => 'Регистрационный номер сертификата/удостоверения',
+					'required'     => 1,
+				),
+				array(
+					'key'          => 'field_gociss_cert_type',
+					'label'        => 'Вид сертификата',
+					'name'         => 'gociss_cert_type',
+					'type'         => 'text',
+					'instructions' => 'Например: ISO 9001:2015, ISO 14001:2015',
+					'required'     => 1,
+				),
+				array(
+					'key'          => 'field_gociss_cert_date_start',
+					'label'        => 'Дата регистрации',
+					'name'         => 'gociss_cert_date_start',
+					'type'         => 'date_picker',
+					'instructions' => 'Дата выдачи сертификата',
+					'required'     => 1,
+					'display_format' => 'd.m.Y',
+					'return_format'  => 'Y-m-d',
+					'first_day'      => 1,
+				),
+				array(
+					'key'          => 'field_gociss_cert_date_end',
+					'label'        => 'Срок действия',
+					'name'         => 'gociss_cert_date_end',
+					'type'         => 'date_picker',
+					'instructions' => 'Дата окончания действия сертификата',
+					'required'     => 1,
+					'display_format' => 'd.m.Y',
+					'return_format'  => 'Y-m-d',
+					'first_day'      => 1,
+				),
+				array(
+					'key'           => 'field_gociss_cert_status',
+					'label'         => 'Статус',
+					'name'          => 'gociss_cert_status',
+					'type'          => 'select',
+					'instructions'  => 'Текущий статус сертификата. Если ручное управление выключено — статус обновляется автоматически.',
+					'required'      => 1,
+					'choices'       => array(
+						'active'    => 'Действует',
+						'expired'   => 'Не действует',
+						'suspended' => 'Приостановлен',
+						'renewed'   => 'Продлён',
+					),
+					'default_value' => 'active',
+				),
+				array(
+					'key'          => 'field_gociss_cert_status_manual',
+					'label'        => 'Ручное управление статусом',
+					'name'         => 'gociss_cert_status_manual',
+					'type'         => 'true_false',
+					'instructions' => 'Включите, чтобы статус не менялся автоматически при истечении срока действия',
+					'ui'           => 1,
+				),
+			),
+			'location'              => array(
+				array(
+					array(
+						'param'    => 'post_type',
+						'operator' => '==',
+						'value'    => 'gociss_certificate',
+					),
+				),
+			),
+			'menu_order'            => 0,
+			'position'              => 'normal',
+			'style'                 => 'default',
+			'label_placement'       => 'top',
+			'instruction_placement' => 'label',
+		)
+	);
+}
+add_action( 'acf/init', 'gociss_register_certificate_acf_fields' );
+
+/**
  * Регистрация страницы настроек ACF
  */
 function gociss_add_options_page() {
