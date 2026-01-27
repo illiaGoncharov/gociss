@@ -66,7 +66,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 									<li><a href="#product-certification">Сертификация продукции</a></li>
 									<li><a href="#personnel-certification">Сертификация персонала</a></li>
 									<li><a href="#voluntary-certification">Добровольная сертификация</a></li>
-									<li><a href="#training">Учебный центр</a></li>
+									<li><a href="<?php echo esc_url( home_url( '/edu/' ) ); ?>">Учебный центр</a></li>
 									<li><a href="#all-services">Все услуги</a></li>
 								</ul>
 								<?php

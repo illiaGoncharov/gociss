@@ -515,7 +515,7 @@
             e.preventDefault();
             e.stopPropagation();
             const isOpen = switcher.classList.contains('is-open');
-            
+
             if (isOpen) {
                 closeRegionSwitcher();
             } else {

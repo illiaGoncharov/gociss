@@ -3706,3 +3706,471 @@ function gociss_add_options_page() {
 }
 add_action( 'acf/init', 'gociss_add_options_page' );
 
+/**
+ * Регистрация ACF полей для типа записи "Курсы"
+ */
+function gociss_register_course_acf_fields() {
+	if ( ! function_exists( 'acf_add_local_field_group' ) ) {
+		return;
+	}
+
+	acf_add_local_field_group(
+		array(
+			'key'                   => 'group_gociss_course',
+			'title'                 => 'Данные курса',
+			'fields'                => array(
+				array(
+					'key'           => 'field_gociss_course_date_type',
+					'label'         => 'Тип даты проведения',
+					'name'          => 'gociss_course_date_type',
+					'type'          => 'select',
+					'instructions'  => 'Выберите, как указать дату проведения курса',
+					'required'      => 1,
+					'choices'       => array(
+						'range'     => 'Диапазон дат',
+						'on_demand' => 'По мере набора групп',
+					),
+					'default_value' => 'range',
+				),
+				array(
+					'key'               => 'field_gociss_course_date_start',
+					'label'             => 'Дата начала',
+					'name'              => 'gociss_course_date_start',
+					'type'              => 'date_picker',
+					'instructions'      => 'Дата начала курса',
+					'display_format'    => 'd.m.Y',
+					'return_format'     => 'Y-m-d',
+					'conditional_logic' => array(
+						array(
+							array(
+								'field'    => 'field_gociss_course_date_type',
+								'operator' => '==',
+								'value'    => 'range',
+							),
+						),
+					),
+				),
+				array(
+					'key'               => 'field_gociss_course_date_end',
+					'label'             => 'Дата окончания',
+					'name'              => 'gociss_course_date_end',
+					'type'              => 'date_picker',
+					'instructions'      => 'Дата окончания курса',
+					'display_format'    => 'd.m.Y',
+					'return_format'     => 'Y-m-d',
+					'conditional_logic' => array(
+						array(
+							array(
+								'field'    => 'field_gociss_course_date_type',
+								'operator' => '==',
+								'value'    => 'range',
+							),
+						),
+					),
+				),
+				array(
+					'key'          => 'field_gociss_course_price',
+					'label'        => 'Стоимость',
+					'name'         => 'gociss_course_price',
+					'type'         => 'number',
+					'instructions' => 'Стоимость курса в рублях',
+					'append'       => '₽',
+				),
+				array(
+					'key'           => 'field_gociss_course_pdf',
+					'label'         => 'PDF с подробной информацией',
+					'name'          => 'gociss_course_pdf',
+					'type'          => 'file',
+					'instructions'  => 'Загрузите PDF-файл с программой курса. При клике на название курса откроется этот файл.',
+					'return_format' => 'array',
+					'library'       => 'all',
+					'mime_types'    => 'pdf',
+				),
+				array(
+					'key'           => 'field_gociss_course_status',
+					'label'         => 'Статус курса',
+					'name'          => 'gociss_course_status',
+					'type'          => 'select',
+					'instructions'  => 'Выберите статус курса',
+					'choices'       => array(
+						'active'   => 'Активный (можно записаться)',
+						'finished' => 'Завершён',
+					),
+					'default_value' => 'active',
+				),
+			),
+			'location'              => array(
+				array(
+					array(
+						'param'    => 'post_type',
+						'operator' => '==',
+						'value'    => 'gociss_course',
+					),
+				),
+			),
+			'menu_order'            => 0,
+			'position'              => 'normal',
+			'style'                 => 'default',
+			'label_placement'       => 'top',
+			'instruction_placement' => 'label',
+		)
+	);
+}
+add_action( 'acf/init', 'gociss_register_course_acf_fields' );
+
+/**
+ * Регистрация ACF полей для страницы "Учебный центр"
+ */
+function gociss_register_edu_page_acf_fields() {
+	if ( ! function_exists( 'acf_add_local_field_group' ) ) {
+		return;
+	}
+
+	acf_add_local_field_group(
+		array(
+			'key'                   => 'group_gociss_edu_page',
+			'title'                 => 'Настройки страницы Учебного центра',
+			'fields'                => array(
+				// === HERO СЕКЦИЯ ===
+				array(
+					'key'   => 'field_gociss_edu_hero_tab',
+					'label' => 'Hero секция',
+					'name'  => '',
+					'type'  => 'tab',
+				),
+				array(
+					'key'           => 'field_gociss_edu_hero_title',
+					'label'         => 'Заголовок',
+					'name'          => 'gociss_edu_hero_title',
+					'type'          => 'text',
+					'default_value' => 'Учебный центр',
+				),
+				array(
+					'key'           => 'field_gociss_edu_hero_subtitle',
+					'label'         => 'Подзаголовок',
+					'name'          => 'gociss_edu_hero_subtitle',
+					'type'          => 'textarea',
+					'rows'          => 2,
+					'default_value' => 'Дополнительное профессиональное образование в области управления качеством',
+				),
+				array(
+					'key'           => 'field_gociss_edu_hero_bullet_1',
+					'label'         => 'Пункт 1',
+					'name'          => 'gociss_edu_hero_bullet_1',
+					'type'          => 'text',
+					'default_value' => 'Аккредитованные эксперты',
+				),
+				array(
+					'key'           => 'field_gociss_edu_hero_bullet_2',
+					'label'         => 'Пункт 2',
+					'name'          => 'gociss_edu_hero_bullet_2',
+					'type'          => 'text',
+					'default_value' => 'Лицензированные программы',
+				),
+				array(
+					'key'           => 'field_gociss_edu_hero_bullet_3',
+					'label'         => 'Пункт 3',
+					'name'          => 'gociss_edu_hero_bullet_3',
+					'type'          => 'text',
+					'default_value' => 'Лицензия Л035-01271-78/01059514',
+				),
+				array(
+					'key'           => 'field_gociss_edu_hero_btn_text',
+					'label'         => 'Текст кнопки',
+					'name'          => 'gociss_edu_hero_btn_text',
+					'type'          => 'text',
+					'default_value' => 'Выбрать курс',
+				),
+				array(
+					'key'           => 'field_gociss_edu_hero_image',
+					'label'         => 'Фоновое изображение',
+					'name'          => 'gociss_edu_hero_image',
+					'type'          => 'image',
+					'return_format' => 'array',
+					'preview_size'  => 'medium',
+					'instructions'  => 'Рекомендуемый размер: 1200x400px',
+				),
+
+				// === ДОКУМЕНТЫ ===
+				array(
+					'key'   => 'field_gociss_edu_docs_tab',
+					'label' => 'Документы обучения',
+					'name'  => '',
+					'type'  => 'tab',
+				),
+				array(
+					'key'           => 'field_gociss_edu_doc1_title',
+					'label'         => 'Документ 1: Заголовок',
+					'name'          => 'gociss_edu_doc1_title',
+					'type'          => 'text',
+					'default_value' => 'Удостоверение о повышении квалификации',
+				),
+				array(
+					'key'           => 'field_gociss_edu_doc1_text',
+					'label'         => 'Документ 1: Описание',
+					'name'          => 'gociss_edu_doc1_text',
+					'type'          => 'textarea',
+					'rows'          => 4,
+				),
+				array(
+					'key'           => 'field_gociss_edu_doc1_image',
+					'label'         => 'Документ 1: Изображение',
+					'name'          => 'gociss_edu_doc1_image',
+					'type'          => 'image',
+					'return_format' => 'array',
+					'preview_size'  => 'medium',
+				),
+				array(
+					'key'           => 'field_gociss_edu_doc2_title',
+					'label'         => 'Документ 2: Заголовок',
+					'name'          => 'gociss_edu_doc2_title',
+					'type'          => 'text',
+					'default_value' => 'Персональный сертификат соответствия',
+				),
+				array(
+					'key'           => 'field_gociss_edu_doc2_text',
+					'label'         => 'Документ 2: Описание',
+					'name'          => 'gociss_edu_doc2_text',
+					'type'          => 'textarea',
+					'rows'          => 4,
+				),
+				array(
+					'key'           => 'field_gociss_edu_doc2_image',
+					'label'         => 'Документ 2: Изображение',
+					'name'          => 'gociss_edu_doc2_image',
+					'type'          => 'image',
+					'return_format' => 'array',
+					'preview_size'  => 'medium',
+				),
+
+				// === ЛИЦЕНЗИИ ===
+				array(
+					'key'   => 'field_gociss_edu_licenses_tab',
+					'label' => 'Лицензии',
+					'name'  => '',
+					'type'  => 'tab',
+				),
+				array(
+					'key'           => 'field_gociss_edu_fis_title',
+					'label'         => 'ФИС ФРДО: Заголовок',
+					'name'          => 'gociss_edu_fis_title',
+					'type'          => 'text',
+					'default_value' => 'Документы об образовании вносятся в ФИС ФРДО',
+				),
+				array(
+					'key'  => 'field_gociss_edu_fis_text',
+					'label' => 'ФИС ФРДО: Описание',
+					'name'  => 'gociss_edu_fis_text',
+					'type'  => 'textarea',
+					'rows'  => 3,
+				),
+				array(
+					'key'           => 'field_gociss_edu_fis_link',
+					'label'         => 'ФИС ФРДО: Ссылка на реестр',
+					'name'          => 'gociss_edu_fis_link',
+					'type'          => 'url',
+				),
+				array(
+					'key'           => 'field_gociss_edu_lic1_title',
+					'label'         => 'Лицензия 1: Заголовок',
+					'name'          => 'gociss_edu_lic1_title',
+					'type'          => 'text',
+					'default_value' => 'Государственная лицензия на ДПО',
+				),
+				array(
+					'key'  => 'field_gociss_edu_lic1_text',
+					'label' => 'Лицензия 1: Описание',
+					'name'  => 'gociss_edu_lic1_text',
+					'type'  => 'textarea',
+					'rows'  => 3,
+				),
+				array(
+					'key'   => 'field_gociss_edu_lic1_number',
+					'label' => 'Лицензия 1: Номер',
+					'name'  => 'gociss_edu_lic1_number',
+					'type'  => 'text',
+				),
+				array(
+					'key'           => 'field_gociss_edu_lic1_file',
+					'label'         => 'Лицензия 1: PDF файл',
+					'name'          => 'gociss_edu_lic1_file',
+					'type'          => 'file',
+					'return_format' => 'array',
+					'mime_types'    => 'pdf',
+				),
+				array(
+					'key'           => 'field_gociss_edu_lic1_image',
+					'label'         => 'Лицензия 1: Изображение',
+					'name'          => 'gociss_edu_lic1_image',
+					'type'          => 'image',
+					'return_format' => 'array',
+					'preview_size'  => 'medium',
+				),
+				array(
+					'key'           => 'field_gociss_edu_lic2_title',
+					'label'         => 'Лицензия 2: Заголовок',
+					'name'          => 'gociss_edu_lic2_title',
+					'type'          => 'text',
+					'default_value' => 'Государственная лицензия Федеральной службы по аккредитации',
+				),
+				array(
+					'key'  => 'field_gociss_edu_lic2_text',
+					'label' => 'Лицензия 2: Описание',
+					'name'  => 'gociss_edu_lic2_text',
+					'type'  => 'textarea',
+					'rows'  => 3,
+				),
+				array(
+					'key'   => 'field_gociss_edu_lic2_number',
+					'label' => 'Лицензия 2: Номер',
+					'name'  => 'gociss_edu_lic2_number',
+					'type'  => 'text',
+				),
+				array(
+					'key'           => 'field_gociss_edu_lic2_file',
+					'label'         => 'Лицензия 2: PDF файл',
+					'name'          => 'gociss_edu_lic2_file',
+					'type'          => 'file',
+					'return_format' => 'array',
+					'mime_types'    => 'pdf',
+				),
+				array(
+					'key'           => 'field_gociss_edu_lic2_image',
+					'label'         => 'Лицензия 2: Изображение',
+					'name'          => 'gociss_edu_lic2_image',
+					'type'          => 'image',
+					'return_format' => 'array',
+					'preview_size'  => 'medium',
+				),
+
+				// === ПРЕИМУЩЕСТВА ===
+				array(
+					'key'   => 'field_gociss_edu_adv_tab',
+					'label' => 'Преимущества',
+					'name'  => '',
+					'type'  => 'tab',
+				),
+				array(
+					'key'           => 'field_gociss_edu_adv_title',
+					'label'         => 'Заголовок секции',
+					'name'          => 'gociss_edu_adv_title',
+					'type'          => 'text',
+					'default_value' => 'Наши конкурентные преимущества',
+				),
+				array(
+					'key'           => 'field_gociss_edu_adv_subtitle',
+					'label'         => 'Подзаголовок секции',
+					'name'          => 'gociss_edu_adv_subtitle',
+					'type'          => 'text',
+					'default_value' => 'Почему клиенты выбирают именно нас для решения задач сертификации',
+				),
+				array(
+					'key'           => 'field_gociss_edu_adv1_icon',
+					'label'         => 'Преимущество 1: Иконка',
+					'name'          => 'gociss_edu_adv1_icon',
+					'type'          => 'image',
+					'return_format' => 'array',
+					'preview_size'  => 'thumbnail',
+				),
+				array(
+					'key'           => 'field_gociss_edu_adv1_text',
+					'label'         => 'Преимущество 1: Текст',
+					'name'          => 'gociss_edu_adv1_text',
+					'type'          => 'text',
+					'default_value' => 'Наличие государственной аккредитации (Росаккредитация)',
+				),
+				array(
+					'key'           => 'field_gociss_edu_adv2_icon',
+					'label'         => 'Преимущество 2: Иконка',
+					'name'          => 'gociss_edu_adv2_icon',
+					'type'          => 'image',
+					'return_format' => 'array',
+					'preview_size'  => 'thumbnail',
+				),
+				array(
+					'key'           => 'field_gociss_edu_adv2_text',
+					'label'         => 'Преимущество 2: Текст',
+					'name'          => 'gociss_edu_adv2_text',
+					'type'          => 'text',
+					'default_value' => 'Законность оформленных заключений и сертификатов СМК',
+				),
+				array(
+					'key'           => 'field_gociss_edu_adv3_icon',
+					'label'         => 'Преимущество 3: Иконка',
+					'name'          => 'gociss_edu_adv3_icon',
+					'type'          => 'image',
+					'return_format' => 'array',
+					'preview_size'  => 'thumbnail',
+				),
+				array(
+					'key'           => 'field_gociss_edu_adv3_text',
+					'label'         => 'Преимущество 3: Текст',
+					'name'          => 'gociss_edu_adv3_text',
+					'type'          => 'text',
+					'default_value' => 'Стабильно высокое качество работ по подтверждению ИСО',
+				),
+				array(
+					'key'           => 'field_gociss_edu_adv4_icon',
+					'label'         => 'Преимущество 4: Иконка',
+					'name'          => 'gociss_edu_adv4_icon',
+					'type'          => 'image',
+					'return_format' => 'array',
+					'preview_size'  => 'thumbnail',
+				),
+				array(
+					'key'           => 'field_gociss_edu_adv4_text',
+					'label'         => 'Преимущество 4: Текст',
+					'name'          => 'gociss_edu_adv4_text',
+					'type'          => 'text',
+					'default_value' => 'Объективность и достоверность предоставленных сведений',
+				),
+				array(
+					'key'           => 'field_gociss_edu_adv5_icon',
+					'label'         => 'Преимущество 5: Иконка',
+					'name'          => 'gociss_edu_adv5_icon',
+					'type'          => 'image',
+					'return_format' => 'array',
+					'preview_size'  => 'thumbnail',
+				),
+				array(
+					'key'           => 'field_gociss_edu_adv5_text',
+					'label'         => 'Преимущество 5: Текст',
+					'name'          => 'gociss_edu_adv5_text',
+					'type'          => 'text',
+					'default_value' => 'Отсутствие государственных пошлин за оказываемые услуги',
+				),
+				array(
+					'key'           => 'field_gociss_edu_adv6_icon',
+					'label'         => 'Преимущество 6: Иконка',
+					'name'          => 'gociss_edu_adv6_icon',
+					'type'          => 'image',
+					'return_format' => 'array',
+					'preview_size'  => 'thumbnail',
+				),
+				array(
+					'key'           => 'field_gociss_edu_adv6_text',
+					'label'         => 'Преимущество 6: Текст',
+					'name'          => 'gociss_edu_adv6_text',
+					'type'          => 'text',
+					'default_value' => 'Оперативная доставка документов по всем субъектам РФ',
+				),
+			),
+			'location'              => array(
+				array(
+					array(
+						'param'    => 'page_template',
+						'operator' => '==',
+						'value'    => 'page-edu.php',
+					),
+				),
+			),
+			'menu_order'            => 0,
+			'position'              => 'normal',
+			'style'                 => 'default',
+			'label_placement'       => 'top',
+			'instruction_placement' => 'label',
+		)
+	);
+}
+add_action( 'acf/init', 'gociss_register_edu_page_acf_fields' );
+

@@ -38,9 +38,9 @@ $form_id = 'registry-search-' . $registry_type;
 
 	<form class="registry-search-form" id="<?php echo esc_attr( $form_id ); ?>" data-registry-type="<?php echo esc_attr( $registry_type ); ?>">
 		<div class="registry-search-form__input-wrapper">
-			<input 
-				type="text" 
-				class="registry-search-form__input" 
+			<input
+				type="text"
+				class="registry-search-form__input"
 				name="search_query"
 				placeholder="<?php echo esc_attr( $placeholder ); ?>"
 				autocomplete="off"

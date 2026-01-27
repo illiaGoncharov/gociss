@@ -937,3 +937,105 @@ function gociss_create_default_certificate_types() {
 add_action( 'after_switch_theme', 'gociss_create_default_certificate_types' );
 add_action( 'init', 'gociss_create_default_certificate_types', 99 );
 
+/**
+ * Регистрация типа записи "Курсы" (Учебный центр)
+ */
+function gociss_register_course_post_type() {
+	$labels = array(
+		'name'                  => _x( 'Курсы', 'Post Type General Name', 'gociss' ),
+		'singular_name'         => _x( 'Курс', 'Post Type Singular Name', 'gociss' ),
+		'menu_name'             => __( 'Учебный центр', 'gociss' ),
+		'name_admin_bar'        => __( 'Курс', 'gociss' ),
+		'archives'              => __( 'Курсы и программы', 'gociss' ),
+		'all_items'             => __( 'Все курсы', 'gociss' ),
+		'add_new_item'          => __( 'Добавить курс', 'gociss' ),
+		'add_new'               => __( 'Добавить курс', 'gociss' ),
+		'new_item'              => __( 'Новый курс', 'gociss' ),
+		'edit_item'             => __( 'Редактировать курс', 'gociss' ),
+		'update_item'           => __( 'Обновить курс', 'gociss' ),
+		'view_item'             => __( 'Просмотреть курс', 'gociss' ),
+		'view_items'            => __( 'Просмотреть курсы', 'gociss' ),
+		'search_items'          => __( 'Искать курсы', 'gociss' ),
+		'not_found'             => __( 'Курсы не найдены', 'gociss' ),
+		'not_found_in_trash'    => __( 'Не найдено в корзине', 'gociss' ),
+	);
+
+	$args = array(
+		'label'                 => __( 'Курс', 'gociss' ),
+		'description'           => __( 'Курсы и образовательные программы учебного центра', 'gociss' ),
+		'labels'                => $labels,
+		'supports'              => array( 'title' ),
+		'taxonomies'            => array( 'gociss_course_cat' ),
+		'hierarchical'          => false,
+		'public'                => false,
+		'show_ui'               => true,
+		'show_in_menu'          => true,
+		'menu_position'         => 10,
+		'menu_icon'             => 'dashicons-welcome-learn-more',
+		'show_in_admin_bar'     => true,
+		'show_in_nav_menus'     => false,
+		'can_export'            => true,
+		'has_archive'           => false,
+		'exclude_from_search'   => true,
+		'publicly_queryable'    => false,
+		'capability_type'       => 'post',
+		'show_in_rest'          => false,
+	);
+
+	register_post_type( 'gociss_course', $args );
+}
+add_action( 'init', 'gociss_register_course_post_type', 0 );
+
+/**
+ * Регистрация таксономии "Категории курсов"
+ */
+function gociss_register_course_category_taxonomy() {
+	$labels = array(
+		'name'                       => _x( 'Категории курсов', 'Taxonomy General Name', 'gociss' ),
+		'singular_name'              => _x( 'Категория курса', 'Taxonomy Singular Name', 'gociss' ),
+		'menu_name'                  => __( 'Категории', 'gociss' ),
+		'all_items'                  => __( 'Все категории', 'gociss' ),
+		'new_item_name'              => __( 'Новая категория', 'gociss' ),
+		'add_new_item'               => __( 'Добавить категорию', 'gociss' ),
+		'edit_item'                  => __( 'Редактировать категорию', 'gociss' ),
+		'update_item'                => __( 'Обновить категорию', 'gociss' ),
+		'view_item'                  => __( 'Просмотреть категорию', 'gociss' ),
+		'search_items'               => __( 'Искать категории', 'gociss' ),
+		'not_found'                  => __( 'Категории не найдены', 'gociss' ),
+	);
+
+	$args = array(
+		'labels'            => $labels,
+		'hierarchical'      => true,
+		'public'            => false,
+		'show_ui'           => true,
+		'show_admin_column' => true,
+		'show_in_nav_menus' => false,
+		'show_tagcloud'     => false,
+		'show_in_rest'      => false,
+	);
+
+	register_taxonomy( 'gociss_course_cat', array( 'gociss_course' ), $args );
+}
+add_action( 'init', 'gociss_register_course_category_taxonomy', 0 );
+
+/**
+ * Создать фиксированные категории курсов при активации темы
+ */
+function gociss_create_default_course_categories() {
+	$categories = array(
+		'iso-9001-14001-45001' => 'ISO 9001, ISO 14001, ISO 45001',
+		'iso-22000-haccp'      => 'ISO 22000 / ХАССП',
+		'internal-audit'       => 'Внутренний аудит',
+		'other-standards'      => 'Другие стандарты',
+	);
+
+	foreach ( $categories as $slug => $name ) {
+		if ( ! term_exists( $slug, 'gociss_course_cat' ) ) {
+			wp_insert_term( $name, 'gociss_course_cat', array( 'slug' => $slug ) );
+		}
+	}
+}
+add_action( 'after_switch_theme', 'gociss_create_default_course_categories' );
+add_action( 'init', 'gociss_create_default_course_categories', 99 );
+

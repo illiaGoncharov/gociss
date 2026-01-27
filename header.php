@@ -206,7 +206,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 						<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/ui_file[white].svg' ); ?>" alt="" class="header-services__icon" width="16" height="16">
 						<span class="header-services__text">Добровольная сертификация</span>
 					</a>
-					<a href="#training" class="header-services__item">
+					<a href="<?php echo esc_url( home_url( '/edu/' ) ); ?>" class="header-services__item">
 						<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/ui_file[white].svg' ); ?>" alt="" class="header-services__icon" width="16" height="16">
 						<span class="header-services__text">Учебный центр</span>
 					</a>
@@ -304,7 +304,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 							<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/ui_file[white].svg' ); ?>" alt="" class="header-mobile-menu__services-icon" width="16" height="16">
 							<span>Добровольная сертификация</span>
 						</a>
-						<a href="#training" class="header-mobile-menu__services-item">
+						<a href="<?php echo esc_url( home_url( '/edu/' ) ); ?>" class="header-mobile-menu__services-item">
 							<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/ui_file[white].svg' ); ?>" alt="" class="header-mobile-menu__services-icon" width="16" height="16">
 							<span>Учебный центр</span>
 						</a>
