@@ -8199,3 +8199,356 @@ body {
         height: 280px;
     }
 }
+
+/* ==========================================================================
+   Страница ГОСТов
+   ========================================================================== */
+
+.gost-page {
+    background: var(--color-bg);
+}
+
+/* Hero секция ГОСТов */
+.gost-hero {
+    position: relative;
+    padding: 4rem 0;
+    min-height: 240px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #E8EDF5;
+    display: flex;
+    align-items: center;
+}
+
+.gost-hero__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, rgba(232, 237, 245, 0.95) 0%, rgba(232, 237, 245, 0.7) 50%, rgba(232, 237, 245, 0.4) 100%);
+}
+
+.gost-hero .container {
+    position: relative;
+    z-index: 1;
+}
+
+.gost-hero__content {
+    max-width: 700px;
+    text-align: center;
+    margin: 0 auto;
+}
+
+.gost-hero__title {
+    font-size: 40px;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin-bottom: 1rem;
+    line-height: 1.2;
+}
+
+.gost-hero__subtitle {
+    font-size: 18px;
+    color: #4B5563;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Секция стандартов */
+.gost-standards {
+    padding: 4rem 0;
+    background-color: var(--color-white);
+}
+
+.gost-standards__title {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--color-primary);
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.gost-standards__list {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* Группа стандартов (аккордеон) */
+.gost-group {
+    background: var(--color-white);
+    border: 1px solid #E5E7EB;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: box-shadow 0.2s ease;
+}
+
+.gost-group:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.gost-group__header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.5rem;
+    cursor: pointer;
+}
+
+.gost-group__icon {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--color-primary);
+}
+
+.gost-group__icon svg {
+    width: 24px;
+    height: 24px;
+}
+
+.gost-group__icon-img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
+
+.gost-group__info {
+    flex: 1;
+    min-width: 0;
+}
+
+.gost-group__name {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0 0 0.375rem;
+    line-height: 1.4;
+}
+
+.gost-group__description {
+    font-size: 14px;
+    color: #6B7280;
+    margin: 0 0 0.5rem;
+    line-height: 1.5;
+}
+
+.gost-group__count {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-button);
+}
+
+.gost-group__toggle {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #6B7280;
+    transition: transform 0.3s ease, color 0.2s ease;
+    flex-shrink: 0;
+    margin-top: 4px;
+}
+
+.gost-group__toggle:hover {
+    color: var(--color-primary);
+}
+
+.gost-group.is-open .gost-group__toggle {
+    transform: rotate(180deg);
+}
+
+/* Контент аккордеона */
+.gost-group__content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease-out;
+}
+
+.gost-group__standards {
+    padding: 0 1.5rem 1.5rem;
+    border-top: 1px solid #E5E7EB;
+}
+
+/* Элемент стандарта */
+.gost-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid #F3F4F6;
+}
+
+.gost-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.gost-item:first-child {
+    padding-top: 1.5rem;
+}
+
+.gost-item__info {
+    flex: 1;
+    min-width: 0;
+}
+
+.gost-item__name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0 0 0.25rem;
+    line-height: 1.4;
+}
+
+.gost-item__description {
+    font-size: 14px;
+    color: #6B7280;
+    margin: 0;
+    line-height: 1.5;
+}
+
+.gost-item__action {
+    flex-shrink: 0;
+}
+
+/* Кнопка скачать */
+.btn--outline-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.625rem 1.25rem;
+    background: transparent;
+    border: 1px solid var(--color-primary);
+    border-radius: 6px;
+    color: var(--color-primary);
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.btn--outline-primary:hover:not(:disabled) {
+    background: var(--color-primary);
+    color: var(--color-white);
+}
+
+.btn--outline-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    border-color: #9CA3AF;
+    color: #9CA3AF;
+}
+
+.btn--sm {
+    padding: 0.5rem 1rem;
+    font-size: 13px;
+}
+
+/* Адаптив страницы ГОСТов */
+@media (max-width: 768px) {
+    .gost-hero {
+        padding: 3rem 0;
+        min-height: auto;
+    }
+
+    .gost-hero__title {
+        font-size: 28px;
+    }
+
+    .gost-hero__subtitle {
+        font-size: 15px;
+    }
+
+    .gost-standards {
+        padding: 3rem 0;
+    }
+
+    .gost-standards__title {
+        font-size: 26px;
+        margin-bottom: 2rem;
+    }
+
+    .gost-group__header {
+        padding: 1.25rem;
+    }
+
+    .gost-group__icon {
+        width: 40px;
+        height: 40px;
+    }
+
+    .gost-group__icon svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .gost-group__name {
+        font-size: 16px;
+    }
+
+    .gost-group__description {
+        font-size: 13px;
+    }
+
+    .gost-group__standards {
+        padding: 0 1.25rem 1.25rem;
+    }
+
+    .gost-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
+
+    .gost-item__action {
+        align-self: flex-start;
+    }
+}
+
+@media (max-width: 480px) {
+    .gost-hero__title {
+        font-size: 24px;
+    }
+
+    .gost-hero__subtitle {
+        font-size: 14px;
+    }
+
+    .gost-standards__title {
+        font-size: 22px;
+    }
+
+    .gost-group__header {
+        padding: 1rem;
+        gap: 0.75rem;
+    }
+
+    .gost-group__toggle {
+        width: 32px;
+        height: 32px;
+    }
+
+    .gost-item__name {
+        font-size: 14px;
+    }
+
+    .gost-item__description {
+        font-size: 13px;
+    }
+}

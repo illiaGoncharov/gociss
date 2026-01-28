@@ -4282,3 +4282,152 @@ function gociss_register_contacts_page_acf_fields() {
 }
 add_action( 'acf/init', 'gociss_register_contacts_page_acf_fields' );
 
+/**
+ * Регистрация ACF полей для страницы ГОСТов
+ */
+function gociss_register_gost_page_acf_fields() {
+	if ( ! function_exists( 'acf_add_local_field_group' ) ) {
+		return;
+	}
+
+	// Поля для групп стандартов
+	$group_fields = array(
+		// Hero секция
+		array(
+			'key'   => 'field_gociss_gost_hero_tab',
+			'label' => 'Hero секция',
+			'name'  => '',
+			'type'  => 'tab',
+		),
+		array(
+			'key'           => 'field_gociss_gost_hero_title',
+			'label'         => 'Заголовок',
+			'name'          => 'gociss_gost_hero_title',
+			'type'          => 'text',
+			'default_value' => 'Нормативная база ГОСТов',
+		),
+		array(
+			'key'           => 'field_gociss_gost_hero_subtitle',
+			'label'         => 'Подзаголовок',
+			'name'          => 'gociss_gost_hero_subtitle',
+			'type'          => 'textarea',
+			'rows'          => 2,
+			'default_value' => 'Полная база государственных стандартов качества для обеспечения соответствия продукции и услуг требованиям безопасности и качества',
+		),
+		array(
+			'key'           => 'field_gociss_gost_hero_image',
+			'label'         => 'Фоновое изображение',
+			'name'          => 'gociss_gost_hero_image',
+			'type'          => 'image',
+			'instructions'  => 'Рекомендуемый размер: 1920x400px',
+			'return_format' => 'array',
+			'preview_size'  => 'medium',
+			'library'       => 'all',
+		),
+		// Секция стандартов
+		array(
+			'key'   => 'field_gociss_gost_section_tab',
+			'label' => 'Секция стандартов',
+			'name'  => '',
+			'type'  => 'tab',
+		),
+		array(
+			'key'           => 'field_gociss_gost_section_title',
+			'label'         => 'Заголовок секции',
+			'name'          => 'gociss_gost_section_title',
+			'type'          => 'text',
+			'default_value' => 'Основные стандарты ИСО',
+		),
+	);
+
+	// Генерируем поля для 6 групп стандартов
+	for ( $g = 1; $g <= 6; $g++ ) {
+		$group_fields[] = array(
+			'key'   => 'field_gociss_gost_group_' . $g . '_tab',
+			'label' => 'Группа ' . $g,
+			'name'  => '',
+			'type'  => 'tab',
+		);
+		$group_fields[] = array(
+			'key'          => 'field_gociss_gost_group_' . $g . '_icon',
+			'label'        => 'Иконка группы',
+			'name'         => 'gociss_gost_group_' . $g . '_icon',
+			'type'         => 'image',
+			'instructions' => 'SVG или PNG, рекомендуемый размер: 48x48px',
+			'return_format' => 'array',
+			'preview_size' => 'thumbnail',
+			'library'      => 'all',
+		);
+		$group_fields[] = array(
+			'key'   => 'field_gociss_gost_group_' . $g . '_name',
+			'label' => 'Название группы',
+			'name'  => 'gociss_gost_group_' . $g . '_name',
+			'type'  => 'text',
+		);
+		$group_fields[] = array(
+			'key'   => 'field_gociss_gost_group_' . $g . '_description',
+			'label' => 'Описание группы',
+			'name'  => 'gociss_gost_group_' . $g . '_description',
+			'type'  => 'textarea',
+			'rows'  => 2,
+		);
+
+		// 10 стандартов в каждой группе
+		for ( $s = 1; $s <= 10; $s++ ) {
+			$group_fields[] = array(
+				'key'   => 'field_gociss_gost_group_' . $g . '_std_' . $s . '_name',
+				'label' => 'Стандарт ' . $s . ' - Название',
+				'name'  => 'gociss_gost_group_' . $g . '_std_' . $s . '_name',
+				'type'  => 'text',
+				'wrapper' => array(
+					'width' => '40',
+				),
+			);
+			$group_fields[] = array(
+				'key'   => 'field_gociss_gost_group_' . $g . '_std_' . $s . '_description',
+				'label' => 'Стандарт ' . $s . ' - Описание',
+				'name'  => 'gociss_gost_group_' . $g . '_std_' . $s . '_description',
+				'type'  => 'text',
+				'wrapper' => array(
+					'width' => '40',
+				),
+			);
+			$group_fields[] = array(
+				'key'           => 'field_gociss_gost_group_' . $g . '_std_' . $s . '_file',
+				'label'         => 'Стандарт ' . $s . ' - Файл',
+				'name'          => 'gociss_gost_group_' . $g . '_std_' . $s . '_file',
+				'type'          => 'file',
+				'return_format' => 'array',
+				'library'       => 'all',
+				'mime_types'    => 'pdf,doc,docx',
+				'wrapper'       => array(
+					'width' => '20',
+				),
+			);
+		}
+	}
+
+	acf_add_local_field_group(
+		array(
+			'key'                   => 'group_gociss_gost_page',
+			'title'                 => 'Страница ГОСТов',
+			'fields'                => $group_fields,
+			'location'              => array(
+				array(
+					array(
+						'param'    => 'page_template',
+						'operator' => '==',
+						'value'    => 'page-gost.php',
+					),
+				),
+			),
+			'menu_order'            => 0,
+			'position'              => 'normal',
+			'style'                 => 'default',
+			'label_placement'       => 'top',
+			'instruction_placement' => 'label',
+		)
+	);
+}
+add_action( 'acf/init', 'gociss_register_gost_page_acf_fields' );
+

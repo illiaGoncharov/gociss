@@ -61,13 +61,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 							'fallback_cb'    => function() {
 								?>
 								<ul class="site-footer__menu">
-									<li><a href="https://aq-spb.ru/iso-45001">Сертификация ISO</a></li>
-									<li><a href="#experience">Опыт и репутация</a></li>
-									<li><a href="#product-certification">Сертификация продукции</a></li>
-									<li><a href="#personnel-certification">Сертификация персонала</a></li>
-									<li><a href="#voluntary-certification">Добровольная сертификация</a></li>
+									<li><a href="<?php echo esc_url( get_post_type_archive_link( 'gociss_service' ) ); ?>">Сертификация ISO</a></li>
+									<li><a href="<?php echo esc_url( home_url( '/' ) ); ?>">Опыт и репутация</a></li>
+									<li><a href="<?php echo esc_url( get_post_type_archive_link( 'gociss_service' ) ); ?>">Сертификация продукции</a></li>
+									<li><a href="<?php echo esc_url( get_post_type_archive_link( 'gociss_service' ) ); ?>">Сертификация персонала</a></li>
+									<li><a href="<?php echo esc_url( get_post_type_archive_link( 'gociss_service' ) ); ?>">Добровольная сертификация</a></li>
 									<li><a href="<?php echo esc_url( home_url( '/edu/' ) ); ?>">Учебный центр</a></li>
-									<li><a href="#all-services">Все услуги</a></li>
+									<li><a href="<?php echo esc_url( get_post_type_archive_link( 'gociss_service' ) ); ?>">Все услуги</a></li>
 								</ul>
 								<?php
 							},
@@ -90,11 +90,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 							'fallback_cb'    => function() {
 								?>
 								<ul class="site-footer__menu">
-									<li><a href="#registers">Реестры</a></li>
-									<li><a href="#news">Новости</a></li>
-									<li><a href="#articles">Статьи</a></li>
-									<li><a href="#gosts">ГОСТы</a></li>
-									<li><a href="#faq">Вопрос-ответ</a></li>
+									<li><a href="<?php echo esc_url( home_url( '/reestr/' ) ); ?>">Реестры</a></li>
+									<li><a href="<?php echo esc_url( get_post_type_archive_link( 'gociss_article' ) ); ?>">Новости</a></li>
+									<li><a href="<?php echo esc_url( get_post_type_archive_link( 'gociss_article' ) ); ?>">Статьи</a></li>
+									<li><a href="<?php echo esc_url( home_url( '/gost/' ) ); ?>">ГОСТы</a></li>
+									<li><a href="<?php echo esc_url( get_post_type_archive_link( 'gociss_faq' ) ); ?>">Вопрос-ответ</a></li>
 								</ul>
 								<?php
 							},
@@ -117,10 +117,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 							'fallback_cb'    => function() {
 								?>
 								<ul class="site-footer__menu">
-									<li><a href="#about">О компании</a></li>
-									<li><a href="#accreditation">Аккредитация</a></li>
-									<li><a href="#vacancies">Вакансии</a></li>
-									<li><a href="#sitemap">Карта сайта</a></li>
+									<li><a href="<?php echo esc_url( home_url( '/' ) ); ?>">О компании</a></li>
+									<li><a href="<?php echo esc_url( home_url( '/' ) ); ?>">Аккредитация</a></li>
+									<li><a href="<?php echo esc_url( home_url( '/contacts/' ) ); ?>">Контакты</a></li>
 								</ul>
 								<?php
 							},
@@ -168,9 +167,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 					<p class="site-footer__copyright">&copy; <?php echo esc_html( date( 'Y' ) ); ?></p>
 					<p class="site-footer__legal">Материалы, размещенные на сайте, носят информационный характер и ни при каких условиях не являются публичной офертой, определяемой положениями ст. 437 Гражданского кодекса РФ</p>
 					<div class="site-footer__legal-links">
-						<a href="#privacy" class="site-footer__legal-link">Политика конфиденциальности</a>
-						<a href="#agreement" class="site-footer__legal-link">Пользовательское соглашение</a>
-						<a href="#cookies" class="site-footer__legal-link">Согласие на использование файлов cookie</a>
+						<a href="<?php echo esc_url( home_url( '/privacy-policy/' ) ); ?>" class="site-footer__legal-link">Политика конфиденциальности</a>
+						<a href="<?php echo esc_url( home_url( '/terms/' ) ); ?>" class="site-footer__legal-link">Пользовательское соглашение</a>
 					</div>
 				</div>
 			</div>

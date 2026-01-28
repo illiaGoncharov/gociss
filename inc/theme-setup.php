@@ -183,6 +183,30 @@ function gociss_fix_uploads_permissions() {
 add_action( 'admin_init', 'gociss_fix_uploads_permissions' );
 
 /**
+ * Получить URL страницы по шаблону
+ *
+ * @param string $template Имя файла шаблона (например, 'page-gost.php').
+ * @return string URL страницы или home_url() если страница не найдена.
+ */
+function gociss_get_page_url_by_template( $template ) {
+	$pages = get_posts(
+		array(
+			'post_type'      => 'page',
+			'posts_per_page' => 1,
+			'meta_key'       => '_wp_page_template',
+			'meta_value'     => $template,
+			'post_status'    => 'publish',
+		)
+	);
+
+	if ( ! empty( $pages ) ) {
+		return get_permalink( $pages[0]->ID );
+	}
+
+	return home_url( '/' );
+}
+
+/**
  * Получить хлебные крошки для услуги
  *
  * @param int|null $post_id ID поста (опционально, по умолчанию текущий пост).

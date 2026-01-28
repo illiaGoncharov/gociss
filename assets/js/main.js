@@ -10,6 +10,7 @@
     // Инициализация при загрузке DOM
     document.addEventListener('DOMContentLoaded', function() {
         initFAQ();
+        initGostAccordion();
         initForm();
         initHeroSlider();
         initExpertsSlider();
@@ -73,6 +74,63 @@
             const firstAnswer = firstOpen.querySelector('.faq__answer');
             if (firstAnswer) {
                 firstAnswer.style.maxHeight = firstAnswer.scrollHeight + 'px';
+            }
+        }
+    }
+
+    /**
+     * Инициализация аккордеона групп ГОСТов
+     */
+    function initGostAccordion() {
+        const gostGroups = document.querySelectorAll('.gost-group');
+
+        if (!gostGroups.length) {
+            return;
+        }
+
+        gostGroups.forEach(function(group) {
+            const header = group.querySelector('.gost-group__header');
+            const content = group.querySelector('.gost-group__content');
+            const toggle = group.querySelector('.gost-group__toggle');
+
+            if (!header || !content) {
+                return;
+            }
+
+            header.addEventListener('click', function() {
+                const wasOpen = group.classList.contains('is-open');
+
+                // Закрываем все группы
+                gostGroups.forEach(function(otherGroup) {
+                    const otherContent = otherGroup.querySelector('.gost-group__content');
+                    const otherToggle = otherGroup.querySelector('.gost-group__toggle');
+
+                    otherGroup.classList.remove('is-open');
+                    if (otherContent) {
+                        otherContent.style.maxHeight = null;
+                    }
+                    if (otherToggle) {
+                        otherToggle.setAttribute('aria-expanded', 'false');
+                    }
+                });
+
+                // Открываем текущую группу, если она была закрыта
+                if (!wasOpen) {
+                    group.classList.add('is-open');
+                    if (toggle) {
+                        toggle.setAttribute('aria-expanded', 'true');
+                    }
+                    content.style.maxHeight = content.scrollHeight + 'px';
+                }
+            });
+        });
+
+        // Инициализация: открываем первую группу
+        const firstOpenGroup = document.querySelector('.gost-group.is-open');
+        if (firstOpenGroup) {
+            const firstContent = firstOpenGroup.querySelector('.gost-group__content');
+            if (firstContent) {
+                firstContent.style.maxHeight = firstContent.scrollHeight + 'px';
             }
         }
     }
