@@ -4174,3 +4174,111 @@ function gociss_register_edu_page_acf_fields() {
 }
 add_action( 'acf/init', 'gociss_register_edu_page_acf_fields' );
 
+/**
+ * Регистрация ACF полей для страницы Контакты
+ */
+function gociss_register_contacts_page_acf_fields() {
+	if ( ! function_exists( 'acf_add_local_field_group' ) ) {
+		return;
+	}
+
+	acf_add_local_field_group(
+		array(
+			'key'                   => 'group_gociss_contacts_page',
+			'title'                 => 'Настройки страницы Контакты',
+			'fields'                => array(
+				// Заголовок секции
+				array(
+					'key'           => 'field_gociss_contacts_title',
+					'label'         => 'Заголовок',
+					'name'          => 'gociss_contacts_title',
+					'type'          => 'text',
+					'default_value' => 'Контакты',
+				),
+				// Название организации
+				array(
+					'key'           => 'field_gociss_contacts_org_name',
+					'label'         => 'Название организации',
+					'name'          => 'gociss_contacts_org_name',
+					'type'          => 'textarea',
+					'rows'          => 2,
+					'default_value' => 'Автономная некоммерческая организация "Головной центр испытаний, сертификации и стандартизации"',
+				),
+				// PDF реквизитов
+				array(
+					'key'           => 'field_gociss_contacts_requisites_pdf',
+					'label'         => 'PDF реквизитов',
+					'name'          => 'gociss_contacts_requisites_pdf',
+					'type'          => 'file',
+					'instructions'  => 'Загрузите PDF файл с реквизитами организации',
+					'return_format' => 'array',
+					'library'       => 'all',
+					'mime_types'    => 'pdf',
+				),
+				// Адрес офиса
+				array(
+					'key'           => 'field_gociss_contacts_address_label',
+					'label'         => 'Метка адреса',
+					'name'          => 'gociss_contacts_address_label',
+					'type'          => 'text',
+					'default_value' => 'Адрес офиса:',
+				),
+				array(
+					'key'           => 'field_gociss_contacts_address',
+					'label'         => 'Адрес офиса',
+					'name'          => 'gociss_contacts_address',
+					'type'          => 'textarea',
+					'rows'          => 2,
+					'default_value' => 'г. Санкт-Петербург, ул. Парковая, дом 4, литера Д, офис 255',
+				),
+				// Контактные данные
+				array(
+					'key'           => 'field_gociss_contacts_data_label',
+					'label'         => 'Метка контактных данных',
+					'name'          => 'gociss_contacts_data_label',
+					'type'          => 'text',
+					'default_value' => 'Контактные данные:',
+				),
+				array(
+					'key'           => 'field_gociss_contacts_email',
+					'label'         => 'Email',
+					'name'          => 'gociss_contacts_email',
+					'type'          => 'email',
+					'default_value' => 'info@gociss.ru',
+				),
+				array(
+					'key'           => 'field_gociss_contacts_phone',
+					'label'         => 'Телефон',
+					'name'          => 'gociss_contacts_phone',
+					'type'          => 'text',
+					'default_value' => '+7 (800) 551-02-36',
+				),
+				// Яндекс Карта
+				array(
+					'key'          => 'field_gociss_contacts_map_embed',
+					'label'        => 'Код Яндекс Карты',
+					'name'         => 'gociss_contacts_map_embed',
+					'type'         => 'textarea',
+					'instructions' => 'Вставьте код карты из конструктора Яндекс Карт (constructor.yandex.ru). Можно использовать iframe или script.',
+					'rows'         => 6,
+				),
+			),
+			'location'              => array(
+				array(
+					array(
+						'param'    => 'page_template',
+						'operator' => '==',
+						'value'    => 'page-contacts.php',
+					),
+				),
+			),
+			'menu_order'            => 0,
+			'position'              => 'normal',
+			'style'                 => 'default',
+			'label_placement'       => 'top',
+			'instruction_placement' => 'label',
+		)
+	);
+}
+add_action( 'acf/init', 'gociss_register_contacts_page_acf_fields' );
+

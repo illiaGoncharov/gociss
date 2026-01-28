@@ -8017,3 +8017,185 @@ body {
     }
 }
 
+/* ===========================
+   Страница контактов
+   =========================== */
+
+.contacts-page {
+    padding-bottom: 4rem;
+}
+
+.contacts {
+    padding: 3rem 0 4rem;
+}
+
+.contacts__title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+/* Обёртка с серым фоном */
+.contacts__wrapper {
+    background-color: #EAEFF7;
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.contacts__info {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1rem;
+}
+
+.contacts__card {
+    background-color: var(--color-white);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.contacts__card--org {
+    gap: 1.25rem;
+}
+
+.contacts__org-name {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--color-text);
+    line-height: 1.5;
+}
+
+.contacts__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.5rem;
+    background-color: transparent;
+    border: 1px solid var(--color-primary);
+    border-radius: var(--border-radius);
+    color: var(--color-primary);
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    width: fit-content;
+}
+
+.contacts__btn:hover {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+}
+
+.contacts__label {
+    font-size: 0.875rem;
+    color: var(--color-text-light);
+    margin-bottom: 0.5rem;
+}
+
+.contacts__value {
+    font-size: 1rem;
+    color: var(--color-text);
+    line-height: 1.5;
+}
+
+.contacts__card--data {
+    gap: 0.25rem;
+}
+
+.contacts__link {
+    font-size: 1rem;
+    color: var(--color-button);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.contacts__link:hover {
+    color: var(--color-button-hover);
+    text-decoration: underline;
+}
+
+.contacts__link--phone {
+    color: var(--color-text);
+}
+
+.contacts__link--phone:hover {
+    color: var(--color-primary);
+}
+
+/* Яндекс Карта */
+.contacts__map {
+    width: 100%;
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.contacts__map iframe {
+    display: block;
+    width: 100%;
+    min-height: 500px;
+    border: none;
+}
+
+/* Заглушка карты */
+.contacts__map-placeholder {
+    width: 100%;
+    height: 500px;
+    background-color: #E5E5E5;
+    border-radius: 16px;
+}
+
+/* Адаптив для страницы контактов */
+@media (max-width: 1024px) {
+    .contacts__info {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .contacts__card--org {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 768px) {
+    .contacts__title {
+        font-size: 2rem;
+    }
+
+    .contacts__wrapper {
+        padding: 1rem;
+    }
+
+    .contacts__info {
+        grid-template-columns: 1fr;
+    }
+
+    .contacts__card--org {
+        grid-column: auto;
+    }
+
+    .contacts__map iframe,
+    .contacts__map-placeholder {
+        min-height: 350px;
+        height: 350px;
+    }
+}
+
+@media (max-width: 480px) {
+    .contacts__title {
+        font-size: 1.75rem;
+    }
+
+    .contacts__card {
+        padding: 1.25rem;
+    }
+
+    .contacts__map iframe,
+    .contacts__map-placeholder {
+        min-height: 280px;
+        height: 280px;
+    }
+}
