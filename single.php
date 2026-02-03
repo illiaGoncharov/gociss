@@ -1,6 +1,6 @@
 <?php
 /**
- * Шаблон одной статьи
+ * Шаблон одиночной записи блога
  *
  * @package Gociss
  */
@@ -14,8 +14,8 @@ get_header();
 while ( have_posts() ) :
 	the_post();
 
-	$article_cats = get_the_terms( get_the_ID(), 'gociss_article_cat' );
-	$primary_cat  = $article_cats && ! is_wp_error( $article_cats ) ? $article_cats[0] : null;
+	$post_cats   = get_the_category();
+	$primary_cat = ! empty( $post_cats ) ? $post_cats[0] : null;
 ?>
 
 <article class="article-single">
@@ -24,10 +24,10 @@ while ( have_posts() ) :
 		<nav class="breadcrumbs" aria-label="Хлебные крошки">
 			<a href="<?php echo esc_url( home_url( '/' ) ); ?>">Главная</a>
 			<span class="breadcrumbs__separator">→</span>
-			<a href="<?php echo esc_url( get_post_type_archive_link( 'gociss_article' ) ); ?>">Статьи</a>
+			<a href="<?php echo esc_url( home_url( '/blog/' ) ); ?>">Блог</a>
 			<?php if ( $primary_cat ) : ?>
 				<span class="breadcrumbs__separator">→</span>
-				<a href="<?php echo esc_url( get_term_link( $primary_cat ) ); ?>"><?php echo esc_html( $primary_cat->name ); ?></a>
+				<a href="<?php echo esc_url( get_category_link( $primary_cat->term_id ) ); ?>"><?php echo esc_html( $primary_cat->name ); ?></a>
 			<?php endif; ?>
 			<span class="breadcrumbs__separator">→</span>
 			<span class="breadcrumbs__current"><?php the_title(); ?></span>
@@ -35,10 +35,10 @@ while ( have_posts() ) :
 
 		<!-- Заголовок -->
 		<header class="article-single__header">
-			<?php if ( $article_cats && ! is_wp_error( $article_cats ) ) : ?>
+			<?php if ( ! empty( $post_cats ) ) : ?>
 			<div class="article-single__categories">
-				<?php foreach ( $article_cats as $cat ) : ?>
-					<a href="<?php echo esc_url( get_term_link( $cat ) ); ?>" class="article-single__category">
+				<?php foreach ( $post_cats as $cat ) : ?>
+					<a href="<?php echo esc_url( get_category_link( $cat->term_id ) ); ?>" class="article-single__category">
 						<?php echo esc_html( $cat->name ); ?>
 					</a>
 				<?php endforeach; ?>
@@ -70,6 +70,15 @@ while ( have_posts() ) :
 					</svg>
 					<?php echo esc_html( $read_time ); ?> мин чтения
 				</span>
+				<?php if ( get_the_author() ) : ?>
+				<span class="article-single__author">
+					<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="2"/>
+						<path d="M4 20C4 16.6863 7.13401 14 11 14H13C16.866 14 20 16.6863 20 20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+					</svg>
+					<?php the_author(); ?>
+				</span>
+				<?php endif; ?>
 			</div>
 		</header>
 
@@ -85,7 +94,20 @@ while ( have_posts() ) :
 			<?php the_content(); ?>
 		</div>
 
-		<!-- Навигация между статьями -->
+		<!-- Теги -->
+		<?php $post_tags = get_the_tags(); ?>
+		<?php if ( ! empty( $post_tags ) ) : ?>
+		<div class="article-single__tags">
+			<span class="article-single__tags-label">Теги:</span>
+			<?php foreach ( $post_tags as $tag ) : ?>
+				<a href="<?php echo esc_url( get_tag_link( $tag->term_id ) ); ?>" class="article-single__tag">
+					<?php echo esc_html( $tag->name ); ?>
+				</a>
+			<?php endforeach; ?>
+		</div>
+		<?php endif; ?>
+
+		<!-- Навигация между записями -->
 		<nav class="article-single__nav">
 			<?php
 			$prev_post = get_previous_post();
@@ -93,23 +115,23 @@ while ( have_posts() ) :
 			?>
 			<?php if ( $prev_post ) : ?>
 			<a href="<?php echo esc_url( get_permalink( $prev_post ) ); ?>" class="article-single__nav-item article-single__nav-item--prev">
-				<span class="article-single__nav-label">← Предыдущая статья</span>
+				<span class="article-single__nav-label">← Предыдущая запись</span>
 				<span class="article-single__nav-title"><?php echo esc_html( $prev_post->post_title ); ?></span>
 			</a>
 			<?php endif; ?>
 
 			<?php if ( $next_post ) : ?>
 			<a href="<?php echo esc_url( get_permalink( $next_post ) ); ?>" class="article-single__nav-item article-single__nav-item--next">
-				<span class="article-single__nav-label">Следующая статья →</span>
+				<span class="article-single__nav-label">Следующая запись →</span>
 				<span class="article-single__nav-title"><?php echo esc_html( $next_post->post_title ); ?></span>
 			</a>
 			<?php endif; ?>
 		</nav>
 
-		<!-- Похожие статьи -->
+		<!-- Похожие записи -->
 		<?php
 		$related_args = array(
-			'post_type'      => 'gociss_article',
+			'post_type'      => 'post',
 			'posts_per_page' => 3,
 			'post__not_in'   => array( get_the_ID() ),
 			'orderby'        => 'rand',
@@ -117,13 +139,7 @@ while ( have_posts() ) :
 		);
 
 		if ( $primary_cat ) {
-			$related_args['tax_query'] = array(
-				array(
-					'taxonomy' => 'gociss_article_cat',
-					'field'    => 'term_id',
-					'terms'    => $primary_cat->term_id,
-				),
-			);
+			$related_args['cat'] = $primary_cat->term_id;
 		}
 
 		$related_query = new WP_Query( $related_args );
@@ -131,7 +147,7 @@ while ( have_posts() ) :
 		if ( $related_query->have_posts() ) :
 		?>
 		<section class="article-single__related">
-			<h2 class="article-single__related-title">Похожие статьи</h2>
+			<h2 class="article-single__related-title">Похожие записи</h2>
 			<div class="article-single__related-grid">
 				<?php
 				while ( $related_query->have_posts() ) :
@@ -173,9 +189,5 @@ while ( have_posts() ) :
 <?php endwhile; ?>
 
 <?php get_footer(); ?>
-
-
-
-
 
 

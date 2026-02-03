@@ -33,6 +33,8 @@ require_once GOCISS_THEME_PATH . '/inc/custom-post-types.php';
 require_once GOCISS_THEME_PATH . '/inc/form-handler.php';
 require_once GOCISS_THEME_PATH . '/inc/create-front-page.php';
 require_once GOCISS_THEME_PATH . '/inc/certificate-handler.php';
+require_once GOCISS_THEME_PATH . '/inc/term-order.php';
+require_once GOCISS_THEME_PATH . '/inc/legal-pages.php';
 
 /**
  * Отключение проверки обновлений WordPress для локальной разработки

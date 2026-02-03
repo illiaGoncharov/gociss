@@ -93,7 +93,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 									<li><a href="<?php echo esc_url( home_url( '/reestr/' ) ); ?>">Реестры</a></li>
 									<li><a href="<?php echo esc_url( get_post_type_archive_link( 'gociss_article' ) ); ?>">Новости</a></li>
 									<li><a href="<?php echo esc_url( get_post_type_archive_link( 'gociss_article' ) ); ?>">Статьи</a></li>
-									<li><a href="<?php echo esc_url( home_url( '/gost/' ) ); ?>">ГОСТы</a></li>
+									<li><a href="<?php echo esc_url( gociss_get_page_url_by_template( 'page-gost.php' ) ); ?>">ГОСТы</a></li>
 									<li><a href="<?php echo esc_url( get_post_type_archive_link( 'gociss_faq' ) ); ?>">Вопрос-ответ</a></li>
 								</ul>
 								<?php
@@ -120,6 +120,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 									<li><a href="<?php echo esc_url( home_url( '/' ) ); ?>">О компании</a></li>
 									<li><a href="<?php echo esc_url( home_url( '/' ) ); ?>">Аккредитация</a></li>
 									<li><a href="<?php echo esc_url( home_url( '/contacts/' ) ); ?>">Контакты</a></li>
+									<li><a href="<?php echo esc_url( gociss_get_page_url_by_template( 'page-vacancies.php' ) ); ?>">Вакансии</a></li>
 								</ul>
 								<?php
 							},
@@ -170,6 +171,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 						<a href="<?php echo esc_url( home_url( '/privacy-policy/' ) ); ?>" class="site-footer__legal-link">Политика конфиденциальности</a>
 						<a href="<?php echo esc_url( home_url( '/terms/' ) ); ?>" class="site-footer__legal-link">Пользовательское соглашение</a>
 					</div>
+					<p class="site-footer__developer">
+						Разработано <a href="https://join-site.ru" target="_blank" rel="noopener noreferrer">join-site.ru</a>
+					</p>
 				</div>
 			</div>
 		</div>

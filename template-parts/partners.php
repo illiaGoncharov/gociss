@@ -27,43 +27,51 @@ $default_actions = array(
 	array(
 		'icon'  => 'phone_w.png.png',
 		'title' => 'Звонок',
-		'url'   => 'tel:+74951234567',
+		'url'   => 'tel:+78005510236',
 	),
 );
 
-// Заглушки партнёров
+// Заглушки партнёров - используем новые логотипы из папки pre-footer
 $default_partners = array(
 	array(
-		'title' => 'Правительство РФ',
-		'url'   => 'https://government.ru/',
+		'image' => get_template_directory_uri() . '/assets/images/pre-footer/01.jpg',
+		'title' => 'Партнёр 1',
+		'url'   => '#',
 	),
 	array(
-		'title' => 'Министерство экономического развития РФ',
-		'url'   => 'https://www.economy.gov.ru/',
+		'image' => get_template_directory_uri() . '/assets/images/pre-footer/02.jpg',
+		'title' => 'Партнёр 2',
+		'url'   => '#',
 	),
 	array(
-		'title' => 'Федеральная служба по аккредитации',
-		'url'   => 'https://fsa.gov.ru/',
+		'image' => get_template_directory_uri() . '/assets/images/pre-footer/03.jpg',
+		'title' => 'Партнёр 3',
+		'url'   => '#',
 	),
 	array(
-		'title' => 'ЕИС закупки',
-		'url'   => 'https://zakupki.gov.ru/',
+		'image' => get_template_directory_uri() . '/assets/images/pre-footer/04.jpg',
+		'title' => 'Партнёр 4',
+		'url'   => '#',
 	),
 	array(
-		'title' => 'МИНПРОМТОРГ',
-		'url'   => 'https://minpromtorg.gov.ru/',
+		'image' => get_template_directory_uri() . '/assets/images/pre-footer/05.jpg',
+		'title' => 'Партнёр 5',
+		'url'   => '#',
 	),
 	array(
-		'title' => 'РОССТАНДАРТ',
-		'url'   => 'https://www.rst.gov.ru/',
+		'image' => get_template_directory_uri() . '/assets/images/pre-footer/06.jpg',
+		'title' => 'Партнёр 6',
+		'url'   => '#',
 	),
 	array(
-		'title' => 'ГОСУСЛУГИ',
-		'url'   => 'https://www.gosuslugi.ru/',
+		'image' => get_template_directory_uri() . '/assets/images/pre-footer/07.jpg',
+		'title' => 'Партнёр 7',
+		'url'   => '#',
 	),
 	array(
-		'title' => 'ЧЕСТНЫЙ ЗНАК',
-		'url'   => 'https://chestnyznak.ru/',
+		'image' => get_template_directory_uri() . '/assets/images/pre-footer/08.jpg',
+		'title' => 'Партнёр 8',
+		'url'   => '#',
 	),
 );
 
@@ -81,10 +89,10 @@ $partners_to_show = ( $partners_items && is_array( $partners_items ) && count( $
 						<?php if ( ! empty( $action['icon_image'] ) && ! empty( $action['icon_image']['url'] ) ) : ?>
 							<img src="<?php echo esc_url( $action['icon_image']['url'] ); ?>" alt="<?php echo esc_attr( $action['title'] ?? '' ); ?>">
 						<?php else : ?>
-							<?php
-							$icon_file = $action['icon'] ?? 'zay_w.png.png';
-							$icon_path = get_template_directory_uri() . '/assets/images/pre-footer/' . $icon_file;
-							?>
+						<?php
+						$icon_file = $action['icon'] ?? 'zay_w.png.png';
+						$icon_path = get_template_directory_uri() . '/assets/images/pre-footer/' . $icon_file;
+						?>
 							<img src="<?php echo esc_url( $icon_path ); ?>" alt="<?php echo esc_attr( $action['title'] ?? '' ); ?>">
 						<?php endif; ?>
 					</div>
@@ -99,14 +107,25 @@ $partners_to_show = ( $partners_items && is_array( $partners_items ) && count( $
 			$index = 0;
 			foreach ( $partners_to_show as $partner ) :
 				$index++;
+				// Поддержка как ACF поля (массив), так и прямой строки пути
+				$partner_image = '';
+				if ( ! empty( $partner['image'] ) ) {
+					if ( is_array( $partner['image'] ) && ! empty( $partner['image']['url'] ) ) {
+						$partner_image = $partner['image']['url'];
+					} elseif ( is_string( $partner['image'] ) ) {
+						$partner_image = $partner['image'];
+					}
+				}
+				$partner_title = $partner['title'] ?? 'Партнёр ' . $index;
+				$partner_url   = $partner['url'] ?? '#';
 			?>
-				<a href="<?php echo esc_url( $partner['url'] ?? '#' ); ?>" class="partners__item" target="_blank" rel="noopener noreferrer">
-					<?php if ( ! empty( $partner['image'] ) && ! empty( $partner['image']['url'] ) ) : ?>
-						<img src="<?php echo esc_url( $partner['image']['url'] ); ?>" alt="<?php echo esc_attr( $partner['title'] ?? '' ); ?>">
+				<a href="<?php echo esc_url( $partner_url ); ?>" class="partners__item" target="_blank" rel="noopener noreferrer">
+					<?php if ( ! empty( $partner_image ) ) : ?>
+						<img src="<?php echo esc_url( $partner_image ); ?>" alt="<?php echo esc_attr( $partner_title ); ?>">
 					<?php else : ?>
 						<!-- Placeholder -->
 						<div class="partners__item-placeholder">
-							<span><?php echo esc_html( $partner['title'] ?? 'Партнёр ' . $index ); ?></span>
+							<span><?php echo esc_html( $partner_title ); ?></span>
 						</div>
 					<?php endif; ?>
 				</a>

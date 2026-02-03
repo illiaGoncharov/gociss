@@ -1,8 +1,8 @@
 <?php
 /**
- * Template Name: ГОСТы
+ * Template Name: Вакансии
  *
- * Шаблон страницы с нормативной базой ГОСТов
+ * Шаблон страницы с вакансиями компании
  *
  * @package Gociss
  */
@@ -14,21 +14,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 get_header();
 ?>
 
-<main class="gost-page">
+<main class="vacancies-page">
 	<!-- Хлебные крошки -->
 	<section class="breadcrumbs">
 		<div class="container">
 			<a href="<?php echo esc_url( home_url( '/' ) ); ?>">Главная</a>
 			<span class="breadcrumbs__separator">&rarr;</span>
-			<span class="breadcrumbs__current">ГОСТы</span>
+			<span class="breadcrumbs__current">Вакансии</span>
 		</div>
 	</section>
 
 	<!-- Hero секция -->
-	<?php get_template_part( 'template-parts/gost/hero' ); ?>
+	<?php get_template_part( 'template-parts/vacancies/hero' ); ?>
 
-	<!-- Секция стандартов -->
-	<?php get_template_part( 'template-parts/gost/standards' ); ?>
+	<!-- Список вакансий -->
+	<?php get_template_part( 'template-parts/vacancies/list' ); ?>
 </main>
 
 <?php

@@ -36,7 +36,7 @@ if ( ! $geo_title ) {
 			<div class="geography__map">
 				<!-- Статичная карта для мобильных -->
 				<img class="geography__map-static" src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/map/branches_map.gif' ); ?>" alt="Карта России">
-				
+
 				<!-- Интерактивная карта для десктопа: базовый слой + подсветка -->
 				<div class="interactive-map">
 					<div class="interactive-map__inner">

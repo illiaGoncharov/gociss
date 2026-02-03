@@ -4431,3 +4431,144 @@ function gociss_register_gost_page_acf_fields() {
 }
 add_action( 'acf/init', 'gociss_register_gost_page_acf_fields' );
 
+/**
+ * Регистрация ACF полей для страницы "Вакансии"
+ */
+function gociss_register_vacancies_page_acf_fields() {
+	if ( ! function_exists( 'acf_add_local_field_group' ) ) {
+		return;
+	}
+
+	$vacancies_fields = array();
+
+	// === HERO СЕКЦИЯ ===
+	$vacancies_fields[] = array(
+		'key'   => 'field_gociss_vacancies_hero_tab',
+		'label' => 'Hero секция',
+		'name'  => '',
+		'type'  => 'tab',
+	);
+	$vacancies_fields[] = array(
+		'key'           => 'field_gociss_vacancies_hero_title',
+		'label'         => 'Заголовок',
+		'name'          => 'gociss_vacancies_hero_title',
+		'type'          => 'text',
+		'default_value' => 'Вакансии',
+	);
+	$vacancies_fields[] = array(
+		'key'           => 'field_gociss_vacancies_hero_description',
+		'label'         => 'Описание',
+		'name'          => 'gociss_vacancies_hero_description',
+		'type'          => 'text',
+		'default_value' => 'По вопросам трудоустройства обращаться:',
+	);
+	$vacancies_fields[] = array(
+		'key'           => 'field_gociss_vacancies_hero_phone',
+		'label'         => 'Телефон отдела кадров',
+		'name'          => 'gociss_vacancies_hero_phone',
+		'type'          => 'text',
+		'default_value' => 'Отдел кадров 388-69-03',
+	);
+	$vacancies_fields[] = array(
+		'key'           => 'field_gociss_vacancies_hero_image',
+		'label'         => 'Фоновое изображение',
+		'name'          => 'gociss_vacancies_hero_image',
+		'type'          => 'image',
+		'return_format' => 'array',
+		'preview_size'  => 'medium',
+		'instructions'  => 'Рекомендуемый размер: 1440x300px',
+	);
+
+	// === ВАКАНСИИ (5 штук) ===
+	for ( $i = 1; $i <= 5; $i++ ) {
+		$vacancies_fields[] = array(
+			'key'   => 'field_gociss_vacancy_' . $i . '_tab',
+			'label' => 'Вакансия ' . $i,
+			'name'  => '',
+			'type'  => 'tab',
+		);
+		$vacancies_fields[] = array(
+			'key'          => 'field_gociss_vacancy_' . $i . '_title',
+			'label'        => 'Название вакансии',
+			'name'         => 'gociss_vacancy_' . $i . '_title',
+			'type'         => 'text',
+			'instructions' => 'Оставьте пустым, чтобы скрыть эту вакансию',
+		);
+		$vacancies_fields[] = array(
+			'key'          => 'field_gociss_vacancy_' . $i . '_requirements',
+			'label'        => 'Требования к кандидату',
+			'name'         => 'gociss_vacancy_' . $i . '_requirements',
+			'type'         => 'textarea',
+			'rows'         => 8,
+			'instructions' => 'Каждое требование с новой строки, начинайте с • или -',
+		);
+		$vacancies_fields[] = array(
+			'key'          => 'field_gociss_vacancy_' . $i . '_qualities',
+			'label'        => 'Личностные качества',
+			'name'         => 'gociss_vacancy_' . $i . '_qualities',
+			'type'         => 'textarea',
+			'rows'         => 4,
+			'instructions' => 'Каждое качество с новой строки',
+		);
+		$vacancies_fields[] = array(
+			'key'          => 'field_gociss_vacancy_' . $i . '_conditions',
+			'label'        => 'Условия',
+			'name'         => 'gociss_vacancy_' . $i . '_conditions',
+			'type'         => 'textarea',
+			'rows'         => 4,
+			'instructions' => 'Каждое условие с новой строки',
+		);
+		$vacancies_fields[] = array(
+			'key'   => 'field_gociss_vacancy_' . $i . '_salary',
+			'label' => 'Заработная плата',
+			'name'  => 'gociss_vacancy_' . $i . '_salary',
+			'type'  => 'text',
+		);
+	}
+
+	// === CTA КНОПКА ===
+	$vacancies_fields[] = array(
+		'key'   => 'field_gociss_vacancies_cta_tab',
+		'label' => 'Кнопка CTA',
+		'name'  => '',
+		'type'  => 'tab',
+	);
+	$vacancies_fields[] = array(
+		'key'           => 'field_gociss_vacancies_cta_text',
+		'label'         => 'Текст кнопки',
+		'name'          => 'gociss_vacancies_cta_text',
+		'type'          => 'text',
+		'default_value' => 'Оставить заявку',
+	);
+	$vacancies_fields[] = array(
+		'key'           => 'field_gociss_vacancies_cta_url',
+		'label'         => 'Ссылка кнопки',
+		'name'          => 'gociss_vacancies_cta_url',
+		'type'          => 'url',
+		'instructions'  => 'Например: #contact-form или ссылка на форму',
+	);
+
+	acf_add_local_field_group(
+		array(
+			'key'                   => 'group_gociss_vacancies_page',
+			'title'                 => 'Страница Вакансий',
+			'fields'                => $vacancies_fields,
+			'location'              => array(
+				array(
+					array(
+						'param'    => 'page_template',
+						'operator' => '==',
+						'value'    => 'page-vacancies.php',
+					),
+				),
+			),
+			'menu_order'            => 0,
+			'position'              => 'normal',
+			'style'                 => 'default',
+			'label_placement'       => 'top',
+			'instruction_placement' => 'label',
+		)
+	);
+}
+add_action( 'acf/init', 'gociss_register_vacancies_page_acf_fields' );
+

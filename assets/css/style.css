@@ -1449,18 +1449,24 @@ body {
 /* Секция география (карта России) */
 .geography {
     background-color: var(--color-white);
-    padding: 80px 0;
+    padding: 60px 0;
 }
 
 .geography__content {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 60px;
+    gap: 32px;
     align-items: center;
 }
 
 .geography__text {
     max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin: 0 auto;
 }
 
 .geography__title {
@@ -1468,7 +1474,7 @@ body {
     font-weight: 700;
     color: #051945;
     line-height: 1.2;
-    margin-bottom: 32px;
+    margin-bottom: 20px;
     font-family: var(--font-primary);
     text-transform: uppercase;
 }
@@ -2350,6 +2356,25 @@ body {
     color: var(--color-white);
 }
 
+.site-footer__developer {
+    font-size: 10px;
+    color: #C3C3C3;
+    font-family: var(--font-primary);
+    font-weight: 400;
+    margin: 0;
+    flex-shrink: 0;
+}
+
+.site-footer__developer a {
+    color: #C3C3C3;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.site-footer__developer a:hover {
+    color: var(--color-white);
+}
+
 /* Адаптивность футера */
 @media (max-width: 1200px) {
     .site-footer__main {
@@ -2519,15 +2544,14 @@ body {
 }
 
 .partners__item {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: block;
     background-color: #3B5998;
     border-radius: 12px;
-    padding: 20px 24px;
+    padding: 0;
     min-height: 80px;
     text-decoration: none;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+    overflow: hidden;
 }
 
 .partners__item:hover {
@@ -2536,9 +2560,11 @@ body {
 }
 
 .partners__item img {
-    max-width: 100%;
-    max-height: 60px;
-    object-fit: contain;
+    width: 100%;
+    height: 100%;
+    min-height: 80px;
+    object-fit: cover;
+    display: block;
 }
 
 .partners__item-placeholder {
@@ -2570,7 +2596,11 @@ body {
 
     .partners__item {
         min-height: 70px;
-        padding: 16px 20px;
+        padding: 0;
+    }
+
+    .partners__item img {
+        min-height: 70px;
     }
 
     .partners__item-placeholder {
@@ -3541,7 +3571,11 @@ body {
 
     .partners__item {
         min-height: 64px;
-        padding: 16px;
+        padding: 0;
+    }
+
+    .partners__item img {
+        min-height: 64px;
     }
 
     .partners__item-placeholder {
@@ -3972,12 +4006,12 @@ body {
 
     .partners__item {
         min-height: 56px;
-        padding: 12px;
+        padding: 0;
         border-radius: 8px;
     }
 
     .partners__item img {
-        max-height: 40px;
+        min-height: 56px;
     }
 
     .partners__item-placeholder {
@@ -8550,5 +8584,532 @@ body {
 
     .gost-item__description {
         font-size: 13px;
+    }
+}
+
+/* =====================================================
+   Страница Вакансий
+   ===================================================== */
+
+/* Hero секция */
+.vacancies-hero {
+    position: relative;
+    background-color: var(--color-primary);
+    background-size: cover;
+    background-position: center;
+    padding: 4rem 0;
+    min-height: 280px;
+    display: flex;
+    align-items: center;
+}
+
+.vacancies-hero__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, rgba(5, 25, 69, 0.85) 0%, rgba(5, 25, 69, 0.6) 100%);
+}
+
+.vacancies-hero__content {
+    position: relative;
+    z-index: 1;
+    max-width: 600px;
+    text-align: center;
+    margin: 0 auto;
+}
+
+.vacancies-hero__title {
+    font-size: 48px;
+    font-weight: 700;
+    color: var(--color-white);
+    margin: 0 0 1rem;
+    line-height: 1.2;
+}
+
+.vacancies-hero__description {
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0 0 0.5rem;
+    line-height: 1.5;
+}
+
+.vacancies-hero__phone {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--color-white);
+    margin: 0;
+}
+
+/* Список вакансий */
+.vacancies-list {
+    padding: 4rem 0;
+    background-color: #F9FAFB;
+}
+
+.vacancy-card {
+    background: var(--color-white);
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.vacancy-card:last-of-type {
+    margin-bottom: 0;
+}
+
+.vacancy-card__title {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0 0 1.5rem;
+    line-height: 1.4;
+}
+
+/* Аккордеон вакансии */
+.vacancy-card__accordions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.vacancy-accordion {
+    background: var(--color-white);
+    border: 1px solid #E5E7EB;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.vacancy-accordion__header {
+    width: 100%;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--color-text);
+    transition: background-color 0.2s ease;
+}
+
+.vacancy-accordion__header:hover {
+    background-color: #FAFAFA;
+}
+
+.vacancy-accordion__title {
+    flex: 1;
+    padding-right: 16px;
+}
+
+.vacancy-accordion__icon {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    color: #9CA3AF;
+    transition: transform 0.3s ease;
+}
+
+.vacancy-accordion__icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.vacancy-accordion.is-open .vacancy-accordion__icon {
+    transform: rotate(180deg);
+}
+
+.vacancy-accordion__content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.vacancy-accordion.is-open .vacancy-accordion__content {
+    max-height: 2000px;
+}
+
+.vacancy-accordion__inner {
+    padding: 0 20px 20px;
+    color: #4B5563;
+    font-size: 15px;
+    line-height: 1.7;
+}
+
+.vacancy-accordion__inner ul,
+.vacancy-accordion__inner ol {
+    margin: 0;
+    padding-left: 0;
+    list-style: none;
+}
+
+.vacancy-accordion__inner li {
+    position: relative;
+    padding-left: 1.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.vacancy-accordion__inner li::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    color: var(--color-primary);
+}
+
+/* CTA кнопка */
+.vacancies-list__cta {
+    display: flex;
+    justify-content: center;
+    margin-top: 3rem;
+}
+
+.vacancies-list__cta .btn {
+    gap: 8px;
+}
+
+.vacancies-list__cta .btn svg {
+    transition: transform 0.2s ease;
+}
+
+.vacancies-list__cta .btn:hover svg {
+    transform: translateX(4px);
+}
+
+/* Адаптив страницы Вакансий */
+@media (max-width: 768px) {
+    .vacancies-hero {
+        padding: 3rem 0;
+        min-height: auto;
+    }
+
+    .vacancies-hero__title {
+        font-size: 32px;
+    }
+
+    .vacancies-hero__description,
+    .vacancies-hero__phone {
+        font-size: 16px;
+    }
+
+    .vacancies-list {
+        padding: 2.5rem 0;
+    }
+
+    .vacancy-card {
+        padding: 1.5rem;
+    }
+
+    .vacancy-card__title {
+        font-size: 18px;
+        margin-bottom: 1.25rem;
+    }
+
+    .vacancy-accordion__header {
+        padding: 14px 16px;
+        font-size: 15px;
+    }
+
+    .vacancy-accordion__inner {
+        padding: 0 16px 16px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .vacancies-hero__title {
+        font-size: 28px;
+    }
+
+    .vacancies-hero__description,
+    .vacancies-hero__phone {
+        font-size: 15px;
+    }
+
+    .vacancy-card {
+        padding: 1.25rem;
+        border-radius: 8px;
+    }
+
+    .vacancy-card__title {
+        font-size: 16px;
+    }
+
+    .vacancy-accordion__header {
+        padding: 12px 14px;
+        font-size: 14px;
+    }
+
+    .vacancy-accordion__icon {
+        width: 20px;
+        height: 20px;
+    }
+
+    .vacancy-accordion__inner {
+        padding: 0 14px 14px;
+        font-size: 13px;
+        line-height: 1.6;
+    }
+}
+
+/* ================================
+   Юридические страницы (Legal)
+   ================================ */
+
+.legal-page {
+    padding: 40px 0 80px;
+    background-color: var(--color-white);
+}
+
+.legal-page .breadcrumbs {
+    margin-bottom: 32px;
+}
+
+.legal-page__content {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.legal-page__header {
+    margin-bottom: 40px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.legal-page__title {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--color-primary);
+    line-height: 1.2;
+    margin-bottom: 12px;
+    font-family: var(--font-primary);
+}
+
+.legal-page__updated {
+    font-size: 14px;
+    color: var(--color-text-light);
+    margin: 0;
+}
+
+.legal-page__body {
+    color: var(--color-text);
+    font-size: 16px;
+    line-height: 1.8;
+}
+
+.legal-page__body h2 {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--color-primary);
+    margin: 40px 0 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--color-border);
+}
+
+.legal-page__body h2:first-child {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: none;
+}
+
+.legal-page__body h3 {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 32px 0 16px;
+}
+
+.legal-page__body p {
+    margin-bottom: 16px;
+}
+
+.legal-page__body ul,
+.legal-page__body ol {
+    margin: 16px 0;
+    padding-left: 24px;
+}
+
+.legal-page__body li {
+    margin-bottom: 8px;
+}
+
+.legal-page__body a {
+    color: var(--color-button);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s ease;
+}
+
+.legal-page__body a:hover {
+    border-bottom-color: var(--color-button);
+}
+
+.legal-page__body strong {
+    font-weight: 600;
+}
+
+.legal-page__body table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 24px 0;
+}
+
+.legal-page__body th,
+.legal-page__body td {
+    padding: 12px 16px;
+    border: 1px solid var(--color-border);
+    text-align: left;
+}
+
+.legal-page__body th {
+    background-color: var(--color-gray);
+    font-weight: 600;
+}
+
+.legal-page__body blockquote {
+    margin: 24px 0;
+    padding: 20px 24px;
+    background-color: var(--color-gray);
+    border-left: 4px solid var(--color-primary);
+    font-style: italic;
+}
+
+.legal-page__footer {
+    margin-top: 48px;
+    padding: 24px;
+    background-color: var(--color-gray);
+    border-radius: var(--border-radius);
+}
+
+.legal-page__footer p {
+    margin: 0 0 12px;
+    font-weight: 500;
+}
+
+.legal-page__footer ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.legal-page__footer li {
+    margin-bottom: 8px;
+}
+
+.legal-page__footer a {
+    color: var(--color-button);
+    text-decoration: none;
+}
+
+.legal-page__footer a:hover {
+    text-decoration: underline;
+}
+
+/* Блок связанных документов */
+.legal-page__related {
+    max-width: 900px;
+    margin: 48px auto 0;
+    padding: 24px;
+    background-color: #F8FAFC;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--color-border);
+}
+
+.legal-page__related-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0 0 16px;
+}
+
+.legal-page__related-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.legal-page__related-list a {
+    display: inline-flex;
+    padding: 8px 16px;
+    background-color: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    color: var(--color-text);
+    text-decoration: none;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.legal-page__related-list a:hover {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-white);
+}
+
+/* Адаптивность юридических страниц */
+@media (max-width: 768px) {
+    .legal-page {
+        padding: 24px 0 60px;
+    }
+
+    .legal-page__title {
+        font-size: 28px;
+    }
+
+    .legal-page__body {
+        font-size: 15px;
+    }
+
+    .legal-page__body h2 {
+        font-size: 20px;
+    }
+
+    .legal-page__body h3 {
+        font-size: 18px;
+    }
+
+    .legal-page__footer {
+        padding: 20px;
+    }
+
+    .legal-page__related {
+        padding: 20px;
+    }
+
+    .legal-page__related-list {
+        flex-direction: column;
+    }
+
+    .legal-page__related-list a {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .legal-page__title {
+        font-size: 24px;
+    }
+
+    .legal-page__body {
+        font-size: 14px;
+        line-height: 1.7;
+    }
+
+    .legal-page__body h2 {
+        font-size: 18px;
+    }
+
+    .legal-page__body h3 {
+        font-size: 16px;
     }
 }

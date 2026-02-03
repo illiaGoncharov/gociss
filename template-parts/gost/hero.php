@@ -41,3 +41,4 @@ if ( $hero_image && isset( $hero_image['url'] ) ) {
 	</div>
 </section>
 
+

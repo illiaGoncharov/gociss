@@ -133,7 +133,7 @@ function gociss_register_service_post_type() {
 		'label'                 => __( 'Услуга', 'gociss' ),
 		'description'           => __( 'Услуги компании по сертификации', 'gociss' ),
 		'labels'                => $labels,
-		'supports'              => array( 'title', 'editor', 'thumbnail', 'excerpt' ),
+		'supports'              => array( 'title', 'editor', 'thumbnail', 'excerpt', 'page-attributes' ),
 		'taxonomies'            => array( 'gociss_service_cat' ),
 		'hierarchical'          => false,
 		'public'                => true,

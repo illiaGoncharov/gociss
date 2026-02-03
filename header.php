@@ -75,7 +75,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 								// Формируем URL для региона
 								$current_post = get_queried_object();
 								$is_service_page = false;
-								
+
 								// Проверяем, это ли страница услуги
 								if ( $current_post && isset( $current_post->post_type ) && $current_post->post_type === 'gociss_service' ) {
 									$is_service_page = true;

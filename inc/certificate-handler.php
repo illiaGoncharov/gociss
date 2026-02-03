@@ -373,3 +373,4 @@ function gociss_certificate_orderby( $query ) {
 }
 add_action( 'pre_get_posts', 'gociss_certificate_orderby' );
 
+

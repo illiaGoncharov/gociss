@@ -63,6 +63,7 @@ if ( ! empty( $regional_hero_title ) ) {
 			'Ростов-на-Дону'  => 'Ростове-на-Дону',
 			'Уфа'             => 'Уфе',
 			'Красноярск'      => 'Красноярске',
+			'Краснодар'       => 'Краснодаре',
 			'Воронеж'         => 'Воронеже',
 			'Пермь'           => 'Перми',
 			'Волгоград'       => 'Волгограде',
@@ -176,38 +177,4 @@ if ( $service_banner && ! empty( $service_banner['url'] ) ) {
 		</div>
 	</div>
 </section>
-
-<!-- Секция описания -->
-<?php if ( $service_short_desc || has_excerpt() ) : ?>
-<section class="service-about">
-	<div class="container">
-		<div class="service-about__content">
-			<div class="service-about__text">
-				<h2 class="service-about__title"><?php echo esc_html( get_the_title() ); ?></h2>
-
-				<div class="service-about__description">
-					<?php
-					if ( $service_short_desc ) {
-						echo wp_kses_post( $service_short_desc );
-					} elseif ( has_excerpt() ) {
-						echo wp_kses_post( get_the_excerpt() );
-					}
-					?>
-				</div>
-
-			<a href="#form" class="service-about__btn">
-				Бесплатная консультация
-			</a>
-		</div>
-
-		<?php if ( has_post_thumbnail() ) : ?>
-		<div class="service-about__image">
-			<?php the_post_thumbnail( 'large', array( 'class' => 'service-about__cert-img' ) ); ?>
-		</div>
-		<?php endif; ?>
-	</div>
-</div>
-</section>
-<?php endif; ?>
-
 

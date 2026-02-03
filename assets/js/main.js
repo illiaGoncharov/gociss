@@ -11,6 +11,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         initFAQ();
         initGostAccordion();
+        initVacanciesAccordion();
         initForm();
         initHeroSlider();
         initExpertsSlider();
@@ -133,6 +134,53 @@
                 firstContent.style.maxHeight = firstContent.scrollHeight + 'px';
             }
         }
+    }
+
+    /**
+     * Инициализация аккордеона вакансий
+     */
+    function initVacanciesAccordion() {
+        const accordions = document.querySelectorAll('.vacancy-accordion');
+
+        if (!accordions.length) {
+            return;
+        }
+
+        accordions.forEach(function(accordion) {
+            const header = accordion.querySelector('.vacancy-accordion__header');
+            const content = accordion.querySelector('.vacancy-accordion__content');
+
+            if (!header || !content) {
+                return;
+            }
+
+            header.addEventListener('click', function() {
+                const wasOpen = accordion.classList.contains('is-open');
+
+                // Переключаем состояние текущего аккордеона
+                if (wasOpen) {
+                    accordion.classList.remove('is-open');
+                    header.setAttribute('aria-expanded', 'false');
+                    content.style.maxHeight = null;
+                } else {
+                    accordion.classList.add('is-open');
+                    header.setAttribute('aria-expanded', 'true');
+                    content.style.maxHeight = content.scrollHeight + 'px';
+                }
+            });
+        });
+
+        // Инициализация: открываем первый элемент в каждой карточке вакансии
+        const vacancyCards = document.querySelectorAll('.vacancy-card');
+        vacancyCards.forEach(function(card) {
+            const firstOpen = card.querySelector('.vacancy-accordion.is-open');
+            if (firstOpen) {
+                const firstContent = firstOpen.querySelector('.vacancy-accordion__content');
+                if (firstContent) {
+                    firstContent.style.maxHeight = firstContent.scrollHeight + 'px';
+                }
+            }
+        });
     }
 
     /**

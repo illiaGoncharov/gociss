@@ -57,7 +57,7 @@ if ( $hero_image && isset( $hero_image['url'] ) ) {
 			<?php if ( $hero_subtitle ) : ?>
 				<p class="edu-hero__subtitle"><?php echo esc_html( $hero_subtitle ); ?></p>
 			<?php endif; ?>
-			
+
 			<?php if ( ! empty( $bullets ) ) : ?>
 				<ul class="edu-hero__bullets">
 					<?php foreach ( $bullets as $bullet ) : ?>
