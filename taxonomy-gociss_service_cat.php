@@ -40,13 +40,13 @@ if ( $current_term->parent > 0 ) {
 		<!-- Хлебные крошки -->
 		<nav class="breadcrumbs" aria-label="Хлебные крошки">
 			<a href="<?php echo esc_url( home_url( '/' ) ); ?>">Главная</a>
-			<span class="breadcrumbs__separator">/</span>
+			<span class="breadcrumbs__separator">→</span>
 			<a href="<?php echo esc_url( get_post_type_archive_link( 'gociss_service' ) ); ?>">Услуги</a>
 			<?php if ( $parent_term && ! is_wp_error( $parent_term ) ) : ?>
-				<span class="breadcrumbs__separator">/</span>
+				<span class="breadcrumbs__separator">→</span>
 				<a href="<?php echo esc_url( get_term_link( $parent_term ) ); ?>"><?php echo esc_html( $parent_term->name ); ?></a>
 			<?php endif; ?>
-			<span class="breadcrumbs__separator">/</span>
+			<span class="breadcrumbs__separator">→</span>
 			<span class="breadcrumbs__current"><?php echo esc_html( $current_term->name ); ?></span>
 		</nav>
 

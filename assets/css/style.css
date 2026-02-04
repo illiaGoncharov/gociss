@@ -9128,8 +9128,7 @@ body {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    display: flex;
-    align-items: center;
+    padding: 48px 0;
     overflow: hidden;
 }
 
@@ -9807,5 +9806,400 @@ a.about-accred__card-link:hover {
 
     .about-docs__placeholder {
         height: 200px;
+    }
+}
+
+
+/* ===========================================
+   Страница Аккредитация
+   =========================================== */
+
+/* ----- Секция "О нашей аккредитации" ----- */
+.accred-info {
+    padding: 80px 0;
+    background-color: #f8fafc;
+}
+
+.accred-info__card {
+    position: relative;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+}
+
+.accred-info__body {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 40px 48px;
+    gap: 40px;
+}
+
+.accred-info__content {
+    flex: 1;
+    max-width: 750px;
+}
+
+.accred-info__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    vertical-align: middle;
+}
+
+.accred-info__icon--blue {
+    background-color: #dbeafe;
+    color: #2563eb;
+}
+
+.accred-info__icon--green {
+    background-color: #d1fae5;
+    color: #059669;
+}
+
+.accred-info__title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 24px;
+    font-weight: 700;
+    color: #111827;
+    margin: 0 0 20px 0;
+}
+
+.accred-info__text {
+    font-size: 16px;
+    line-height: 1.7;
+    color: #374151;
+    margin-bottom: 24px;
+}
+
+.accred-info__text a {
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.accred-info__text a:hover {
+    text-decoration: underline;
+}
+
+.accred-info__date {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 15px;
+    color: #4B5563;
+    margin-bottom: 24px;
+}
+
+.accred-info__date .accred-info__icon {
+    width: 28px;
+    height: 28px;
+}
+
+.accred-info__date strong {
+    color: #111827;
+}
+
+.accred-info__btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 12px 24px;
+    background: #ffffff;
+    border: 2px solid #111827;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #111827;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.accred-info__btn:hover {
+    background: #111827;
+    color: #ffffff;
+}
+
+.accred-info__logos {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.accred-info__logos img {
+    max-height: 100px;
+    width: auto;
+    object-fit: contain;
+}
+
+/* Адаптивность секции "О нашей аккредитации" */
+@media (max-width: 992px) {
+    .accred-info__body {
+        flex-direction: column;
+        padding: 32px;
+    }
+
+    .accred-info__logos {
+        align-self: flex-start;
+    }
+}
+
+@media (max-width: 768px) {
+    .accred-info {
+        padding: 48px 0;
+    }
+
+    .accred-info__body {
+        padding: 24px;
+        gap: 24px;
+    }
+
+    .accred-info__title {
+        font-size: 20px;
+        gap: 10px;
+    }
+
+    .accred-info__icon {
+        width: 32px;
+        height: 32px;
+    }
+
+    .accred-info__text {
+        font-size: 15px;
+        line-height: 1.6;
+    }
+
+    .accred-info__date {
+        font-size: 14px;
+        flex-wrap: wrap;
+    }
+
+    .accred-info__btn {
+        padding: 10px 20px;
+        font-size: 13px;
+    }
+
+    .accred-info__logos img {
+        max-height: 80px;
+    }
+}
+
+@media (max-width: 480px) {
+    .accred-info__body {
+        padding: 20px;
+    }
+
+    .accred-info__title {
+        font-size: 18px;
+    }
+
+    .accred-info__text {
+        font-size: 14px;
+    }
+
+    .accred-info__logos img {
+        max-height: 60px;
+    }
+}
+
+/* ----- Секция "Аттестат аккредитации" ----- */
+.accred-cert {
+    padding: 80px 0;
+    background-color: #f8fafc;
+}
+
+.accred-cert__title {
+    font-size: 36px;
+    font-weight: 700;
+    color: #111827;
+    text-align: center;
+    margin-bottom: 48px;
+}
+
+.accred-cert__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: start;
+}
+
+.accred-cert__image {
+    display: flex;
+    justify-content: center;
+}
+
+.accred-cert__image-wrapper img {
+    max-width: 100%;
+    height: auto;
+}
+
+.accred-cert__info {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.accred-cert__item {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.accred-cert__item-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.accred-cert__item-icon--blue {
+    background-color: #dbeafe;
+    color: #2563eb;
+}
+
+.accred-cert__item-icon--green {
+    background-color: #d1fae5;
+    color: #059669;
+}
+
+.accred-cert__item-icon--orange {
+    background-color: #ffedd5;
+    color: #ea580c;
+}
+
+.accred-cert__item-icon--red {
+    background-color: #fee2e2;
+    color: #dc2626;
+}
+
+.accred-cert__item-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.accred-cert__item-label {
+    font-size: 16px;
+    font-weight: 600;
+    color: #111827;
+}
+
+.accred-cert__item-value {
+    font-size: 15px;
+    color: #6B7280;
+    line-height: 1.5;
+}
+
+.accred-cert__note {
+    background: linear-gradient(135deg, #e0f2fe 0%, #dbeafe 100%);
+    padding: 20px 24px;
+    border-radius: 12px;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #1e40af;
+    margin-top: 16px;
+}
+
+/* Адаптивность секции "Аттестат" */
+@media (max-width: 992px) {
+    .accred-cert__grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+
+    .accred-cert__image {
+        order: -1;
+    }
+
+    .accred-cert__image-wrapper {
+        max-width: 400px;
+        margin: 0 auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .accred-cert {
+        padding: 48px 0;
+    }
+
+    .accred-cert__title {
+        font-size: 28px;
+        margin-bottom: 32px;
+    }
+
+    .accred-cert__grid {
+        gap: 32px;
+    }
+
+    .accred-cert__image-wrapper {
+        max-width: 350px;
+    }
+
+    .accred-cert__info {
+        gap: 20px;
+    }
+
+    .accred-cert__item {
+        gap: 12px;
+    }
+
+    .accred-cert__item-icon {
+        width: 36px;
+        height: 36px;
+    }
+
+    .accred-cert__item-label {
+        font-size: 15px;
+    }
+
+    .accred-cert__item-value {
+        font-size: 14px;
+    }
+
+    .accred-cert__note {
+        padding: 16px 20px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .accred-cert {
+        padding: 40px 0;
+    }
+
+    .accred-cert__title {
+        font-size: 24px;
+        margin-bottom: 24px;
+    }
+
+    .accred-cert__image-wrapper {
+        max-width: 280px;
+    }
+
+    .accred-cert__item-icon {
+        width: 32px;
+        height: 32px;
+    }
+
+    .accred-cert__item-label {
+        font-size: 14px;
+    }
+
+    .accred-cert__item-value {
+        font-size: 13px;
+    }
+
+    .accred-cert__note {
+        padding: 14px 16px;
+        font-size: 13px;
     }
 }

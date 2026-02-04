@@ -4853,3 +4853,189 @@ function gociss_register_about_page_acf_fields() {
 }
 add_action( 'acf/init', 'gociss_register_about_page_acf_fields' );
 
+/**
+ * ACF поля для страницы "Аккредитация"
+ */
+function gociss_register_accreditation_page_acf_fields() {
+	if ( ! function_exists( 'acf_add_local_field_group' ) ) {
+		return;
+	}
+
+	$accred_fields = array(
+		// ===== Hero секция =====
+		array(
+			'key'   => 'field_gociss_accred_page_hero_tab',
+			'label' => 'Hero секция',
+			'type'  => 'tab',
+		),
+		array(
+			'key'          => 'field_gociss_accred_page_hero_title',
+			'label'        => 'Заголовок',
+			'name'         => 'gociss_accred_page_hero_title',
+			'type'         => 'text',
+			'instructions' => 'Главный заголовок страницы',
+			'placeholder'  => 'Информация об аккредитации',
+		),
+		array(
+			'key'          => 'field_gociss_accred_page_hero_subtitle',
+			'label'        => 'Подзаголовок',
+			'name'         => 'gociss_accred_page_hero_subtitle',
+			'type'         => 'textarea',
+			'instructions' => 'Описание под заголовком',
+			'rows'         => 2,
+		),
+		array(
+			'key'           => 'field_gociss_accred_page_hero_image',
+			'label'         => 'Фоновое изображение',
+			'name'          => 'gociss_accred_page_hero_image',
+			'type'          => 'image',
+			'instructions'  => 'Фото для фона Hero секции (с белым blur-оверлеем)',
+			'return_format' => 'array',
+			'preview_size'  => 'medium',
+		),
+
+		// ===== Секция "О нашей аккредитации" =====
+		array(
+			'key'   => 'field_gociss_accred_page_info_tab',
+			'label' => 'О нашей аккредитации',
+			'type'  => 'tab',
+		),
+		array(
+			'key'         => 'field_gociss_accred_page_info_title',
+			'label'       => 'Заголовок карточки',
+			'name'        => 'gociss_accred_page_info_title',
+			'type'        => 'text',
+			'placeholder' => 'О нашей аккредитации',
+		),
+		array(
+			'key'          => 'field_gociss_accred_page_info_text',
+			'label'        => 'Текст описания',
+			'name'         => 'gociss_accred_page_info_text',
+			'type'         => 'wysiwyg',
+			'instructions' => 'Основной текст с возможностью добавить ссылки',
+			'toolbar'      => 'basic',
+			'media_upload' => 0,
+		),
+		array(
+			'key'          => 'field_gociss_accred_page_info_date',
+			'label'        => 'Дата внесения в реестр',
+			'name'         => 'gociss_accred_page_info_date',
+			'type'         => 'text',
+			'placeholder'  => '17.04.2015',
+			'instructions' => 'Дата в формате ДД.ММ.ГГГГ',
+		),
+		array(
+			'key'         => 'field_gociss_accred_page_info_btn_text',
+			'label'       => 'Текст кнопки',
+			'name'        => 'gociss_accred_page_info_btn_text',
+			'type'        => 'text',
+			'placeholder' => 'Перейти в карточку в реестре',
+		),
+		array(
+			'key'          => 'field_gociss_accred_page_info_btn_url',
+			'label'        => 'Ссылка кнопки',
+			'name'         => 'gociss_accred_page_info_btn_url',
+			'type'         => 'url',
+			'instructions' => 'Ссылка на карточку в реестре Росаккредитации',
+		),
+		array(
+			'key'           => 'field_gociss_accred_page_info_logo1',
+			'label'         => 'Логотип 1 (Росаккредитация)',
+			'name'          => 'gociss_accred_page_info_logo1',
+			'type'          => 'image',
+			'return_format' => 'array',
+			'preview_size'  => 'thumbnail',
+		),
+		array(
+			'key'           => 'field_gociss_accred_page_info_logo2',
+			'label'         => 'Логотип 2 (ISO)',
+			'name'          => 'gociss_accred_page_info_logo2',
+			'type'          => 'image',
+			'return_format' => 'array',
+			'preview_size'  => 'thumbnail',
+		),
+
+		// ===== Секция "Аттестат аккредитации" =====
+		array(
+			'key'   => 'field_gociss_accred_page_cert_tab',
+			'label' => 'Аттестат аккредитации',
+			'type'  => 'tab',
+		),
+		array(
+			'key'         => 'field_gociss_accred_page_cert_title',
+			'label'       => 'Заголовок секции',
+			'name'        => 'gociss_accred_page_cert_title',
+			'type'        => 'text',
+			'placeholder' => 'Аттестат аккредитации',
+		),
+		array(
+			'key'           => 'field_gociss_accred_page_cert_image',
+			'label'         => 'Изображение аттестата',
+			'name'          => 'gociss_accred_page_cert_image',
+			'type'          => 'image',
+			'instructions'  => 'Скан/фото аттестата аккредитации',
+			'return_format' => 'array',
+			'preview_size'  => 'medium',
+		),
+		array(
+			'key'         => 'field_gociss_accred_page_cert_number',
+			'label'       => 'Номер аттестата',
+			'name'        => 'gociss_accred_page_cert_number',
+			'type'        => 'text',
+			'placeholder' => 'RA.RU.13СМ43',
+		),
+		array(
+			'key'         => 'field_gociss_accred_page_cert_org',
+			'label'       => 'Орган аккредитации',
+			'name'        => 'gociss_accred_page_cert_org',
+			'type'        => 'text',
+			'placeholder' => 'Федеральная служба по аккредитации (Росаккредитация)',
+		),
+		array(
+			'key'         => 'field_gociss_accred_page_cert_date',
+			'label'       => 'Дата аккредитации',
+			'name'        => 'gociss_accred_page_cert_date',
+			'type'        => 'text',
+			'placeholder' => '17 апреля 2015 года',
+		),
+		array(
+			'key'         => 'field_gociss_accred_page_cert_status',
+			'label'       => 'Статус',
+			'name'        => 'gociss_accred_page_cert_status',
+			'type'        => 'text',
+			'placeholder' => 'Действующая аккредитация',
+		),
+		array(
+			'key'          => 'field_gociss_accred_page_cert_note',
+			'label'        => 'Примечание',
+			'name'         => 'gociss_accred_page_cert_note',
+			'type'         => 'textarea',
+			'instructions' => 'Текст в голубой плашке внизу',
+			'rows'         => 3,
+		),
+	);
+
+	acf_add_local_field_group(
+		array(
+			'key'                   => 'group_gociss_accred_page',
+			'title'                 => 'Страница Аккредитация',
+			'fields'                => $accred_fields,
+			'location'              => array(
+				array(
+					array(
+						'param'    => 'page_template',
+						'operator' => '==',
+						'value'    => 'page-accreditation.php',
+					),
+				),
+			),
+			'menu_order'            => 0,
+			'position'              => 'normal',
+			'style'                 => 'default',
+			'label_placement'       => 'top',
+			'instruction_placement' => 'label',
+		)
+	);
+}
+add_action( 'acf/init', 'gociss_register_accreditation_page_acf_fields' );
+

@@ -1,7 +1,7 @@
 <?php
 /**
- * Hero секция страницы "О компании"
- * Фото здания с белым blur-оверлеем
+ * Hero секция страницы "Аккредитация"
+ * Фото с белым blur-оверлеем
  *
  * @package Gociss
  */
@@ -11,16 +11,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // ACF поля
-$hero_image       = function_exists( 'get_field' ) ? get_field( 'gociss_about_hero_image' ) : '';
-$hero_title       = function_exists( 'get_field' ) ? get_field( 'gociss_about_hero_title' ) : '';
-$hero_description = function_exists( 'get_field' ) ? get_field( 'gociss_about_hero_description' ) : '';
+$hero_image       = function_exists( 'get_field' ) ? get_field( 'gociss_accred_page_hero_image' ) : '';
+$hero_title       = function_exists( 'get_field' ) ? get_field( 'gociss_accred_page_hero_title' ) : '';
+$hero_description = function_exists( 'get_field' ) ? get_field( 'gociss_accred_page_hero_subtitle' ) : '';
 
 // Заглушки
 if ( ! $hero_title ) {
-	$hero_title = 'О компании';
+	$hero_title = 'Информация об аккредитации';
 }
 if ( ! $hero_description ) {
-	$hero_description = 'Ведущая сертификационная компания с многолетним опытом работы в области подтверждения соответствия и качества продукции';
+	$hero_description = 'Официальная государственная аккредитация — гарантия качества и надёжности наших услуг';
 }
 
 // Фоновое изображение

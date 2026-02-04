@@ -118,20 +118,20 @@ if ( $service_banner && ! empty( $service_banner['url'] ) ) {
 	<div class="container">
 		<nav class="breadcrumbs" aria-label="Хлебные крошки">
 			<a href="<?php echo esc_url( home_url( '/' ) ); ?>">Главная</a>
-			<span class="breadcrumbs__separator">/</span>
+			<span class="breadcrumbs__separator">→</span>
 			<a href="<?php echo esc_url( get_post_type_archive_link( 'gociss_service' ) ); ?>">Услуги</a>
 			<?php if ( $parent_term && ! is_wp_error( $parent_term ) ) : ?>
-				<span class="breadcrumbs__separator">/</span>
+				<span class="breadcrumbs__separator">→</span>
 				<a href="<?php echo esc_url( get_term_link( $parent_term ) ); ?>"><?php echo esc_html( $parent_term->name ); ?></a>
 			<?php endif; ?>
 		<?php if ( $primary_term && ! is_wp_error( $primary_term ) ) : ?>
-			<span class="breadcrumbs__separator">/</span>
+			<span class="breadcrumbs__separator">→</span>
 			<a href="<?php echo esc_url( get_term_link( $primary_term ) ); ?>"><?php echo esc_html( $primary_term->name ); ?></a>
 		<?php endif; ?>
-		<span class="breadcrumbs__separator">/</span>
+		<span class="breadcrumbs__separator">→</span>
 		<?php if ( $current_region ) : ?>
 			<a href="<?php echo esc_url( get_permalink() ); ?>"><?php echo esc_html( get_the_title() ); ?></a>
-			<span class="breadcrumbs__separator">/</span>
+			<span class="breadcrumbs__separator">→</span>
 			<span class="breadcrumbs__current"><?php echo esc_html( $current_region->name ); ?></span>
 		<?php else : ?>
 			<span class="breadcrumbs__current"><?php echo esc_html( get_the_title() ); ?></span>

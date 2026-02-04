@@ -19,6 +19,8 @@ get_header();
 	<section class="breadcrumbs">
 		<div class="container">
 			<a href="<?php echo esc_url( home_url( '/' ) ); ?>">Главная</a>
+			<span class="breadcrumbs__separator">→</span>
+			<span class="breadcrumbs__current">Реестры</span>
 		</div>
 	</section>
 
