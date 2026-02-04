@@ -4572,3 +4572,284 @@ function gociss_register_vacancies_page_acf_fields() {
 }
 add_action( 'acf/init', 'gociss_register_vacancies_page_acf_fields' );
 
+/**
+ * ACF поля для страницы "О компании"
+ */
+function gociss_register_about_page_acf_fields() {
+	if ( ! function_exists( 'acf_add_local_field_group' ) ) {
+		return;
+	}
+
+	$about_fields = array();
+
+	// === HERO СЕКЦИЯ ===
+	$about_fields[] = array(
+		'key'   => 'field_gociss_about_hero_tab',
+		'label' => 'Hero секция',
+		'name'  => '',
+		'type'  => 'tab',
+	);
+	$about_fields[] = array(
+		'key'           => 'field_gociss_about_hero_image',
+		'label'         => 'Фоновое изображение',
+		'name'          => 'gociss_about_hero_image',
+		'type'          => 'image',
+		'instructions'  => 'Рекомендуемый размер: 1920x400px. Фото здания или офиса.',
+		'return_format' => 'array',
+		'preview_size'  => 'medium',
+	);
+	$about_fields[] = array(
+		'key'           => 'field_gociss_about_hero_title',
+		'label'         => 'Заголовок',
+		'name'          => 'gociss_about_hero_title',
+		'type'          => 'text',
+		'default_value' => 'О компании',
+	);
+	$about_fields[] = array(
+		'key'           => 'field_gociss_about_hero_description',
+		'label'         => 'Описание',
+		'name'          => 'gociss_about_hero_description',
+		'type'          => 'textarea',
+		'rows'          => 3,
+		'default_value' => 'Ведущая сертификационная компания с многолетним опытом работы в области подтверждения соответствия и качества продукции',
+	);
+
+	// === ОБ ОРГАНИЗАЦИИ ===
+	$about_fields[] = array(
+		'key'   => 'field_gociss_about_org_tab',
+		'label' => 'Об организации',
+		'name'  => '',
+		'type'  => 'tab',
+	);
+	$about_fields[] = array(
+		'key'           => 'field_gociss_about_org_title',
+		'label'         => 'Заголовок секции',
+		'name'          => 'gociss_about_org_title',
+		'type'          => 'text',
+		'default_value' => 'Об организации',
+	);
+	$about_fields[] = array(
+		'key'          => 'field_gociss_about_org_content',
+		'label'        => 'Текст об организации',
+		'name'         => 'gociss_about_org_content',
+		'type'         => 'wysiwyg',
+		'tabs'         => 'all',
+		'toolbar'      => 'full',
+		'media_upload' => 0,
+	);
+	$about_fields[] = array(
+		'key'           => 'field_gociss_about_org_image',
+		'label'         => 'Фото организации',
+		'name'          => 'gociss_about_org_image',
+		'type'          => 'image',
+		'instructions'  => 'Рекомендуемый размер: 600x400px',
+		'return_format' => 'array',
+		'preview_size'  => 'medium',
+	);
+
+	// === ПРИЗНАНИЕ И ЛЕГИТИМНОСТЬ ===
+	$about_fields[] = array(
+		'key'   => 'field_gociss_about_accred_tab',
+		'label' => 'Признание и легитимность',
+		'name'  => '',
+		'type'  => 'tab',
+	);
+	$about_fields[] = array(
+		'key'           => 'field_gociss_about_accred_title',
+		'label'         => 'Заголовок секции',
+		'name'          => 'gociss_about_accred_title',
+		'type'          => 'text',
+		'default_value' => 'Признание и легитимность',
+	);
+	$about_fields[] = array(
+		'key'           => 'field_gociss_about_accred_subtitle',
+		'label'         => 'Подзаголовок',
+		'name'          => 'gociss_about_accred_subtitle',
+		'type'          => 'textarea',
+		'rows'          => 2,
+		'default_value' => 'Наша компания аккредитована ведущими международными организациями',
+	);
+
+	// Карточки аккредитации (3 штуки)
+	for ( $i = 1; $i <= 3; $i++ ) {
+		$about_fields[] = array(
+			'key'   => 'field_gociss_about_accred_card_' . $i,
+			'label' => 'Карточка ' . $i,
+			'name'  => 'gociss_about_accred_card_' . $i,
+			'type'  => 'group',
+			'layout' => 'block',
+			'sub_fields' => array(
+				array(
+					'key'   => 'field_gociss_about_accred_card_' . $i . '_title',
+					'label' => 'Заголовок',
+					'name'  => 'title',
+					'type'  => 'text',
+				),
+				array(
+					'key'   => 'field_gociss_about_accred_card_' . $i . '_description',
+					'label' => 'Описание',
+					'name'  => 'description',
+					'type'  => 'textarea',
+					'rows'  => 3,
+				),
+				array(
+					'key'   => 'field_gociss_about_accred_card_' . $i . '_link_text',
+					'label' => 'Текст ссылки',
+					'name'  => 'link_text',
+					'type'  => 'text',
+				),
+				array(
+					'key'   => 'field_gociss_about_accred_card_' . $i . '_link_url',
+					'label' => 'URL ссылки',
+					'name'  => 'link_url',
+					'type'  => 'url',
+				),
+			),
+		);
+	}
+
+	// === ОСНОВНЫЕ ЦЕЛИ ===
+	$about_fields[] = array(
+		'key'   => 'field_gociss_about_goals_tab',
+		'label' => 'Основные цели',
+		'name'  => '',
+		'type'  => 'tab',
+	);
+	$about_fields[] = array(
+		'key'           => 'field_gociss_about_goals_title',
+		'label'         => 'Заголовок секции',
+		'name'          => 'gociss_about_goals_title',
+		'type'          => 'text',
+		'default_value' => 'Основные цели компании',
+	);
+	$about_fields[] = array(
+		'key'           => 'field_gociss_about_goals_subtitle',
+		'label'         => 'Подзаголовок',
+		'name'          => 'gociss_about_goals_subtitle',
+		'type'          => 'textarea',
+		'rows'          => 2,
+	);
+
+	// Цели (3 штуки)
+	for ( $i = 1; $i <= 3; $i++ ) {
+		$about_fields[] = array(
+			'key'   => 'field_gociss_about_goal_' . $i,
+			'label' => 'Цель ' . $i,
+			'name'  => 'gociss_about_goal_' . $i,
+			'type'  => 'group',
+			'layout' => 'block',
+			'sub_fields' => array(
+				array(
+					'key'   => 'field_gociss_about_goal_' . $i . '_title',
+					'label' => 'Текст цели',
+					'name'  => 'title',
+					'type'  => 'textarea',
+					'rows'  => 3,
+				),
+			),
+		);
+	}
+
+	// === ПАРТНЁРЫ ===
+	$about_fields[] = array(
+		'key'   => 'field_gociss_about_partners_tab',
+		'label' => 'Партнёры',
+		'name'  => '',
+		'type'  => 'tab',
+	);
+	$about_fields[] = array(
+		'key'           => 'field_gociss_about_partners_title',
+		'label'         => 'Заголовок секции',
+		'name'          => 'gociss_about_partners_title',
+		'type'          => 'text',
+		'default_value' => 'Наши партнёры',
+	);
+	$about_fields[] = array(
+		'key'           => 'field_gociss_about_partners_subtitle',
+		'label'         => 'Подзаголовок',
+		'name'          => 'gociss_about_partners_subtitle',
+		'type'          => 'textarea',
+		'rows'          => 2,
+	);
+
+	// Названия партнёров (до 8)
+	for ( $i = 1; $i <= 8; $i++ ) {
+		$about_fields[] = array(
+			'key'          => 'field_gociss_about_partner_' . $i,
+			'label'        => 'Партнёр ' . $i,
+			'name'         => 'gociss_about_partner_' . $i,
+			'type'         => 'group',
+			'layout'       => 'block',
+			'sub_fields'   => array(
+				array(
+					'key'   => 'field_gociss_about_partner_' . $i . '_name',
+					'label' => 'Название компании',
+					'name'  => 'name',
+					'type'  => 'text',
+				),
+			),
+		);
+	}
+
+	// === ОТЗЫВЫ (используются общие поля из страницы услуги) ===
+	// Отзывы редактируются на странице услуги (gociss_service_review_*)
+
+	// === ДОКУМЕНТЫ ===
+	$about_fields[] = array(
+		'key'   => 'field_gociss_about_docs_tab',
+		'label' => 'Документы',
+		'name'  => '',
+		'type'  => 'tab',
+	);
+	$about_fields[] = array(
+		'key'           => 'field_gociss_about_docs_title',
+		'label'         => 'Заголовок секции',
+		'name'          => 'gociss_about_docs_title',
+		'type'          => 'text',
+		'default_value' => 'Документы',
+	);
+	$about_fields[] = array(
+		'key'           => 'field_gociss_about_docs_subtitle',
+		'label'         => 'Подзаголовок',
+		'name'          => 'gociss_about_docs_subtitle',
+		'type'          => 'text',
+		'default_value' => 'Наши документы',
+	);
+
+	// Галерея документов (отдельные image поля для бесплатной версии ACF)
+	for ( $i = 1; $i <= 6; $i++ ) {
+		$about_fields[] = array(
+			'key'           => 'field_gociss_about_doc_' . $i,
+			'label'         => 'Документ ' . $i,
+			'name'          => 'gociss_about_doc_' . $i,
+			'type'          => 'image',
+			'instructions'  => 'Изображение сертификата/документа',
+			'return_format' => 'array',
+			'preview_size'  => 'medium',
+		);
+	}
+
+	acf_add_local_field_group(
+		array(
+			'key'                   => 'group_gociss_about_page',
+			'title'                 => 'Страница О компании',
+			'fields'                => $about_fields,
+			'location'              => array(
+				array(
+					array(
+						'param'    => 'page_template',
+						'operator' => '==',
+						'value'    => 'page-about.php',
+					),
+				),
+			),
+			'menu_order'            => 0,
+			'position'              => 'normal',
+			'style'                 => 'default',
+			'label_placement'       => 'top',
+			'instruction_placement' => 'label',
+		)
+	);
+}
+add_action( 'acf/init', 'gociss_register_about_page_acf_fields' );
+

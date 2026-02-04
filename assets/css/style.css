@@ -9113,3 +9113,699 @@ body {
         font-size: 16px;
     }
 }
+
+/* ============================================================
+   СТИЛИ СТРАНИЦЫ "О КОМПАНИИ" (page-about.php)
+   ============================================================ */
+
+/* ===========================================
+   About Hero - Секция с фото и белым blur
+   =========================================== */
+.about-hero {
+    position: relative;
+    min-height: 320px;
+    background-color: #F3F4F6;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+
+.about-hero__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+}
+
+.about-hero .container {
+    position: relative;
+    z-index: 1;
+}
+
+.about-hero__breadcrumbs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 24px;
+    font-size: 14px;
+    font-family: var(--font-primary);
+}
+
+.about-hero__breadcrumbs a {
+    color: #6B7280;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.about-hero__breadcrumbs a:hover {
+    color: #0052CC;
+}
+
+.about-hero__breadcrumbs-sep {
+    color: #9CA3AF;
+}
+
+.about-hero__breadcrumbs-current {
+    color: #374151;
+    font-weight: 500;
+}
+
+.about-hero__content {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px 0;
+}
+
+.about-hero__title {
+    font-size: 48px;
+    font-weight: 700;
+    color: #051945;
+    margin-bottom: 16px;
+    line-height: 1.2;
+    font-family: var(--font-primary);
+}
+
+.about-hero__description {
+    font-size: 18px;
+    color: #4B5563;
+    line-height: 1.6;
+    font-family: var(--font-primary);
+}
+
+/* Адаптивность About Hero */
+@media (max-width: 768px) {
+    .about-hero {
+        min-height: 260px;
+    }
+
+    .about-hero__title {
+        font-size: 32px;
+    }
+
+    .about-hero__description {
+        font-size: 16px;
+    }
+
+    .about-hero__content {
+        padding: 32px 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .about-hero__title {
+        font-size: 28px;
+    }
+
+    .about-hero__description {
+        font-size: 14px;
+    }
+}
+
+/* ===========================================
+   About Organization - Секция об организации
+   =========================================== */
+.about-org {
+    padding: 80px 0;
+    background-color: var(--color-white);
+}
+
+.about-org__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: start;
+}
+
+.about-org__title {
+    font-size: 32px;
+    font-weight: 700;
+    color: #051945;
+    margin-bottom: 24px;
+    font-family: var(--font-primary);
+}
+
+.about-org__text {
+    font-size: 16px;
+    color: #4B5563;
+    line-height: 1.7;
+    font-family: var(--font-primary);
+}
+
+.about-org__text p {
+    margin-bottom: 16px;
+}
+
+.about-org__text p:last-child {
+    margin-bottom: 0;
+}
+
+.about-org__image img {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.about-org__placeholder {
+    width: 100%;
+    height: 300px;
+    background: #F3F4F6;
+    border: 2px dashed #D1D5DB;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: #9CA3AF;
+    font-size: 14px;
+}
+
+.about-org__placeholder span:first-child {
+    font-size: 48px;
+}
+
+/* Адаптивность About Organization */
+@media (max-width: 992px) {
+    .about-org__grid {
+        gap: 32px;
+    }
+}
+
+@media (max-width: 768px) {
+    .about-org {
+        padding: 60px 0;
+    }
+
+    .about-org__grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
+
+    .about-org__title {
+        font-size: 28px;
+    }
+
+    .about-org__image {
+        order: -1;
+    }
+}
+
+/* ===========================================
+   About Accreditation - Признание и легитимность
+   =========================================== */
+.about-accred {
+    padding: 80px 0;
+    background-color: var(--color-white);
+}
+
+.about-accred__title {
+    font-size: 40px;
+    font-weight: 700;
+    color: #051945;
+    text-align: center;
+    margin-bottom: 16px;
+    font-family: var(--font-primary);
+}
+
+.about-accred__subtitle {
+    font-size: 18px;
+    color: #4B5563;
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto 48px;
+    line-height: 1.6;
+    font-family: var(--font-primary);
+}
+
+.about-accred__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+.about-accred__card {
+    background: var(--color-white);
+    border-radius: 16px;
+    padding: 32px;
+    text-align: left;
+    border: 1px solid #E5E7EB;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.about-accred__card:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
+}
+
+.about-accred__card-icon {
+    width: 56px;
+    height: 56px;
+    background: #EFF6FF;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+}
+
+.about-accred__card-icon img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
+
+.about-accred__card-icon svg {
+    width: 24px;
+    height: 24px;
+}
+
+.about-accred__card-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #051945;
+    margin-bottom: 12px;
+    font-family: var(--font-primary);
+    line-height: 1.3;
+}
+
+.about-accred__card-description {
+    font-size: 14px;
+    color: #6B7280;
+    line-height: 1.6;
+    margin-bottom: 16px;
+    font-family: var(--font-primary);
+}
+
+.about-accred__card-link {
+    display: inline-block;
+    font-size: 14px;
+    color: #0052CC;
+    text-decoration: none;
+    font-weight: 500;
+    font-style: italic;
+}
+
+a.about-accred__card-link:hover {
+    color: #003d99;
+    text-decoration: underline;
+}
+
+/* Адаптивность About Accreditation */
+@media (max-width: 992px) {
+    .about-accred__grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .about-accred__card:last-child {
+        grid-column: span 2;
+        max-width: 450px;
+        margin: 0 auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .about-accred {
+        padding: 60px 0;
+    }
+
+    .about-accred__title {
+        font-size: 28px;
+    }
+
+    .about-accred__subtitle {
+        font-size: 16px;
+        margin-bottom: 32px;
+    }
+
+    .about-accred__grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .about-accred__card {
+        padding: 24px;
+    }
+
+    .about-accred__card:last-child {
+        grid-column: auto;
+        max-width: none;
+    }
+
+    .about-accred__card-icon {
+        width: 48px;
+        height: 48px;
+    }
+}
+
+/* ===========================================
+   About Goals - Основные цели компании
+   =========================================== */
+.about-goals {
+    padding: 80px 0;
+    background-color: #EFF6FF;
+}
+
+.about-goals__title {
+    font-size: 40px;
+    font-weight: 700;
+    color: #051945;
+    text-align: center;
+    margin-bottom: 16px;
+    font-family: var(--font-primary);
+}
+
+.about-goals__subtitle {
+    font-size: 18px;
+    color: #4B5563;
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto 48px;
+    line-height: 1.6;
+    font-family: var(--font-primary);
+}
+
+.about-goals__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+}
+
+.about-goals__card {
+    background: var(--color-white);
+    border-radius: 16px;
+    padding: 40px 32px;
+    text-align: center;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.about-goals__card-icon {
+    width: 64px;
+    height: 64px;
+    background: #EFF6FF;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+}
+
+.about-goals__card-icon svg {
+    width: 32px;
+    height: 32px;
+}
+
+.about-goals__card-title {
+    font-size: 16px;
+    color: #374151;
+    line-height: 1.6;
+    font-family: var(--font-primary);
+}
+
+/* Адаптивность About Goals */
+@media (max-width: 992px) {
+    .about-goals__grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .about-goals__card:last-child {
+        grid-column: span 2;
+        max-width: 400px;
+        margin: 0 auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .about-goals {
+        padding: 60px 0;
+    }
+
+    .about-goals__title {
+        font-size: 28px;
+    }
+
+    .about-goals__subtitle {
+        font-size: 16px;
+        margin-bottom: 32px;
+    }
+
+    .about-goals__grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+
+    .about-goals__card:last-child {
+        grid-column: auto;
+        max-width: none;
+    }
+
+    .about-goals__card {
+        padding: 32px 24px;
+    }
+}
+
+/* ===========================================
+   About Partners - Наши партнёры
+   =========================================== */
+.about-partners {
+    padding: 80px 0;
+    background-color: var(--color-white);
+}
+
+.about-partners__title {
+    font-size: 40px;
+    font-weight: 700;
+    color: #051945;
+    text-align: center;
+    margin-bottom: 16px;
+    font-family: var(--font-primary);
+}
+
+.about-partners__subtitle {
+    font-size: 18px;
+    color: #4B5563;
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto 48px;
+    line-height: 1.6;
+    font-family: var(--font-primary);
+}
+
+.about-partners__grid {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.about-partners__card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 24px;
+    background: var(--color-white);
+    border: 1px solid #E5E7EB;
+    border-radius: 12px;
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.about-partners__card:hover {
+    border-color: #D1D5DB;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.about-partners__card-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6B7280;
+}
+
+.about-partners__card-icon svg {
+    width: 20px;
+    height: 20px;
+}
+
+.about-partners__card-name {
+    font-size: 15px;
+    font-weight: 500;
+    color: #1F2937;
+    font-family: var(--font-primary);
+    white-space: nowrap;
+}
+
+/* Адаптивность About Partners */
+@media (max-width: 992px) {
+    .about-partners__grid {
+        gap: 12px;
+    }
+
+    .about-partners__card {
+        padding: 12px 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .about-partners {
+        padding: 60px 0;
+    }
+
+    .about-partners__title {
+        font-size: 28px;
+    }
+
+    .about-partners__subtitle {
+        font-size: 16px;
+        margin-bottom: 32px;
+    }
+
+    .about-partners__grid {
+        gap: 10px;
+    }
+
+    .about-partners__card {
+        padding: 10px 16px;
+    }
+
+    .about-partners__card-name {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .about-partners__grid {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .about-partners__card {
+        justify-content: center;
+    }
+}
+
+/* ===========================================
+   About Documents - Документы
+   =========================================== */
+.about-docs {
+    padding: 80px 0;
+    background-color: #F9FAFB;
+}
+
+.about-docs__title {
+    font-size: 40px;
+    font-weight: 700;
+    color: #051945;
+    text-align: center;
+    margin-bottom: 16px;
+    font-family: var(--font-primary);
+}
+
+.about-docs__subtitle {
+    font-size: 18px;
+    color: #4B5563;
+    text-align: center;
+    margin-bottom: 48px;
+    font-family: var(--font-primary);
+}
+
+.about-docs__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+}
+
+.about-docs__item {
+    display: block;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+.about-docs__item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+}
+
+.about-docs__img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.about-docs__item--placeholder {
+    cursor: default;
+}
+
+.about-docs__item--placeholder:hover {
+    transform: none;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.about-docs__placeholder {
+    width: 100%;
+    height: 280px;
+    background: var(--color-white);
+    border: 2px dashed #D1D5DB;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    color: #9CA3AF;
+}
+
+.about-docs__placeholder-icon {
+    font-size: 48px;
+}
+
+.about-docs__placeholder-text {
+    font-size: 14px;
+}
+
+/* Адаптивность About Documents */
+@media (max-width: 992px) {
+    .about-docs__grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .about-docs {
+        padding: 60px 0;
+    }
+
+    .about-docs__title {
+        font-size: 28px;
+    }
+
+    .about-docs__subtitle {
+        font-size: 16px;
+        margin-bottom: 32px;
+    }
+
+    .about-docs__grid {
+        gap: 24px;
+    }
+}
+
+@media (max-width: 576px) {
+    .about-docs__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .about-docs__placeholder {
+        height: 200px;
+    }
+}
