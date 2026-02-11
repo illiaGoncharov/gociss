@@ -107,6 +107,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 						</div>
 					</div>
 					<?php endif; ?>
+
+				<!-- Тултип подтверждения региона при первом визите -->
+				<div class="region-tooltip" id="regionTooltip" style="display: none;">
+					<div class="region-tooltip__arrow"></div>
+					<p class="region-tooltip__text">Ваш город — <strong><?php echo esc_html( $region_name ); ?></strong>?</p>
+					<div class="region-tooltip__actions">
+						<button class="region-tooltip__btn region-tooltip__btn--yes" type="button">Да</button>
+						<button class="region-tooltip__btn region-tooltip__btn--no" type="button">Выбрать другой</button>
+					</div>
+				</div>
 				</div>
 
 					<!-- Главное меню -->
@@ -124,7 +134,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 										<li><a href="<?php echo esc_url( home_url( '/o-kompanii/' ) ); ?>">О компании</a></li>
 										<li><a href="<?php echo esc_url( home_url( '/akkreditaciya/' ) ); ?>">Аккредитация</a></li>
 										<li><a href="<?php echo esc_url( home_url( '/reestr/' ) ); ?>">Реестры</a></li>
-										<li><a href="<?php echo esc_url( home_url( '/stati/' ) ); ?>">Блог</a></li>
+										<li><a href="<?php echo esc_url( home_url( '/blog/' ) ); ?>">Блог</a></li>
 										<li><a href="<?php echo esc_url( home_url( '/kontakty/' ) ); ?>">Контакты</a></li>
 									</ul>
 									<?php
@@ -145,7 +155,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 							<a href="mailto:info@gociss.ru" class="header-top__email-text">info@gociss.ru</a>
 						</div>
 					</div>
-					<a href="#callback" class="btn btn--primary">Заказать звонок</a>
+					<button type="button" class="btn btn--primary js-open-callback-popup">Заказать звонок</button>
 				</div>
 
 					<!-- Кнопка мобильного меню -->
@@ -156,7 +166,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 				<!-- Кнопка "Заказать звонок" для мобильных (внизу) -->
 				<div class="header-top__mobile-button">
-					<a href="#callback" class="btn btn--primary">Заказать звонок</a>
+					<button type="button" class="btn btn--primary js-open-callback-popup">Заказать звонок</button>
 				</div>
 			</div>
 		</div>
@@ -171,45 +181,23 @@ if ( ! defined( 'ABSPATH' ) ) {
 					</span>
 					<span class="header-services__toggle-icon"></span>
 				</button>
-				<nav class="header-services__nav">
-					<a href="<?php echo esc_url( get_post_type_archive_link( 'gociss_service' ) ); ?>" class="header-services__item header-services__item--all">
-						<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/ui_ham[white].svg' ); ?>" alt="" class="header-services__icon" width="16" height="16">
-						<span class="header-services__text">Все услуги</span>
-					</a>
+			<nav class="header-services__nav">
 					<?php
-					// Ищем категорию "Сертификация ISO" или похожую
-					$iso_category = get_term_by( 'name', 'Сертификация ISO', 'gociss_service_cat' );
-					if ( ! $iso_category ) {
-						$iso_category = get_term_by( 'slug', 'iso', 'gociss_service_cat' );
-					}
-					$iso_link = $iso_category && ! is_wp_error( $iso_category )
-						? get_term_link( $iso_category )
-						: get_post_type_archive_link( 'gociss_service' );
+					// Меню услуг — настраивается в Внешний вид → Меню → «Меню услуг (синяя панель)»
+					// Иконки задаются через CSS-классы пунктов: icon-ham, icon-iso, icon-grad, icon-pack, icon-user, icon-file
+					wp_nav_menu(
+						array(
+							'theme_location' => 'services',
+							'container'      => false,
+							'items_wrap'     => '%3$s',
+							'walker'         => new Gociss_Services_Walker(),
+							'link_class'     => 'header-services__item',
+							'icon_class'     => 'header-services__icon',
+							'text_class'     => 'header-services__text',
+							'fallback_cb'    => 'gociss_services_menu_fallback',
+						)
+					);
 					?>
-					<a href="<?php echo esc_url( $iso_link ); ?>" class="header-services__item">
-						<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/ui_iso[white].svg' ); ?>" alt="" class="header-services__icon" width="16" height="16">
-						<span class="header-services__text">Сертификация ISO</span>
-					</a>
-					<a href="#reputation" class="header-services__item">
-						<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/ui_grad[white].svg' ); ?>" alt="" class="header-services__icon" width="16" height="16">
-						<span class="header-services__text">Опыт и репутация</span>
-					</a>
-					<a href="#product" class="header-services__item">
-						<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/ui_pack[white].svg' ); ?>" alt="" class="header-services__icon" width="16" height="16">
-						<span class="header-services__text">Сертификация продукции</span>
-					</a>
-					<a href="#personnel" class="header-services__item">
-						<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/ui_user[white].svg' ); ?>" alt="" class="header-services__icon" width="16" height="16">
-						<span class="header-services__text">Сертификация персонала</span>
-					</a>
-					<a href="#voluntary" class="header-services__item">
-						<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/ui_file[white].svg' ); ?>" alt="" class="header-services__icon" width="16" height="16">
-						<span class="header-services__text">Добровольная сертификация</span>
-					</a>
-					<a href="<?php echo esc_url( home_url( '/edu/' ) ); ?>" class="header-services__item">
-						<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/ui_file[white].svg' ); ?>" alt="" class="header-services__icon" width="16" height="16">
-						<span class="header-services__text">Учебный центр</span>
-					</a>
 				</nav>
 			</div>
 		</div>
@@ -256,7 +244,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 									<li><a href="<?php echo esc_url( home_url( '/o-kompanii/' ) ); ?>">О компании</a></li>
 									<li><a href="<?php echo esc_url( home_url( '/akkreditaciya/' ) ); ?>">Аккредитация</a></li>
 									<li><a href="<?php echo esc_url( home_url( '/reestr/' ) ); ?>">Реестры</a></li>
-									<li><a href="<?php echo esc_url( home_url( '/stati/' ) ); ?>">Блог</a></li>
+									<li><a href="<?php echo esc_url( home_url( '/blog/' ) ); ?>">Блог</a></li>
 									<li><a href="<?php echo esc_url( home_url( '/kontakty/' ) ); ?>">Контакты</a></li>
 								</ul>
 								<?php
@@ -270,51 +258,28 @@ if ( ! defined( 'ABSPATH' ) ) {
 				<div class="header-mobile-menu__services">
 					<h3 class="header-mobile-menu__services-title">Услуги</h3>
 					<nav class="header-mobile-menu__services-nav">
-						<a href="<?php echo esc_url( get_post_type_archive_link( 'gociss_service' ) ); ?>" class="header-mobile-menu__services-item">
-							<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/ui_ham[white].svg' ); ?>" alt="" class="header-mobile-menu__services-icon" width="16" height="16">
-							<span>Все услуги</span>
-						</a>
 						<?php
-						// Ищем категорию "Сертификация ISO" или похожую
-						$iso_category_mobile = get_term_by( 'name', 'Сертификация ISO', 'gociss_service_cat' );
-						if ( ! $iso_category_mobile ) {
-							$iso_category_mobile = get_term_by( 'slug', 'iso', 'gociss_service_cat' );
-						}
-						$iso_link_mobile = $iso_category_mobile && ! is_wp_error( $iso_category_mobile )
-							? get_term_link( $iso_category_mobile )
-							: get_post_type_archive_link( 'gociss_service' );
+						// Мобильная версия — то же меню услуг, другие CSS-классы
+						wp_nav_menu(
+							array(
+								'theme_location' => 'services',
+								'container'      => false,
+								'items_wrap'     => '%3$s',
+								'walker'         => new Gociss_Services_Walker(),
+								'link_class'     => 'header-mobile-menu__services-item',
+								'icon_class'     => 'header-mobile-menu__services-icon',
+								'text_class'     => '',
+								'fallback_cb'    => 'gociss_services_menu_fallback_mobile',
+							)
+						);
 						?>
-						<a href="<?php echo esc_url( $iso_link_mobile ); ?>" class="header-mobile-menu__services-item">
-							<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/ui_iso[white].svg' ); ?>" alt="" class="header-mobile-menu__services-icon" width="16" height="16">
-							<span>Сертификация ISO</span>
-						</a>
-						<a href="#reputation" class="header-mobile-menu__services-item">
-							<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/ui_grad[white].svg' ); ?>" alt="" class="header-mobile-menu__services-icon" width="16" height="16">
-							<span>Опыт и репутация</span>
-						</a>
-						<a href="#product" class="header-mobile-menu__services-item">
-							<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/ui_pack[white].svg' ); ?>" alt="" class="header-mobile-menu__services-icon" width="16" height="16">
-							<span>Сертификация продукции</span>
-						</a>
-						<a href="#personnel" class="header-mobile-menu__services-item">
-							<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/ui_user[white].svg' ); ?>" alt="" class="header-mobile-menu__services-icon" width="16" height="16">
-							<span>Сертификация персонала</span>
-						</a>
-						<a href="#voluntary" class="header-mobile-menu__services-item">
-							<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/ui_file[white].svg' ); ?>" alt="" class="header-mobile-menu__services-icon" width="16" height="16">
-							<span>Добровольная сертификация</span>
-						</a>
-						<a href="<?php echo esc_url( home_url( '/edu/' ) ); ?>" class="header-mobile-menu__services-item">
-							<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/ui_file[white].svg' ); ?>" alt="" class="header-mobile-menu__services-icon" width="16" height="16">
-							<span>Учебный центр</span>
-						</a>
 					</nav>
 				</div>
 
 				<div class="header-mobile-menu__contacts">
 					<a href="tel:+78005510236" class="header-mobile-menu__phone">+7 (800) 551-02-36</a>
 					<a href="mailto:info@gociss.ru" class="header-mobile-menu__email">info@gociss.ru</a>
-					<a href="#callback" class="btn btn--primary">Заказать звонок</a>
+					<button type="button" class="btn btn--primary js-open-callback-popup">Заказать звонок</button>
 				</div>
 			</div>
 		</div>

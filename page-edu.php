@@ -16,13 +16,13 @@ get_header();
 
 <main class="edu-page">
 	<!-- Хлебные крошки -->
-	<section class="breadcrumbs">
+	<nav class="breadcrumbs" aria-label="Хлебные крошки">
 		<div class="container">
 			<a href="<?php echo esc_url( home_url( '/' ) ); ?>">Главная</a>
 			<span class="breadcrumbs__separator">→</span>
-			<span>Учебный центр</span>
+			<span class="breadcrumbs__current">Учебный центр</span>
 		</div>
-	</section>
+	</nav>
 
 	<!-- Hero секция -->
 	<?php get_template_part( 'template-parts/edu/hero' ); ?>

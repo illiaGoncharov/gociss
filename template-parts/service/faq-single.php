@@ -3,7 +3,10 @@
  * Секция FAQ для страницы услуги
  * Поддерживает региональные значения
  *
- * Использует 8 индивидуальных полей ACF с fallback на региональные
+ * Приоритет загрузки вопросов:
+ * 1. Региональные ACF поля (8 пар на термине региона) — если есть регион
+ * 2. Relationship-поле gociss_sfaq_items (записи CPT FAQ)
+ * 3. Заглушки по умолчанию
  *
  * @package Gociss
  */
@@ -24,39 +27,39 @@ $faq_subtitle = function_exists( 'gociss_get_regional_field' )
 // Получаем текущий регион
 $current_region = function_exists( 'gociss_get_current_region' ) ? gociss_get_current_region() : null;
 
-// Собираем FAQ из 8 индивидуальных полей с учётом региона
+// 1. Проверяем региональные FAQ (8 пар полей на термине региона)
 $faq_items = array();
-for ( $i = 1; $i <= 8; $i++ ) {
-	$question = '';
-	$answer   = '';
-
-	// Сначала проверяем региональные FAQ
-	if ( $current_region && function_exists( 'get_field' ) ) {
+if ( $current_region && function_exists( 'get_field' ) ) {
+	for ( $i = 1; $i <= 8; $i++ ) {
 		$regional_question = get_field( 'gociss_region_faq_' . $i . '_question', 'term_' . $current_region->term_id );
 		$regional_answer   = get_field( 'gociss_region_faq_' . $i . '_answer', 'term_' . $current_region->term_id );
 
 		if ( ! empty( $regional_question ) ) {
-			$question = $regional_question;
-			$answer   = $regional_answer;
+			$faq_items[] = array(
+				'question' => $regional_question,
+				'answer'   => ! empty( $regional_answer ) ? $regional_answer : 'Ответ скоро появится.',
+			);
 		}
-	}
-
-	// Fallback на общие FAQ из услуги
-	if ( empty( $question ) && function_exists( 'get_field' ) ) {
-		$question = get_field( 'gociss_sfaq_' . $i . '_question' );
-		$answer   = get_field( 'gociss_sfaq_' . $i . '_answer' );
-	}
-
-	// Достаточно вопроса — ответ может быть пустым
-	if ( ! empty( $question ) ) {
-		$faq_items[] = array(
-			'question' => $question,
-			'answer'   => ! empty( $answer ) ? $answer : 'Ответ скоро появится.',
-		);
 	}
 }
 
-// Заглушки вопросов для услуги (если ничего не заполнено)
+// 2. Если региональных нет — читаем Relationship-поле услуги
+if ( empty( $faq_items ) && function_exists( 'get_field' ) ) {
+	$faq_relations = get_field( 'gociss_sfaq_items' );
+
+	if ( ! empty( $faq_relations ) && is_array( $faq_relations ) ) {
+		foreach ( $faq_relations as $faq_post ) {
+			if ( is_object( $faq_post ) && ! empty( $faq_post->post_title ) ) {
+				$faq_items[] = array(
+					'question' => $faq_post->post_title,
+					'answer'   => apply_filters( 'the_content', $faq_post->post_content ),
+				);
+			}
+		}
+	}
+}
+
+// 3. Заглушки вопросов для услуги (если ничего не заполнено)
 $default_faqs = array(
 	array(
 		'question' => 'Какие документы нужны для получения сертификата?',
@@ -103,7 +106,7 @@ $display_items = ! empty( $faq_items ) ? $faq_items : $default_faqs;
 					</button>
 					<div class="faq__answer">
 						<div class="faq__answer-inner">
-							<p><?php echo wp_kses_post( $faq_item['answer'] ); ?></p>
+							<?php echo wp_kses_post( $faq_item['answer'] ); ?>
 						</div>
 					</div>
 				</div>

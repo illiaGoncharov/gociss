@@ -44,11 +44,12 @@ function gociss_theme_setup() {
 	// Регистрация меню
 	register_nav_menus(
 		array(
-			'primary'        => esc_html__( 'Основное меню', 'gociss' ),
-			'footer'         => esc_html__( 'Меню в футере', 'gociss' ),
+			'primary'         => esc_html__( 'Основное меню', 'gociss' ),
+			'services'        => esc_html__( 'Меню услуг (синяя панель)', 'gociss' ),
+			'footer'          => esc_html__( 'Меню в футере', 'gociss' ),
 			'footer-services' => esc_html__( 'Футер: Услуги', 'gociss' ),
-			'footer-info'    => esc_html__( 'Футер: Информация', 'gociss' ),
-			'footer-company' => esc_html__( 'Футер: Компания', 'gociss' ),
+			'footer-info'     => esc_html__( 'Футер: Информация', 'gociss' ),
+			'footer-company'  => esc_html__( 'Футер: Компания', 'gociss' ),
 		)
 	);
 
@@ -301,6 +302,117 @@ function gociss_render_breadcrumbs( $breadcrumbs, $separator = '/' ) {
 		endforeach;
 		?>
 	</nav>
+	<?php
+}
+
+/**
+ * Поиск URL категории услуг по имени и slug
+ *
+ * Ищет термин таксономии gociss_service_cat: сначала по именам, потом по слагам.
+ * Если ничего не найдено — возвращает fallback URL (будет вести на 404, пока категория не создана).
+ *
+ * @param array  $names         Массив возможных имён категории.
+ * @param array  $slugs         Массив возможных слагов категории.
+ * @param string $fallback_slug Слаг для fallback URL.
+ * @return string URL категории.
+ */
+function gociss_get_service_cat_url( $names, $slugs, $fallback_slug = '' ) {
+	// Ищем по имени
+	foreach ( $names as $name ) {
+		$term = get_term_by( 'name', $name, 'gociss_service_cat' );
+		if ( $term && ! is_wp_error( $term ) ) {
+			$link = get_term_link( $term );
+			if ( ! is_wp_error( $link ) ) {
+				return $link;
+			}
+		}
+	}
+
+	// Ищем по slug
+	foreach ( $slugs as $slug ) {
+		$term = get_term_by( 'slug', $slug, 'gociss_service_cat' );
+		if ( $term && ! is_wp_error( $term ) ) {
+			$link = get_term_link( $term );
+			if ( ! is_wp_error( $link ) ) {
+				return $link;
+			}
+		}
+	}
+
+	// Fallback — URL-заглушка (404 пока категория не создана)
+	$slug = $fallback_slug ? $fallback_slug : ( ! empty( $slugs ) ? $slugs[0] : 'unknown' );
+	return home_url( '/uslugi/category/' . $slug . '/' );
+}
+
+/**
+ * Общий массив категорий услуг для навигации
+ *
+ * Используется при автосоздании меню и в fallback-ах.
+ * Каждый элемент содержит возможные имена, слаги, иконку и ярлык.
+ *
+ * @return array
+ */
+function gociss_get_nav_service_categories() {
+	return array(
+		'iso'        => array(
+			'names' => array( 'Сертификация ISO', 'Сертификация систем менеджмента качества' ),
+			'slugs' => array( 'sertifikaciya-sistem-menedzhmenta-kachestva', 'iso', 'sertifikaciya-iso' ),
+			'icon'  => 'icon-iso',
+			'label' => 'Сертификация ISO',
+		),
+		'reputation' => array(
+			'names' => array( 'Опыт и репутация' ),
+			'slugs' => array( 'opyt-i-reputaciya', 'reputation' ),
+			'icon'  => 'icon-grad',
+			'label' => 'Опыт и репутация',
+		),
+		'product'    => array(
+			'names' => array( 'Сертификация продукции' ),
+			'slugs' => array( 'sertifikaciya-produkcii', 'product' ),
+			'icon'  => 'icon-pack',
+			'label' => 'Сертификация продукции',
+		),
+		'personnel'  => array(
+			'names' => array( 'Сертификация персонала' ),
+			'slugs' => array( 'sertifikaciya-personala', 'personnel' ),
+			'icon'  => 'icon-user',
+			'label' => 'Сертификация персонала',
+		),
+		'voluntary'  => array(
+			'names' => array( 'Добровольная сертификация' ),
+			'slugs' => array( 'dobrovolnaya-sertifikaciya', 'voluntary' ),
+			'icon'  => 'icon-file',
+			'label' => 'Добровольная сертификация',
+		),
+	);
+}
+
+/**
+ * Fallback для меню услуг (десктоп) — показывается, пока меню не настроено в админке
+ */
+function gociss_services_menu_fallback() {
+	$archive_url = get_post_type_archive_link( 'gociss_service' );
+	?>
+	<a href="<?php echo esc_url( $archive_url ); ?>" class="header-services__item header-services__item--all">
+		<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/ui_ham[white].svg' ); ?>" alt="" class="header-services__icon" width="16" height="16">
+		<span class="header-services__text">Все услуги</span>
+	</a>
+	<span class="header-services__item header-services__item--hint" style="opacity: 0.6; cursor: default;">
+		<span class="header-services__text">Настройте меню: Внешний вид → Меню → «Меню услуг»</span>
+	</span>
+	<?php
+}
+
+/**
+ * Fallback для меню услуг (мобильное) — показывается, пока меню не настроено
+ */
+function gociss_services_menu_fallback_mobile() {
+	$archive_url = get_post_type_archive_link( 'gociss_service' );
+	?>
+	<a href="<?php echo esc_url( $archive_url ); ?>" class="header-mobile-menu__services-item">
+		<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/ui_ham[white].svg' ); ?>" alt="" class="header-mobile-menu__services-icon" width="16" height="16">
+		<span>Все услуги</span>
+	</a>
 	<?php
 }
 

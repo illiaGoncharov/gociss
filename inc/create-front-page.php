@@ -264,6 +264,95 @@ function gociss_create_primary_menu() {
 add_action( 'after_switch_theme', 'gociss_create_primary_menu', 20 );
 
 /**
+ * Создание меню услуг (синяя панель) при активации темы
+ *
+ * Пункты добавляются как произвольные ссылки.
+ * Иконки задаются через CSS-классы: icon-ham, icon-iso, icon-grad, icon-pack, icon-user, icon-file
+ * Если страница ещё не создана — ссылка будет вести на 404, пока страница не появится.
+ */
+function gociss_create_services_menu() {
+	$menu_name   = 'Меню услуг';
+	$menu_exists = wp_get_nav_menu_object( $menu_name );
+
+	// Если меню уже существует — не трогаем (пользователь мог настроить)
+	if ( $menu_exists ) {
+		// Просто привязываем к позиции, если ещё не привязано
+		$locations = get_theme_mod( 'nav_menu_locations' );
+		if ( empty( $locations['services'] ) ) {
+			$locations['services'] = $menu_exists->term_id;
+			set_theme_mod( 'nav_menu_locations', $locations );
+		}
+		return;
+	}
+
+	$menu_id = wp_create_nav_menu( $menu_name );
+
+	if ( is_wp_error( $menu_id ) ) {
+		return;
+	}
+
+	$service_archive = get_post_type_archive_link( 'gociss_service' );
+	if ( ! $service_archive ) {
+		$service_archive = home_url( '/uslugi/' );
+	}
+
+	// Получаем категории из единого источника (theme-setup.php)
+	$nav_categories = gociss_get_nav_service_categories();
+
+	// Формируем пункты меню: «Все услуги» + категории + «Учебный центр»
+	$default_items = array(
+		array(
+			'title'   => 'Все услуги',
+			'url'     => $service_archive,
+			'classes' => array( 'icon-ham' ),
+			'order'   => 1,
+		),
+	);
+
+	$order = 2;
+	foreach ( $nav_categories as $cat ) {
+		// Ищем реальную категорию в БД, если нет — fallback на ожидаемый URL (404)
+		$cat_url = gociss_get_service_cat_url( $cat['names'], $cat['slugs'], $cat['slugs'][0] );
+
+		$default_items[] = array(
+			'title'   => $cat['label'],
+			'url'     => $cat_url,
+			'classes' => array( $cat['icon'] ),
+			'order'   => $order,
+		);
+		$order++;
+	}
+
+	$default_items[] = array(
+		'title'   => 'Учебный центр',
+		'url'     => home_url( '/edu/' ),
+		'classes' => array( 'icon-file' ),
+		'order'   => $order,
+	);
+
+	foreach ( $default_items as $item ) {
+		wp_update_nav_menu_item(
+			$menu_id,
+			0,
+			array(
+				'menu-item-title'    => $item['title'],
+				'menu-item-url'      => $item['url'],
+				'menu-item-type'     => 'custom',
+				'menu-item-status'   => 'publish',
+				'menu-item-position' => $item['order'],
+				'menu-item-classes'  => implode( ' ', $item['classes'] ),
+			)
+		);
+	}
+
+	// Привязываем меню к позиции services
+	$locations = get_theme_mod( 'nav_menu_locations' );
+	$locations['services'] = $menu_id;
+	set_theme_mod( 'nav_menu_locations', $locations );
+}
+add_action( 'after_switch_theme', 'gociss_create_services_menu', 25 );
+
+/**
  * Создание страниц и меню вручную (однократный запуск)
  * Вызывается при первой загрузке если страницы не созданы
  */
@@ -293,6 +382,9 @@ function gociss_maybe_create_pages_and_menu() {
 
 	// Создаём меню (даже если оно уже существует - обновим)
 	gociss_create_primary_menu();
+
+	// Создаём меню услуг (синяя панель), если ещё нет
+	gociss_create_services_menu();
 
 	// Принудительно обновляем шаблон для страницы реестра
 	$reestr_page = get_page_by_path( 'reestr' );

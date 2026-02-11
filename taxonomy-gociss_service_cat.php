@@ -165,6 +165,8 @@ if ( $current_term->parent > 0 ) {
 			</div>
 		<?php endif; ?>
 	</div>
+
+	<?php get_template_part( 'template-parts/form' ); ?>
 </main>
 
 <?php get_footer(); ?>

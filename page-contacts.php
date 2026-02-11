@@ -16,13 +16,13 @@ get_header();
 
 <main class="contacts-page">
 	<!-- Хлебные крошки -->
-	<section class="breadcrumbs">
+	<nav class="breadcrumbs" aria-label="Хлебные крошки">
 		<div class="container">
 			<a href="<?php echo esc_url( home_url( '/' ) ); ?>">Главная</a>
 			<span class="breadcrumbs__separator">→</span>
-			<span>Контакты</span>
+			<span class="breadcrumbs__current">Контакты</span>
 		</div>
-	</section>
+	</nav>
 
 	<!-- Секция контактов -->
 	<?php get_template_part( 'template-parts/contacts' ); ?>

@@ -85,6 +85,16 @@ function gociss_register_expert_acf_fields() {
 					'type'              => 'textarea',
 					'instructions'      => 'Например: "12 лет опыта, более 500 проектов ISO 9001, 14001, 45001"',
 				),
+				array(
+					'key'               => 'field_gociss_expert_order',
+					'label'             => 'Порядок сортировки',
+					'name'              => 'gociss_expert_order',
+					'type'              => 'number',
+					'instructions'      => 'Чем меньше число, тем выше в списке. Например: 1, 2, 3...',
+					'default_value'     => 10,
+					'min'               => 1,
+					'max'               => 100,
+				),
 			),
 			'location'              => array(
 				array(
@@ -99,6 +109,40 @@ function gociss_register_expert_acf_fields() {
 	);
 }
 add_action( 'acf/init', 'gociss_register_expert_acf_fields' );
+
+/**
+ * Сохранение порядка эксперта в menu_order
+ */
+function gociss_save_expert_order( $post_id ) {
+	// Проверяем тип записи
+	if ( get_post_type( $post_id ) !== 'gociss_expert' ) {
+		return;
+	}
+
+	// Проверяем, не автосохранение ли это
+	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+		return;
+	}
+
+	// Получаем значение поля порядка
+	$order = get_field( 'gociss_expert_order', $post_id );
+	if ( $order ) {
+		// Убираем хук, чтобы избежать бесконечного цикла
+		remove_action( 'acf/save_post', 'gociss_save_expert_order', 20 );
+
+		// Обновляем menu_order
+		wp_update_post(
+			array(
+				'ID'         => $post_id,
+				'menu_order' => intval( $order ),
+			)
+		);
+
+		// Возвращаем хук
+		add_action( 'acf/save_post', 'gociss_save_expert_order', 20 );
+	}
+}
+add_action( 'acf/save_post', 'gociss_save_expert_order', 20 );
 
 /**
  * Регистрация типа записи "Услуги"
@@ -536,18 +580,26 @@ function gociss_get_current_page_region_url( $region_slug ) {
  * Rewrite правила для мультирегиональности
  * URL: /{service}/ и /{service}/{region}/
  * Например: /iso-45001/ и /iso-45001/spb/
+ *
+ * ВАЖНО: Исключаем известные пути, чтобы не конфликтовать с другими архивами
  */
 function gociss_add_service_rewrite_rules() {
+	// Список исключений - эти пути НЕ должны перехватываться как услуги
+	// Используем negative lookahead с учётом слеша или конца строки
+	$excluded_prefixes = 'blog/|blog$|vopros-otvet/|vopros-otvet$|uslugi/|uslugi$|wp-admin|wp-content|wp-includes|wp-json|feed|comments|author|page|tag|category';
+
 	// Правило для региональных страниц: /{service}/{region}/
+	// НЕ перехватывает пути из списка исключений
 	add_rewrite_rule(
-		'^([^/]+)/([^/]+)/?$',
+		'^(?!' . $excluded_prefixes . ')([^/]+)/([^/]+)/?$',
 		'index.php?gociss_service_check=$matches[1]&gociss_region=$matches[2]',
 		'top'
 	);
 
 	// Правило для обычных страниц услуг: /{service}/
+	// НЕ перехватывает пути из списка исключений
 	add_rewrite_rule(
-		'^([^/]+)/?$',
+		'^(?!' . $excluded_prefixes . ')([^/]+)/?$',
 		'index.php?gociss_service_check=$matches[1]',
 		'top'
 	);
@@ -604,34 +656,34 @@ function gociss_parse_service_request( $query_vars ) {
 add_filter( 'request', 'gociss_parse_service_request' );
 
 /**
- * Регистрация типа записи "Статьи"
+ * Регистрация типа записи "Блог" (статьи и новости)
  */
 function gociss_register_article_post_type() {
 	$labels = array(
-		'name'                  => _x( 'Статьи', 'Post Type General Name', 'gociss' ),
-		'singular_name'         => _x( 'Статья', 'Post Type Singular Name', 'gociss' ),
-		'menu_name'             => __( 'Статьи', 'gociss' ),
-		'name_admin_bar'        => __( 'Статья', 'gociss' ),
-		'archives'              => __( 'Все статьи', 'gociss' ),
-		'all_items'             => __( 'Все статьи', 'gociss' ),
-		'add_new_item'          => __( 'Добавить статью', 'gociss' ),
-		'add_new'               => __( 'Добавить статью', 'gociss' ),
-		'new_item'              => __( 'Новая статья', 'gociss' ),
-		'edit_item'             => __( 'Редактировать статью', 'gociss' ),
-		'update_item'           => __( 'Обновить статью', 'gociss' ),
-		'view_item'             => __( 'Просмотреть статью', 'gociss' ),
-		'search_items'          => __( 'Искать статьи', 'gociss' ),
-		'not_found'             => __( 'Статьи не найдены', 'gociss' ),
+		'name'                  => _x( 'Блог', 'Post Type General Name', 'gociss' ),
+		'singular_name'         => _x( 'Запись', 'Post Type Singular Name', 'gociss' ),
+		'menu_name'             => __( 'Блог', 'gociss' ),
+		'name_admin_bar'        => __( 'Запись блога', 'gociss' ),
+		'archives'              => __( 'Все записи', 'gociss' ),
+		'all_items'             => __( 'Все записи', 'gociss' ),
+		'add_new_item'          => __( 'Добавить запись', 'gociss' ),
+		'add_new'               => __( 'Добавить запись', 'gociss' ),
+		'new_item'              => __( 'Новая запись', 'gociss' ),
+		'edit_item'             => __( 'Редактировать запись', 'gociss' ),
+		'update_item'           => __( 'Обновить запись', 'gociss' ),
+		'view_item'             => __( 'Просмотреть запись', 'gociss' ),
+		'search_items'          => __( 'Искать записи', 'gociss' ),
+		'not_found'             => __( 'Записи не найдены', 'gociss' ),
 		'not_found_in_trash'    => __( 'Не найдено в корзине', 'gociss' ),
-		'featured_image'        => __( 'Изображение статьи', 'gociss' ),
+		'featured_image'        => __( 'Изображение записи', 'gociss' ),
 		'set_featured_image'    => __( 'Установить изображение', 'gociss' ),
 		'remove_featured_image' => __( 'Удалить изображение', 'gociss' ),
-		'use_featured_image'    => __( 'Использовать как изображение статьи', 'gociss' ),
+		'use_featured_image'    => __( 'Использовать как изображение записи', 'gociss' ),
 	);
 
 	$args = array(
-		'label'                 => __( 'Статья', 'gociss' ),
-		'description'           => __( 'Информационные статьи для SEO', 'gociss' ),
+		'label'                 => __( 'Запись блога', 'gociss' ),
+		'description'           => __( 'Блог: статьи, новости и информационные материалы', 'gociss' ),
 		'labels'                => $labels,
 		'supports'              => array( 'title', 'editor', 'thumbnail', 'excerpt', 'author' ),
 		'taxonomies'            => array( 'gociss_article_cat' ),
@@ -644,13 +696,13 @@ function gociss_register_article_post_type() {
 		'show_in_admin_bar'     => true,
 		'show_in_nav_menus'     => true,
 		'can_export'            => true,
-		'has_archive'           => 'stati',
+		'has_archive'           => 'blog',
 		'exclude_from_search'   => false,
 		'publicly_queryable'    => true,
 		'capability_type'       => 'post',
 		'show_in_rest'          => false,
 		'rewrite'               => array(
-			'slug'       => 'stati',
+			'slug'       => 'blog',
 			'with_front' => false,
 		),
 	);
@@ -660,12 +712,12 @@ function gociss_register_article_post_type() {
 add_action( 'init', 'gociss_register_article_post_type', 0 );
 
 /**
- * Регистрация таксономии "Категории статей"
+ * Регистрация таксономии "Категории блога" (Статьи, Новости и т.д.)
  */
 function gociss_register_article_category_taxonomy() {
 	$labels = array(
-		'name'                       => _x( 'Категории статей', 'Taxonomy General Name', 'gociss' ),
-		'singular_name'              => _x( 'Категория статей', 'Taxonomy Singular Name', 'gociss' ),
+		'name'                       => _x( 'Категории блога', 'Taxonomy General Name', 'gociss' ),
+		'singular_name'              => _x( 'Категория блога', 'Taxonomy Singular Name', 'gociss' ),
 		'menu_name'                  => __( 'Категории', 'gociss' ),
 		'all_items'                  => __( 'Все категории', 'gociss' ),
 		'parent_item'                => __( 'Родительская категория', 'gociss' ),
@@ -689,9 +741,9 @@ function gociss_register_article_category_taxonomy() {
 		'show_tagcloud'     => false,
 		'show_in_rest'      => false,
 		'rewrite'           => array(
-			'slug'         => 'stati/category',
+			'slug'         => 'blog',
 			'with_front'   => false,
-			'hierarchical' => true,
+			'hierarchical' => false,
 		),
 	);
 
@@ -700,98 +752,71 @@ function gociss_register_article_category_taxonomy() {
 add_action( 'init', 'gociss_register_article_category_taxonomy', 0 );
 
 /**
- * Регистрация таксономии "Контекст FAQ"
- * Для привязки вопросов к главной странице или конкретным услугам
+ * Добавляем query var для проверки блога
  */
-function gociss_register_faq_context_taxonomy() {
-	$labels = array(
-		'name'                       => _x( 'Контекст FAQ', 'Taxonomy General Name', 'gociss' ),
-		'singular_name'              => _x( 'Контекст', 'Taxonomy Singular Name', 'gociss' ),
-		'menu_name'                  => __( 'Контекст', 'gociss' ),
-		'all_items'                  => __( 'Все контексты', 'gociss' ),
-		'new_item_name'              => __( 'Новый контекст', 'gociss' ),
-		'add_new_item'               => __( 'Добавить контекст', 'gociss' ),
-		'edit_item'                  => __( 'Редактировать контекст', 'gociss' ),
-		'update_item'                => __( 'Обновить контекст', 'gociss' ),
-		'view_item'                  => __( 'Просмотреть контекст', 'gociss' ),
-		'search_items'               => __( 'Искать контексты', 'gociss' ),
-		'not_found'                  => __( 'Контексты не найдены', 'gociss' ),
+function gociss_add_blog_query_var( $vars ) {
+	$vars[] = 'gociss_blog_check';
+	return $vars;
+}
+add_filter( 'query_vars', 'gociss_add_blog_query_var' );
+
+/**
+ * Добавляем rewrite rules для блога
+ */
+function gociss_add_blog_rewrite_rules() {
+	// /blog/{slug}/ — проверяем: категория или запись
+	add_rewrite_rule(
+		'^blog/([^/]+)/?$',
+		'index.php?gociss_blog_check=$matches[1]',
+		'top'
 	);
 
-	$args = array(
-		'labels'            => $labels,
-		'hierarchical'      => true,
-		'public'            => false,
-		'show_ui'           => true,
-		'show_admin_column' => true,
-		'show_in_nav_menus' => false,
-		'show_tagcloud'     => false,
-		'show_in_rest'      => false,
+	// /blog/{slug}/page/{page}/ → пагинация категории
+	add_rewrite_rule(
+		'^blog/([^/]+)/page/([0-9]+)/?$',
+		'index.php?gociss_blog_check=$matches[1]&paged=$matches[2]',
+		'top'
 	);
-
-	register_taxonomy( 'gociss_faq_context', array( 'gociss_faq' ), $args );
 }
-add_action( 'init', 'gociss_register_faq_context_taxonomy', 0 );
+add_action( 'init', 'gociss_add_blog_rewrite_rules', 5 );
 
 /**
- * Создать базовые контексты FAQ при активации темы
+ * Обработка URL блога: определяем категория это или запись
  */
-function gociss_create_default_faq_contexts() {
-	// Создаём контекст "Главная страница" если его нет
-	if ( ! term_exists( 'homepage', 'gociss_faq_context' ) ) {
-		wp_insert_term(
-			'Главная страница',
-			'gociss_faq_context',
-			array( 'slug' => 'homepage' )
-		);
+function gociss_parse_blog_request( $query_vars ) {
+	if ( empty( $query_vars['gociss_blog_check'] ) ) {
+		return $query_vars;
 	}
+
+	$slug = $query_vars['gociss_blog_check'];
+	unset( $query_vars['gociss_blog_check'] );
+
+	// Сначала проверяем, является ли это категорией блога
+	$term = get_term_by( 'slug', $slug, 'gociss_article_cat' );
+	if ( $term && ! is_wp_error( $term ) ) {
+		// Это категория!
+		$query_vars['gociss_article_cat'] = $slug;
+		return $query_vars;
+	}
+
+	// Если не категория — проверяем, является ли это записью блога
+	$post = get_page_by_path( $slug, OBJECT, 'gociss_article' );
+	if ( $post && $post->post_status === 'publish' ) {
+		// Это запись блога!
+		$query_vars['gociss_article'] = $slug;
+		$query_vars['post_type'] = 'gociss_article';
+		$query_vars['name'] = $slug;
+		return $query_vars;
+	}
+
+	// Ничего не нашли — вернём 404
+	$query_vars['error'] = '404';
+	return $query_vars;
 }
-add_action( 'after_switch_theme', 'gociss_create_default_faq_contexts' );
-add_action( 'init', 'gociss_create_default_faq_contexts', 99 );
+add_filter( 'request', 'gociss_parse_blog_request' );
 
-/**
- * Автоматически создавать контекст FAQ при создании услуги
- */
-function gociss_create_faq_context_for_service( $post_id, $post, $update ) {
-	// Только для новых услуг
-	if ( $update || $post->post_type !== 'gociss_service' ) {
-		return;
-	}
-
-	// Создаём термин с slug = ID услуги
-	$term_slug = 'service-' . $post_id;
-	$term_name = 'Услуга: ' . $post->post_title;
-
-	if ( ! term_exists( $term_slug, 'gociss_faq_context' ) ) {
-		wp_insert_term(
-			$term_name,
-			'gociss_faq_context',
-			array( 'slug' => $term_slug )
-		);
-	}
-}
-add_action( 'wp_insert_post', 'gociss_create_faq_context_for_service', 10, 3 );
-
-/**
- * Обновить название контекста FAQ при обновлении услуги
- */
-function gociss_update_faq_context_for_service( $post_id, $post, $update ) {
-	if ( ! $update || $post->post_type !== 'gociss_service' ) {
-		return;
-	}
-
-	$term_slug = 'service-' . $post_id;
-	$term = get_term_by( 'slug', $term_slug, 'gociss_faq_context' );
-
-	if ( $term ) {
-		wp_update_term(
-			$term->term_id,
-			'gociss_faq_context',
-			array( 'name' => 'Услуга: ' . $post->post_title )
-		);
-	}
-}
-add_action( 'wp_insert_post', 'gociss_update_faq_context_for_service', 10, 3 );
+// Таксономия «Контекст FAQ» удалена — привязка FAQ к страницам
+// теперь осуществляется через ACF Relationship-поле на каждой странице.
 
 /**
  * Сброс правил перезаписи при активации темы
@@ -804,14 +829,26 @@ function gociss_flush_rewrite_rules_on_activation() {
 	gociss_add_service_rewrite_rules();
 	gociss_register_faq_post_type();
 	gociss_register_faq_category_taxonomy();
-	gociss_register_faq_context_taxonomy();
 	gociss_register_article_post_type();
 	gociss_register_article_category_taxonomy();
+	gociss_add_blog_rewrite_rules();
 	gociss_register_certificate_post_type();
 	gociss_register_certificate_type_taxonomy();
 	flush_rewrite_rules();
 }
 add_action( 'after_switch_theme', 'gociss_flush_rewrite_rules_on_activation' );
+
+/**
+ * Временный принудительный сброс rewrite rules
+ * УДАЛИТЬ после того как URL заработают!
+ */
+function gociss_force_flush_rewrite_rules() {
+	if ( get_option( 'gociss_flush_rewrite_v7' ) !== 'done' ) {
+		flush_rewrite_rules();
+		update_option( 'gociss_flush_rewrite_v7', 'done' );
+	}
+}
+add_action( 'init', 'gociss_force_flush_rewrite_rules', 999 );
 
 /**
  * Сброс rewrite rules при сохранении услуги (для обновления региональных URL)

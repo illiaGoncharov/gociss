@@ -89,6 +89,19 @@ if ( ! $phone ) {
 				<div class="contacts__map-placeholder"></div>
 			<?php endif; ?>
 		</div>
+
+		<!-- Яндекс виджет рейтинга -->
+		<?php
+		$yandex_widget = function_exists( 'get_field' ) ? get_field( 'gociss_contacts_yandex_widget' ) : '';
+		if ( $yandex_widget ) :
+		?>
+		<div class="contacts__yandex-widget">
+			<?php
+			// Выводим виджет без экранирования (iframe)
+			echo $yandex_widget; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			?>
+		</div>
+		<?php endif; ?>
 	</div>
 </section>
 

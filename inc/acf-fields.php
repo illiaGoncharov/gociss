@@ -414,248 +414,36 @@ function gociss_register_acf_fields() {
 		)
 	);
 
-	// Группа полей "Секция Эксперты" - 5 фиксированных экспертов
+	// Группа полей "Секция Эксперты" - эксперты берутся из типа записи gociss_expert
 	acf_add_local_field_group(
 		array(
-			'key'                   => 'group_gociss_experts_fixed',
+			'key'                   => 'group_gociss_experts_settings',
 			'title'                 => 'Секция Эксперты',
 			'fields'                => array(
 				array(
-					'key'           => 'field_gociss_experts_title_fixed',
+					'key'           => 'field_gociss_experts_title',
 					'label'         => 'Заголовок секции',
 					'name'          => 'gociss_experts_title',
 					'type'          => 'text',
 					'default_value' => 'Наши ведущие эксперты',
 				),
 				array(
-					'key'           => 'field_gociss_experts_subtitle_fixed',
+					'key'           => 'field_gociss_experts_subtitle',
 					'label'         => 'Подзаголовок секции',
 					'name'          => 'gociss_experts_subtitle',
 					'type'          => 'textarea',
-				),
-				// Эксперт 1
-				array(
-					'key'           => 'field_gociss_expert_1_photo',
-					'label'         => 'Эксперт 1: Фото',
-					'name'          => 'gociss_expert_1_photo',
-					'type'          => 'image',
-					'return_format' => 'array',
-					'preview_size'  => 'medium',
-				),
-						array(
-					'key'   => 'field_gociss_expert_1_name',
-					'label' => 'Эксперт 1: ФИО',
-					'name'  => 'gociss_expert_1_name',
-					'type'  => 'text',
+					'default_value' => 'Команда профессионалов с международной аккредитацией и многолетним опытом',
 				),
 				array(
-					'key'   => 'field_gociss_expert_1_position',
-					'label' => 'Эксперт 1: Должность',
-					'name'  => 'gociss_expert_1_position',
-					'type'  => 'text',
-				),
-				array(
-					'key'   => 'field_gociss_expert_1_experience',
-					'label' => 'Эксперт 1: Опыт',
-					'name'  => 'gociss_expert_1_experience',
-					'type'  => 'textarea',
-					'rows'  => 2,
-				),
-				// Эксперт 2
-				array(
-					'key'           => 'field_gociss_expert_2_photo',
-					'label'         => 'Эксперт 2: Фото',
-					'name'          => 'gociss_expert_2_photo',
-							'type'          => 'image',
-							'return_format' => 'array',
-							'preview_size'  => 'medium',
-						),
-						array(
-					'key'   => 'field_gociss_expert_2_name',
-					'label' => 'Эксперт 2: ФИО',
-					'name'  => 'gociss_expert_2_name',
-							'type'  => 'text',
-						),
-						array(
-					'key'   => 'field_gociss_expert_2_position',
-					'label' => 'Эксперт 2: Должность',
-					'name'  => 'gociss_expert_2_position',
-							'type'  => 'text',
-						),
-						array(
-					'key'   => 'field_gociss_expert_2_experience',
-					'label' => 'Эксперт 2: Опыт',
-					'name'  => 'gociss_expert_2_experience',
-							'type'  => 'textarea',
-							'rows'  => 2,
-						),
-				// Эксперт 3
-				array(
-					'key'           => 'field_gociss_expert_3_photo',
-					'label'         => 'Эксперт 3: Фото',
-					'name'          => 'gociss_expert_3_photo',
-					'type'          => 'image',
-					'return_format' => 'array',
-					'preview_size'  => 'medium',
-				),
-				array(
-					'key'   => 'field_gociss_expert_3_name',
-					'label' => 'Эксперт 3: ФИО',
-					'name'  => 'gociss_expert_3_name',
-					'type'  => 'text',
-				),
-				array(
-					'key'   => 'field_gociss_expert_3_position',
-					'label' => 'Эксперт 3: Должность',
-					'name'  => 'gociss_expert_3_position',
-					'type'  => 'text',
-				),
-				array(
-					'key'   => 'field_gociss_expert_3_experience',
-					'label' => 'Эксперт 3: Опыт',
-					'name'  => 'gociss_expert_3_experience',
-					'type'  => 'textarea',
-					'rows'  => 2,
-				),
-				// Эксперт 4
-				array(
-					'key'           => 'field_gociss_expert_4_photo',
-					'label'         => 'Эксперт 4: Фото',
-					'name'          => 'gociss_expert_4_photo',
-					'type'          => 'image',
-					'return_format' => 'array',
-					'preview_size'  => 'medium',
-				),
-				array(
-					'key'   => 'field_gociss_expert_4_name',
-					'label' => 'Эксперт 4: ФИО',
-					'name'  => 'gociss_expert_4_name',
-					'type'  => 'text',
-				),
-				array(
-					'key'   => 'field_gociss_expert_4_position',
-					'label' => 'Эксперт 4: Должность',
-					'name'  => 'gociss_expert_4_position',
-					'type'  => 'text',
-				),
-				array(
-					'key'   => 'field_gociss_expert_4_experience',
-					'label' => 'Эксперт 4: Опыт',
-					'name'  => 'gociss_expert_4_experience',
-					'type'  => 'textarea',
-					'rows'  => 2,
-				),
-				// Эксперт 5
-				array(
-					'key'           => 'field_gociss_expert_5_photo',
-					'label'         => 'Эксперт 5: Фото',
-					'name'          => 'gociss_expert_5_photo',
-					'type'          => 'image',
-					'return_format' => 'array',
-					'preview_size'  => 'medium',
-				),
-				array(
-					'key'   => 'field_gociss_expert_5_name',
-					'label' => 'Эксперт 5: ФИО',
-					'name'  => 'gociss_expert_5_name',
-					'type'  => 'text',
-				),
-				array(
-					'key'   => 'field_gociss_expert_5_position',
-					'label' => 'Эксперт 5: Должность',
-					'name'  => 'gociss_expert_5_position',
-					'type'  => 'text',
-				),
-				array(
-					'key'   => 'field_gociss_expert_5_experience',
-					'label' => 'Эксперт 5: Опыт',
-					'name'  => 'gociss_expert_5_experience',
-					'type'  => 'textarea',
-					'rows'  => 2,
-				),
-				// Эксперт 6
-				array(
-					'key'           => 'field_gociss_expert_6_photo',
-					'label'         => 'Эксперт 6: Фото',
-					'name'          => 'gociss_expert_6_photo',
-					'type'          => 'image',
-					'return_format' => 'array',
-					'preview_size'  => 'medium',
-				),
-				array(
-					'key'   => 'field_gociss_expert_6_name',
-					'label' => 'Эксперт 6: ФИО',
-					'name'  => 'gociss_expert_6_name',
-					'type'  => 'text',
-				),
-				array(
-					'key'   => 'field_gociss_expert_6_position',
-					'label' => 'Эксперт 6: Должность',
-					'name'  => 'gociss_expert_6_position',
-					'type'  => 'text',
-				),
-				array(
-					'key'   => 'field_gociss_expert_6_experience',
-					'label' => 'Эксперт 6: Опыт',
-					'name'  => 'gociss_expert_6_experience',
-					'type'  => 'textarea',
-					'rows'  => 2,
-				),
-				// Эксперт 7
-				array(
-					'key'           => 'field_gociss_expert_7_photo',
-					'label'         => 'Эксперт 7: Фото',
-					'name'          => 'gociss_expert_7_photo',
-					'type'          => 'image',
-					'return_format' => 'array',
-					'preview_size'  => 'medium',
-				),
-				array(
-					'key'   => 'field_gociss_expert_7_name',
-					'label' => 'Эксперт 7: ФИО',
-					'name'  => 'gociss_expert_7_name',
-					'type'  => 'text',
-				),
-				array(
-					'key'   => 'field_gociss_expert_7_position',
-					'label' => 'Эксперт 7: Должность',
-					'name'  => 'gociss_expert_7_position',
-					'type'  => 'text',
-				),
-				array(
-					'key'   => 'field_gociss_expert_7_experience',
-					'label' => 'Эксперт 7: Опыт',
-					'name'  => 'gociss_expert_7_experience',
-					'type'  => 'textarea',
-					'rows'  => 2,
-				),
-				// Эксперт 8
-				array(
-					'key'           => 'field_gociss_expert_8_photo',
-					'label'         => 'Эксперт 8: Фото',
-					'name'          => 'gociss_expert_8_photo',
-					'type'          => 'image',
-					'return_format' => 'array',
-					'preview_size'  => 'medium',
-				),
-				array(
-					'key'   => 'field_gociss_expert_8_name',
-					'label' => 'Эксперт 8: ФИО',
-					'name'  => 'gociss_expert_8_name',
-					'type'  => 'text',
-				),
-				array(
-					'key'   => 'field_gociss_expert_8_position',
-					'label' => 'Эксперт 8: Должность',
-					'name'  => 'gociss_expert_8_position',
-					'type'  => 'text',
-				),
-				array(
-					'key'   => 'field_gociss_expert_8_experience',
-					'label' => 'Эксперт 8: Опыт',
-					'name'  => 'gociss_expert_8_experience',
-					'type'  => 'textarea',
-					'rows'  => 2,
+					'key'           => 'field_gociss_experts_count',
+					'label'         => 'Количество экспертов для отображения',
+					'name'          => 'gociss_experts_count',
+					'type'          => 'number',
+					'instructions'  => 'Эксперты будут взяты из раздела "Эксперты". Управляйте порядком через меню порядка или плагин Simple Custom Post Order.',
+					'default_value' => 5,
+					'min'           => 1,
+					'max'           => 20,
+					'step'          => 1,
 				),
 			),
 			'location'              => array(
@@ -671,7 +459,7 @@ function gociss_register_acf_fields() {
 		)
 	);
 
-	// Группа полей "Секция FAQ" - 6 фиксированных вопросов
+	// Группа полей "Секция FAQ" — Relationship-поле для выбора записей из CPT FAQ
 	acf_add_local_field_group(
 		array(
 			'key'                   => 'group_gociss_faq_fixed',
@@ -690,125 +478,19 @@ function gociss_register_acf_fields() {
 					'name'          => 'gociss_faq_subtitle',
 					'type'          => 'textarea',
 				),
-				// Вопрос 1
 				array(
-					'key'   => 'field_gociss_faq_1_question',
-					'label' => 'Вопрос 1',
-					'name'  => 'gociss_faq_1_question',
-					'type'  => 'text',
-				),
-						array(
-					'key'   => 'field_gociss_faq_1_answer',
-					'label' => 'Ответ 1',
-					'name'  => 'gociss_faq_1_answer',
-					'type'  => 'wysiwyg',
-					'toolbar' => 'basic',
-					'media_upload' => 0,
-				),
-				// Вопрос 2
-				array(
-					'key'   => 'field_gociss_faq_2_question',
-					'label' => 'Вопрос 2',
-					'name'  => 'gociss_faq_2_question',
-							'type'  => 'text',
-						),
-						array(
-					'key'   => 'field_gociss_faq_2_answer',
-					'label' => 'Ответ 2',
-					'name'  => 'gociss_faq_2_answer',
-							'type'  => 'wysiwyg',
-					'toolbar' => 'basic',
-					'media_upload' => 0,
-				),
-				// Вопрос 3
-				array(
-					'key'   => 'field_gociss_faq_3_question',
-					'label' => 'Вопрос 3',
-					'name'  => 'gociss_faq_3_question',
-					'type'  => 'text',
-				),
-				array(
-					'key'   => 'field_gociss_faq_3_answer',
-					'label' => 'Ответ 3',
-					'name'  => 'gociss_faq_3_answer',
-					'type'  => 'wysiwyg',
-					'toolbar' => 'basic',
-					'media_upload' => 0,
-				),
-				// Вопрос 4
-				array(
-					'key'   => 'field_gociss_faq_4_question',
-					'label' => 'Вопрос 4',
-					'name'  => 'gociss_faq_4_question',
-					'type'  => 'text',
-				),
-				array(
-					'key'   => 'field_gociss_faq_4_answer',
-					'label' => 'Ответ 4',
-					'name'  => 'gociss_faq_4_answer',
-					'type'  => 'wysiwyg',
-					'toolbar' => 'basic',
-					'media_upload' => 0,
-				),
-				// Вопрос 5
-				array(
-					'key'   => 'field_gociss_faq_5_question',
-					'label' => 'Вопрос 5',
-					'name'  => 'gociss_faq_5_question',
-					'type'  => 'text',
-				),
-				array(
-					'key'   => 'field_gociss_faq_5_answer',
-					'label' => 'Ответ 5',
-					'name'  => 'gociss_faq_5_answer',
-					'type'  => 'wysiwyg',
-					'toolbar' => 'basic',
-					'media_upload' => 0,
-				),
-				// Вопрос 6
-				array(
-					'key'   => 'field_gociss_faq_6_question',
-					'label' => 'Вопрос 6',
-					'name'  => 'gociss_faq_6_question',
-					'type'  => 'text',
-				),
-				array(
-					'key'   => 'field_gociss_faq_6_answer',
-					'label' => 'Ответ 6',
-					'name'  => 'gociss_faq_6_answer',
-					'type'  => 'wysiwyg',
-					'toolbar' => 'basic',
-					'media_upload' => 0,
-				),
-				// Вопрос 7
-				array(
-					'key'   => 'field_gociss_faq_7_question',
-					'label' => 'Вопрос 7',
-					'name'  => 'gociss_faq_7_question',
-					'type'  => 'text',
-				),
-				array(
-					'key'   => 'field_gociss_faq_7_answer',
-					'label' => 'Ответ 7',
-					'name'  => 'gociss_faq_7_answer',
-					'type'  => 'wysiwyg',
-					'toolbar' => 'basic',
-					'media_upload' => 0,
-				),
-				// Вопрос 8
-				array(
-					'key'   => 'field_gociss_faq_8_question',
-					'label' => 'Вопрос 8',
-					'name'  => 'gociss_faq_8_question',
-					'type'  => 'text',
-				),
-				array(
-					'key'   => 'field_gociss_faq_8_answer',
-					'label' => 'Ответ 8',
-					'name'  => 'gociss_faq_8_answer',
-					'type'  => 'wysiwyg',
-					'toolbar' => 'basic',
-					'media_upload' => 0,
+					'key'           => 'field_gociss_faq_items',
+					'label'         => 'Вопросы FAQ',
+					'name'          => 'gociss_faq_items',
+					'type'          => 'relationship',
+					'instructions'  => 'Выберите вопросы из раздела FAQ. Перетаскивайте для изменения порядка.',
+					'post_type'     => array( 'gociss_faq' ),
+					'taxonomy'      => array(),
+					'filters'       => array( 'search', 'taxonomy' ),
+					'elements'      => array( 'featured_image' ),
+					'min'           => 0,
+					'max'           => 12,
+					'return_format' => 'object',
 				),
 			),
 			'location'              => array(
@@ -817,6 +499,13 @@ function gociss_register_acf_fields() {
 						'param'    => 'page_template',
 						'operator' => '==',
 						'value'    => 'page-front.php',
+					),
+				),
+				array(
+					array(
+						'param'    => 'page_template',
+						'operator' => '==',
+						'value'    => 'page-service.php',
 					),
 				),
 			),
@@ -917,48 +606,115 @@ function gociss_register_acf_fields() {
 		)
 	);
 
-	// Группа полей для секции Форма
+	// Группа полей для секции Форма — на всех страницах и услугах
 	acf_add_local_field_group(
 		array(
 			'key'                   => 'group_gociss_form',
-			'title'                 => 'Секция Форма обратной связи',
+			'title'                 => 'Форма обратной связи',
 			'fields'                => array(
 				array(
+					'key'               => 'field_gociss_form_variant',
+					'label'             => 'Вариант формы',
+					'name'              => 'gociss_form_variant',
+					'type'              => 'select',
+					'instructions'      => 'Выберите дизайн формы для этой страницы. По умолчанию — основная форма (как на главной).',
+					'choices'           => array(
+						'default'    => 'По умолчанию (как на главной)',
+						'consult'    => 'Готовы проконсультировать (с фото)',
+						'callback'   => 'Остались вопросы (горизонтальная)',
+						'vertical'   => 'Онлайн заявка (вертикальная карточка)',
+						'horizontal' => 'Онлайн заявка (горизонтальная, синий фон)',
+					),
+					'default_value'     => 'default',
+					'allow_null'        => 0,
+					'return_format'     => 'value',
+				),
+				array(
 					'key'               => 'field_gociss_form_label',
-					'label'             => 'Метка',
+					'label'             => 'Метка (для основной формы)',
 					'name'              => 'gociss_form_label',
 					'type'              => 'text',
-					'default_value'     => 'Связаться с нами',
+					'instructions'      => 'Работает только при варианте «По умолчанию». Оставьте пустым для значения по умолчанию.',
+					'default_value'     => '',
+					'placeholder'       => 'Связаться с нами',
+					'conditional_logic' => array(
+						array(
+							array(
+								'field'    => 'field_gociss_form_variant',
+								'operator' => '==',
+								'value'    => 'default',
+							),
+						),
+					),
 				),
 				array(
 					'key'               => 'field_gociss_form_title',
-					'label'             => 'Заголовок',
+					'label'             => 'Заголовок (для основной формы)',
 					'name'              => 'gociss_form_title',
 					'type'              => 'text',
-					'default_value'     => 'Оставить заявку',
+					'instructions'      => 'Работает только при варианте «По умолчанию». Оставьте пустым для значения по умолчанию.',
+					'default_value'     => '',
+					'placeholder'       => 'Оставить заявку',
+					'conditional_logic' => array(
+						array(
+							array(
+								'field'    => 'field_gociss_form_variant',
+								'operator' => '==',
+								'value'    => 'default',
+							),
+						),
+					),
 				),
 				array(
 					'key'               => 'field_gociss_form_description',
-					'label'             => 'Описание',
+					'label'             => 'Описание (для основной формы)',
 					'name'              => 'gociss_form_description',
 					'type'              => 'textarea',
-					'default_value'     => 'Заполните форму, и наш эксперт свяжется с вами в течение 30 минут',
+					'instructions'      => 'Работает только при варианте «По умолчанию». Оставьте пустым для значения по умолчанию.',
+					'default_value'     => '',
+					'placeholder'       => 'Заполните форму, и наш эксперт свяжется с вами в течение 30 минут',
+					'conditional_logic' => array(
+						array(
+							array(
+								'field'    => 'field_gociss_form_variant',
+								'operator' => '==',
+								'value'    => 'default',
+							),
+						),
+					),
 				),
 				array(
 					'key'               => 'field_gociss_form_shortcode',
-					'label'             => 'Шорткод Contact Form 7',
+					'label'             => 'Шорткод CF7 (для основной формы)',
 					'name'              => 'gociss_form_shortcode',
 					'type'              => 'text',
-					'instructions'      => 'Вставьте шорткод формы Contact Form 7, например: [contact-form-7 id="274d127" title="Контактная Форма Главная"]',
-					'default_value'     => '[contact-form-7 id="274d127" title="Контактная Форма Главная"]',
+					'instructions'      => 'Работает только при варианте «По умолчанию». Оставьте пустым — будет использован шорткод из Внешний вид → Формы.',
+					'default_value'     => '',
+					'placeholder'       => '[contact-form-7 id="..." title="..."]',
+					'conditional_logic' => array(
+						array(
+							array(
+								'field'    => 'field_gociss_form_variant',
+								'operator' => '==',
+								'value'    => 'default',
+							),
+						),
+					),
 				),
 			),
 			'location'              => array(
 				array(
 					array(
-						'param'    => 'page_template',
+						'param'    => 'post_type',
 						'operator' => '==',
-						'value'    => 'page-front.php',
+						'value'    => 'page',
+					),
+				),
+				array(
+					array(
+						'param'    => 'post_type',
+						'operator' => '==',
+						'value'    => 'gociss_service',
 					),
 				),
 			),
@@ -2781,54 +2537,7 @@ function gociss_register_acf_fields() {
 
 	// FAQ для page-service.php теперь управляется через CPT gociss_faq
 
-	// Секция формы для страницы услуги
-	acf_add_local_field_group(
-		array(
-			'key'                   => 'group_gociss_service_form',
-			'title'                 => 'Услуга: Форма обратной связи',
-			'fields'                => array(
-				array(
-					'key'               => 'field_gociss_service_form_label',
-					'label'             => 'Метка',
-					'name'              => 'gociss_form_label',
-					'type'              => 'text',
-					'default_value'     => 'Связаться с нами',
-				),
-				array(
-					'key'               => 'field_gociss_service_form_title',
-					'label'             => 'Заголовок',
-					'name'              => 'gociss_form_title',
-					'type'              => 'text',
-					'default_value'     => 'Оставить заявку',
-				),
-				array(
-					'key'               => 'field_gociss_service_form_description',
-					'label'             => 'Описание',
-					'name'              => 'gociss_form_description',
-					'type'              => 'textarea',
-					'default_value'     => 'Заполните форму, и наш эксперт свяжется с вами в течение 30 минут',
-				),
-				array(
-					'key'               => 'field_gociss_service_form_shortcode',
-					'label'             => 'Шорткод Contact Form 7',
-					'name'              => 'gociss_form_shortcode',
-					'type'              => 'text',
-					'instructions'      => 'Вставьте шорткод формы Contact Form 7',
-					'default_value'     => '[contact-form-7 id="274d127" title="Контактная Форма Главная"]',
-				),
-			),
-			'location'              => array(
-				array(
-					array(
-						'param'    => 'page_template',
-						'operator' => '==',
-						'value'    => 'page-service.php',
-					),
-				),
-			),
-			'menu_order'            => 10,
-		)
-	);
+	// Секция формы для page-service.php — удалена, теперь используется единая группа group_gociss_form (на всех pages + gociss_service)
 }
 add_action( 'acf/init', 'gociss_register_acf_fields' );
 
@@ -3076,30 +2785,27 @@ function gociss_register_service_acf_fields() {
 		)
 	);
 
-	// FAQ для страницы услуги (8 вопросов)
-	$service_faq_fields = array();
-	for ( $i = 1; $i <= 8; $i++ ) {
-		$service_faq_fields[] = array(
-			'key'          => 'field_gociss_sfaq_' . $i . '_question',
-			'label'        => 'Вопрос ' . $i,
-			'name'         => 'gociss_sfaq_' . $i . '_question',
-			'type'         => 'text',
-			'instructions' => 'Заполните вопрос, чтобы он отображался',
-		);
-		$service_faq_fields[] = array(
-			'key'          => 'field_gociss_sfaq_' . $i . '_answer',
-			'label'        => 'Ответ ' . $i,
-			'name'         => 'gociss_sfaq_' . $i . '_answer',
-			'type'         => 'textarea',
-			'rows'         => 4,
-		);
-	}
-
+	// FAQ для страницы услуги — Relationship-поле для выбора записей из CPT FAQ
 	acf_add_local_field_group(
 		array(
 			'key'                   => 'group_gociss_service_faq_fixed',
 			'title'                 => 'FAQ услуги',
-			'fields'                => $service_faq_fields,
+			'fields'                => array(
+				array(
+					'key'           => 'field_gociss_sfaq_items',
+					'label'         => 'Вопросы FAQ',
+					'name'          => 'gociss_sfaq_items',
+					'type'          => 'relationship',
+					'instructions'  => 'Выберите вопросы из раздела FAQ. Перетаскивайте для изменения порядка. Региональные FAQ (на вкладке региона) имеют приоритет.',
+					'post_type'     => array( 'gociss_faq' ),
+					'taxonomy'      => array(),
+					'filters'       => array( 'search', 'taxonomy' ),
+					'elements'      => array( 'featured_image' ),
+					'min'           => 0,
+					'max'           => 12,
+					'return_format' => 'object',
+				),
+			),
 			'location'              => array(
 				array(
 					array(
@@ -3597,24 +3303,49 @@ function gociss_register_certificate_acf_fields() {
 					'label'        => 'ИНН организации',
 					'name'         => 'gociss_cert_inn',
 					'type'         => 'text',
-					'instructions' => 'ИНН или ОГРНИП организации',
-					'required'     => 1,
+					'instructions' => 'ИНН организации (обязательное поле для импорта)',
+					'required'     => 0,
+				),
+				array(
+					'key'          => 'field_gociss_cert_ogrn',
+					'label'        => 'ОГРН / ОГРНИП',
+					'name'         => 'gociss_cert_ogrn',
+					'type'         => 'text',
+					'instructions' => 'ОГРН или ОГРНИП организации',
+					'required'     => 0,
 				),
 				array(
 					'key'          => 'field_gociss_cert_company',
 					'label'        => 'Название компании',
 					'name'         => 'gociss_cert_company',
 					'type'         => 'text',
-					'instructions' => 'Полное название организации',
-					'required'     => 1,
+					'instructions' => 'Полное название организации (обязательное поле для импорта)',
+					'required'     => 0,
+				),
+				array(
+					'key'          => 'field_gociss_cert_company_short',
+					'label'        => 'Краткое название',
+					'name'         => 'gociss_cert_company_short',
+					'type'         => 'text',
+					'instructions' => 'Краткое название организации',
+					'required'     => 0,
+				),
+				array(
+					'key'          => 'field_gociss_cert_address',
+					'label'        => 'Адрес',
+					'name'         => 'gociss_cert_address',
+					'type'         => 'textarea',
+					'instructions' => 'Юридический адрес организации',
+					'required'     => 0,
+					'rows'         => 2,
 				),
 				array(
 					'key'          => 'field_gociss_cert_number',
 					'label'        => 'Номер сертификата',
 					'name'         => 'gociss_cert_number',
 					'type'         => 'text',
-					'instructions' => 'Регистрационный номер сертификата/удостоверения',
-					'required'     => 1,
+					'instructions' => 'Регистрационный номер сертификата/удостоверения (обязательное поле)',
+					'required'     => 0,
 				),
 				array(
 					'key'          => 'field_gociss_cert_type',
@@ -3622,15 +3353,24 @@ function gociss_register_certificate_acf_fields() {
 					'name'         => 'gociss_cert_type',
 					'type'         => 'text',
 					'instructions' => 'Например: ISO 9001:2015, ISO 14001:2015',
-					'required'     => 1,
+					'required'     => 0,
+				),
+				array(
+					'key'          => 'field_gociss_cert_object',
+					'label'        => 'Объект сертификации',
+					'name'         => 'gociss_cert_object',
+					'type'         => 'textarea',
+					'instructions' => 'Что было сертифицировано (система менеджмента, продукция, услуга)',
+					'required'     => 0,
+					'rows'         => 3,
 				),
 				array(
 					'key'          => 'field_gociss_cert_date_start',
 					'label'        => 'Дата регистрации',
 					'name'         => 'gociss_cert_date_start',
 					'type'         => 'date_picker',
-					'instructions' => 'Дата выдачи сертификата',
-					'required'     => 1,
+					'instructions' => 'Дата выдачи сертификата (формат: 01.12.2024)',
+					'required'     => 0,
 					'display_format' => 'd.m.Y',
 					'return_format'  => 'Y-m-d',
 					'first_day'      => 1,
@@ -3640,11 +3380,22 @@ function gociss_register_certificate_acf_fields() {
 					'label'        => 'Срок действия',
 					'name'         => 'gociss_cert_date_end',
 					'type'         => 'date_picker',
-					'instructions' => 'Дата окончания действия сертификата',
-					'required'     => 1,
+					'instructions' => 'Дата окончания действия сертификата (формат: 01.12.2027)',
+					'required'     => 0,
 					'display_format' => 'd.m.Y',
 					'return_format'  => 'Y-m-d',
 					'first_day'      => 1,
+				),
+				array(
+					'key'           => 'field_gociss_cert_file',
+					'label'         => 'Файл сертификата',
+					'name'          => 'gociss_cert_file',
+					'type'          => 'file',
+					'instructions'  => 'Прикрепите PDF или изображение сертификата',
+					'required'      => 0,
+					'return_format' => 'array',
+					'library'       => 'all',
+					'mime_types'    => 'pdf,jpg,jpeg,png',
 				),
 				array(
 					'key'           => 'field_gociss_cert_status',
@@ -4262,6 +4013,16 @@ function gociss_register_contacts_page_acf_fields() {
 					'instructions' => 'Вставьте код карты из конструктора Яндекс Карт (constructor.yandex.ru). Можно использовать iframe или script.',
 					'rows'         => 6,
 				),
+				// Яндекс виджет рейтинга
+				array(
+					'key'          => 'field_gociss_contacts_yandex_widget',
+					'label'        => 'Яндекс виджет (рейтинг)',
+					'name'         => 'gociss_contacts_yandex_widget',
+					'type'         => 'textarea',
+					'instructions' => 'Вставьте iframe код виджета Яндекс.Справочника. Будет отображаться под картой.',
+					'rows'         => 3,
+					'default_value' => '<iframe src="https://yandex.ru/sprav/widget/rating-badge/1112548651?type=rating" width="150" height="50" frameborder="0"></iframe>',
+				),
 			),
 			'location'              => array(
 				array(
@@ -4829,6 +4590,34 @@ function gociss_register_about_page_acf_fields() {
 		);
 	}
 
+	// === БЛАГОДАРСТВЕННЫЕ ПИСЬМА ===
+	$about_fields[] = array(
+		'key'   => 'field_gociss_about_letters_tab',
+		'label' => 'Благодарственные письма',
+		'name'  => '',
+		'type'  => 'tab',
+	);
+	$about_fields[] = array(
+		'key'           => 'field_gociss_about_letters_title',
+		'label'         => 'Заголовок секции',
+		'name'          => 'gociss_about_letters_title',
+		'type'          => 'text',
+		'default_value' => 'Благодарственные письма',
+	);
+
+	// Изображения благодарственных писем (8 слотов)
+	for ( $i = 1; $i <= 8; $i++ ) {
+		$about_fields[] = array(
+			'key'           => 'field_gociss_about_letter_' . $i,
+			'label'         => 'Письмо ' . $i,
+			'name'          => 'gociss_about_letter_' . $i,
+			'type'          => 'image',
+			'instructions'  => 'Скан благодарственного письма',
+			'return_format' => 'array',
+			'preview_size'  => 'medium',
+		);
+	}
+
 	acf_add_local_field_group(
 		array(
 			'key'                   => 'group_gociss_about_page',
@@ -5039,3 +4828,4 @@ function gociss_register_accreditation_page_acf_fields() {
 }
 add_action( 'acf/init', 'gociss_register_accreditation_page_acf_fields' );
 
+// Настройки форм вынесены в inc/forms-options-page.php (работает без ACF Pro)

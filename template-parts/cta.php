@@ -59,7 +59,7 @@ if ( ! $cta_description ) {
 						<?php echo esc_html( $cta_btn_secondary['text'] ); ?>
 					</a>
 				<?php else : ?>
-					<a href="#callback" class="cta__btn cta__btn--filled">Заказать обратный звонок</a>
+					<button type="button" class="cta__btn cta__btn--filled js-open-callback-popup">Заказать обратный звонок</button>
 				<?php endif; ?>
 			</div>
 		</div>

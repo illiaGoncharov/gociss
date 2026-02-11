@@ -16,13 +16,13 @@ get_header();
 
 <main class="gost-page">
 	<!-- Хлебные крошки -->
-	<section class="breadcrumbs">
+	<nav class="breadcrumbs" aria-label="Хлебные крошки">
 		<div class="container">
 			<a href="<?php echo esc_url( home_url( '/' ) ); ?>">Главная</a>
-			<span class="breadcrumbs__separator">&rarr;</span>
+			<span class="breadcrumbs__separator">→</span>
 			<span class="breadcrumbs__current">ГОСТы</span>
 		</div>
-	</section>
+	</nav>
 
 	<!-- Hero секция -->
 	<?php get_template_part( 'template-parts/gost/hero' ); ?>

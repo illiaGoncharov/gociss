@@ -62,7 +62,7 @@ $current_region = function_exists( 'gociss_get_current_region' ) ? gociss_get_cu
 	// Географический охват
 	get_template_part( 'template-parts/geography' );
 
-	// Форма обратной связи
+	// Форма обратной связи (вариант выбирается через ACF на каждой услуге)
 	get_template_part( 'template-parts/form' );
 
 	// Партнеры

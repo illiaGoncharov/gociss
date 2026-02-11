@@ -95,7 +95,7 @@ function gociss_term_order_clauses( $clauses, $taxonomies, $args ) {
 
 	if ( ! is_admin() || ! in_array( 'gociss_service_cat', $taxonomies, true ) ) {
 		// Для фронтенда всегда сортируем по menu_order
-		if ( in_array( 'gociss_service_cat', $taxonomies, true ) && 
+		if ( in_array( 'gociss_service_cat', $taxonomies, true ) &&
 			( ! isset( $args['orderby'] ) || 'menu_order' === $args['orderby'] ) ) {
 			$clauses['join']    .= " LEFT JOIN {$wpdb->termmeta} AS tm ON t.term_id = tm.term_id AND tm.meta_key = 'menu_order'";
 			$clauses['orderby']  = 'ORDER BY CAST(COALESCE(tm.meta_value, 999999) AS SIGNED)';

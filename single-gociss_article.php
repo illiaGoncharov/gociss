@@ -24,7 +24,7 @@ while ( have_posts() ) :
 		<nav class="breadcrumbs" aria-label="Хлебные крошки">
 			<a href="<?php echo esc_url( home_url( '/' ) ); ?>">Главная</a>
 			<span class="breadcrumbs__separator">→</span>
-			<a href="<?php echo esc_url( get_post_type_archive_link( 'gociss_article' ) ); ?>">Статьи</a>
+			<a href="<?php echo esc_url( get_post_type_archive_link( 'gociss_article' ) ); ?>">Блог</a>
 			<?php if ( $primary_cat ) : ?>
 				<span class="breadcrumbs__separator">→</span>
 				<a href="<?php echo esc_url( get_term_link( $primary_cat ) ); ?>"><?php echo esc_html( $primary_cat->name ); ?></a>

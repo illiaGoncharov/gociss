@@ -16,11 +16,15 @@
         initHeroSlider();
         initExpertsSlider();
         initNewsSlider();
+        initLettersSlider();
         initSearch();
         initMobileMenu();
         initScrollToTop();
         initRegionSwitcher();
+        initRegionTooltip();
         initRegistrySearch();
+        initCallbackPopup();
+        initFormsMetrika();
         // initInteractiveMap(); // Карта теперь статичная PNG
         // initServicesMenu(); // Услуги теперь в мобильном меню
     });
@@ -492,6 +496,91 @@
     }
 
     /**
+     * Инициализация слайдера благодарственных писем
+     */
+    function initLettersSlider() {
+        const slider = document.querySelector('.about-letters__slider');
+
+        if (!slider) {
+            return;
+        }
+
+        const prevBtn = slider.querySelector('.about-letters__nav--prev');
+        const nextBtn = slider.querySelector('.about-letters__nav--next');
+        const grid = slider.querySelector('.about-letters__grid');
+        const track = slider.querySelector('.about-letters__track');
+
+        if (!prevBtn || !nextBtn || !grid || !track) {
+            return;
+        }
+
+        let currentIndex = 0;
+        const items = grid.querySelectorAll('.about-letters__item');
+        const totalItems = items.length;
+
+        function getItemsPerView() {
+            if (window.innerWidth <= 576) return 1;
+            if (window.innerWidth <= 1024) return 2;
+            return 3;
+        }
+
+        function getItemWidth() {
+            if (items.length === 0) return 0;
+            const item = items[0];
+            const gap = 24;
+            return item.offsetWidth + gap;
+        }
+
+        function updateSlider() {
+            const itemWidth = getItemWidth();
+            const translateX = -currentIndex * itemWidth;
+            grid.style.transform = 'translateX(' + translateX + 'px)';
+            updateButtons();
+        }
+
+        function updateButtons() {
+            const itemsPerView = getItemsPerView();
+            const maxIndex = Math.max(0, totalItems - itemsPerView);
+
+            prevBtn.disabled = currentIndex <= 0;
+            nextBtn.disabled = currentIndex >= maxIndex;
+        }
+
+        prevBtn.addEventListener('click', function() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateSlider();
+            }
+        });
+
+        nextBtn.addEventListener('click', function() {
+            const itemsPerView = getItemsPerView();
+            const maxIndex = Math.max(0, totalItems - itemsPerView);
+            if (currentIndex < maxIndex) {
+                currentIndex++;
+                updateSlider();
+            }
+        });
+
+        // Обновляем при изменении размера окна
+        let resizeTimeout;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(function() {
+                const itemsPerView = getItemsPerView();
+                const maxIndex = Math.max(0, totalItems - itemsPerView);
+                if (currentIndex > maxIndex) {
+                    currentIndex = maxIndex;
+                }
+                updateSlider();
+            }, 100);
+        });
+
+        // Инициализация
+        updateButtons();
+    }
+
+    /**
      * Инициализация поиска
      */
     function initSearch() {
@@ -652,6 +741,65 @@
             switcher.classList.remove('is-open');
             toggle.setAttribute('aria-expanded', 'false');
         }
+    }
+
+    /**
+     * Тултип подтверждения региона при первом визите
+     * Показывается, если нет cookie gociss_selected_region
+     */
+    function initRegionTooltip() {
+        var tooltip = document.getElementById('regionTooltip');
+        if (!tooltip) {
+            return;
+        }
+
+        // Проверяем наличие cookie — если уже выбран регион, не показываем
+        if (document.cookie.indexOf('gociss_selected_region=') !== -1) {
+            return;
+        }
+
+        // Показываем тултип с задержкой 1 сек
+        setTimeout(function() {
+            tooltip.style.display = 'block';
+        }, 1000);
+
+        // Кнопка «Да» — сохраняем дефолтный регион в cookie и скрываем
+        var yesBtn = tooltip.querySelector('.region-tooltip__btn--yes');
+        if (yesBtn) {
+            yesBtn.addEventListener('click', function() {
+                // Сохраняем дефолтный регион (spb) в cookie на 30 дней
+                var expires = new Date();
+                expires.setTime(expires.getTime() + 30 * 24 * 60 * 60 * 1000);
+                document.cookie = 'gociss_selected_region=spb; path=/; expires=' + expires.toUTCString();
+                tooltip.style.display = 'none';
+            });
+        }
+
+        // Кнопка «Выбрать другой» — скрываем тултип, открываем дропдаун
+        var noBtn = tooltip.querySelector('.region-tooltip__btn--no');
+        if (noBtn) {
+            noBtn.addEventListener('click', function() {
+                tooltip.style.display = 'none';
+
+                // Открываем дропдаун выбора региона
+                var switcher = document.querySelector('.region-switcher');
+                var toggle = document.querySelector('.region-switcher__toggle');
+                if (switcher && toggle) {
+                    switcher.classList.add('is-open');
+                    toggle.setAttribute('aria-expanded', 'true');
+                }
+            });
+        }
+
+        // Скрываем тултип по клику вне
+        document.addEventListener('click', function(e) {
+            if (tooltip.style.display !== 'none' && !tooltip.contains(e.target)) {
+                var switcher = document.querySelector('.region-switcher');
+                if (!switcher || !switcher.contains(e.target)) {
+                    tooltip.style.display = 'none';
+                }
+            }
+        });
     }
 
     /**
@@ -1017,5 +1165,132 @@
         }
 
         return 'сертификатов';
+    }
+
+    /**
+     * Инициализация попапа "Заказать звонок"
+     */
+    function initCallbackPopup() {
+        const popup = document.getElementById('callbackPopup');
+        const openButtons = document.querySelectorAll('.js-open-callback-popup');
+
+        if (!popup || !openButtons.length) {
+            return;
+        }
+
+        const overlay = popup.querySelector('.form-popup__overlay');
+        const closeButton = popup.querySelector('.form-popup__close');
+
+        // Открытие попапа
+        function openPopup() {
+            popup.classList.add('is-open');
+            popup.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+
+            // Фокус на первое поле формы
+            setTimeout(function() {
+                const firstInput = popup.querySelector('input[type="text"], input[type="tel"], input[type="email"]');
+                if (firstInput) {
+                    firstInput.focus();
+                }
+            }, 100);
+        }
+
+        // Закрытие попапа
+        function closePopup() {
+            popup.classList.remove('is-open');
+            popup.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = '';
+        }
+
+        // Обработчики открытия
+        openButtons.forEach(function(button) {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                openPopup();
+            });
+        });
+
+        // Закрытие по клику на overlay
+        if (overlay) {
+            overlay.addEventListener('click', closePopup);
+        }
+
+        // Закрытие по кнопке
+        if (closeButton) {
+            closeButton.addEventListener('click', closePopup);
+        }
+
+        // Закрытие по Escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && popup.classList.contains('is-open')) {
+                closePopup();
+            }
+        });
+
+        // Закрытие после успешной отправки формы CF7
+        document.addEventListener('wpcf7mailsent', function(event) {
+            // Проверяем, находится ли отправленная форма внутри попапа
+            if (event.target.closest && event.target.closest('#callbackPopup')) {
+                setTimeout(closePopup, 2000); // Закрываем через 2 секунды
+            }
+        });
+    }
+
+    /**
+     * Интеграция форм с Яндекс.Метрикой
+     * Отправка целей при успешной отправке Contact Form 7
+     */
+    function initFormsMetrika() {
+        // Маппинг типов форм на цели Метрики
+        var formGoals = {
+            'popup':      'est-voprosy-knopka-v-shapke-podvale',
+            'consult':    'est-voprosy-skvoznaya',
+            'callback':   'ostalis-voprosy-skvoznaya',
+            'vertical':   'onlayn-zayavka-vertikalnaya',
+            'horizontal': 'onlayn-zayavka-gorizontalnaya'
+        };
+
+        // ID счётчика Метрики
+        var metrikaId = 32620105;
+
+        // Слушаем событие успешной отправки CF7
+        document.addEventListener('wpcf7mailsent', function(event) {
+            var form = event.target;
+            var formType = null;
+
+            // Определяем тип формы по wrapper-у (closest ищет вверх по DOM)
+            if (form.closest('.form-popup__form') || form.closest('.form-popup')) {
+                formType = 'popup';
+            } else if (form.closest('.form-consult__form') || form.closest('.form-consult')) {
+                formType = 'consult';
+            } else if (form.closest('.form-callback-simple__form') || form.closest('.form-callback-simple')) {
+                formType = 'callback';
+            } else if (form.closest('.form-application-vertical__form') || form.closest('.form-application-vertical')) {
+                formType = 'vertical';
+            } else if (form.closest('.form-application-horizontal__form') || form.closest('.form-application-horizontal')) {
+                formType = 'horizontal';
+            }
+
+            // Также проверяем скрытое поле form_type, если есть
+            if (!formType && event.detail && event.detail.inputs) {
+                var formTypeInput = event.detail.inputs.find(function(input) {
+                    return input.name === 'form_type';
+                });
+                if (formTypeInput) {
+                    formType = formTypeInput.value;
+                }
+            }
+
+            // Отправляем цель в Метрику
+            if (formType && formGoals[formType]) {
+                if (typeof ym !== 'undefined') {
+                    ym(metrikaId, 'reachGoal', formGoals[formType]);
+                    console.log('Метрика: цель отправлена -', formGoals[formType]);
+                } else {
+                    console.log('Метрика не загружена, цель:', formGoals[formType]);
+                }
+            }
+        });
     }
 })();

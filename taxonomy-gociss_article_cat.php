@@ -1,6 +1,7 @@
 <?php
 /**
- * Архив статей - страница "Статьи"
+ * Шаблон таксономии категорий блога
+ * Используется для отображения записей из конкретной категории (Статьи, Новости и т.д.)
  *
  * @package Gociss
  */
@@ -11,7 +12,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 get_header();
 
-// Получаем все категории статей
+$current_term = get_queried_object();
+
+// Получаем все категории для фильтра
 $article_categories = get_terms(
 	array(
 		'taxonomy'   => 'gociss_article_cat',
@@ -19,9 +22,6 @@ $article_categories = get_terms(
 		'parent'     => 0,
 	)
 );
-
-// Текущая выбранная категория (если есть)
-$current_category = get_query_var( 'gociss_article_cat' );
 ?>
 
 <!-- Хлебные крошки -->
@@ -29,7 +29,9 @@ $current_category = get_query_var( 'gociss_article_cat' );
 	<div class="container">
 		<a href="<?php echo esc_url( home_url( '/' ) ); ?>">Главная</a>
 		<span class="breadcrumbs__separator">→</span>
-		<span class="breadcrumbs__current">Блог</span>
+		<a href="<?php echo esc_url( get_post_type_archive_link( 'gociss_article' ) ); ?>">Блог</a>
+		<span class="breadcrumbs__separator">→</span>
+		<span class="breadcrumbs__current"><?php echo esc_html( $current_term->name ); ?></span>
 	</div>
 </nav>
 
@@ -37,18 +39,22 @@ $current_category = get_query_var( 'gociss_article_cat' );
 	<div class="container">
 		<!-- Заголовок -->
 		<div class="articles-archive__header">
-			<h1 class="articles-archive__title">Блог</h1>
-			<p class="articles-archive__subtitle">Статьи, новости и информационные материалы о сертификации и стандартах в законодательстве РФ</p>
+			<h1 class="articles-archive__title"><?php echo esc_html( $current_term->name ); ?></h1>
+			<?php if ( ! empty( $current_term->description ) ) : ?>
+				<p class="articles-archive__subtitle"><?php echo esc_html( $current_term->description ); ?></p>
+			<?php else : ?>
+				<p class="articles-archive__subtitle">Все записи в категории «<?php echo esc_html( $current_term->name ); ?>»</p>
+			<?php endif; ?>
 		</div>
 
 		<!-- Фильтр по категориям -->
 		<?php if ( $article_categories && ! is_wp_error( $article_categories ) && count( $article_categories ) > 0 ) : ?>
 		<div class="articles-archive__filter">
-			<a href="<?php echo esc_url( get_post_type_archive_link( 'gociss_article' ) ); ?>" class="articles-archive__filter-item <?php echo empty( $current_category ) ? 'is-active' : ''; ?>">
+			<a href="<?php echo esc_url( get_post_type_archive_link( 'gociss_article' ) ); ?>" class="articles-archive__filter-item">
 				Все
 			</a>
 			<?php foreach ( $article_categories as $category ) : ?>
-				<a href="<?php echo esc_url( get_term_link( $category ) ); ?>" class="articles-archive__filter-item <?php echo $current_category === $category->slug ? 'is-active' : ''; ?>">
+				<a href="<?php echo esc_url( get_term_link( $category ) ); ?>" class="articles-archive__filter-item <?php echo $current_term->term_id === $category->term_id ? 'is-active' : ''; ?>">
 					<?php echo esc_html( $category->name ); ?>
 				</a>
 			<?php endforeach; ?>
@@ -112,8 +118,8 @@ $current_category = get_query_var( 'gociss_article_cat' );
 
 		<?php else : ?>
 		<div class="articles-archive__empty">
-			<p>Статьи пока не добавлены.</p>
-			<a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="btn btn--primary">На главную</a>
+			<p>В этой категории пока нет записей.</p>
+			<a href="<?php echo esc_url( get_post_type_archive_link( 'gociss_article' ) ); ?>" class="btn btn--primary">Все записи</a>
 		</div>
 		<?php endif; ?>
 	</div>

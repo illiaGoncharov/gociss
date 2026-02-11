@@ -58,19 +58,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 							'container'      => false,
 							'menu_class'     => 'site-footer__menu',
 							'depth'          => 1,
-							'fallback_cb'    => function() {
-								?>
-								<ul class="site-footer__menu">
-									<li><a href="<?php echo esc_url( get_post_type_archive_link( 'gociss_service' ) ); ?>">Сертификация ISO</a></li>
-									<li><a href="<?php echo esc_url( home_url( '/' ) ); ?>">Опыт и репутация</a></li>
-									<li><a href="<?php echo esc_url( get_post_type_archive_link( 'gociss_service' ) ); ?>">Сертификация продукции</a></li>
-									<li><a href="<?php echo esc_url( get_post_type_archive_link( 'gociss_service' ) ); ?>">Сертификация персонала</a></li>
-									<li><a href="<?php echo esc_url( get_post_type_archive_link( 'gociss_service' ) ); ?>">Добровольная сертификация</a></li>
-									<li><a href="<?php echo esc_url( home_url( '/edu/' ) ); ?>">Учебный центр</a></li>
-									<li><a href="<?php echo esc_url( get_post_type_archive_link( 'gociss_service' ) ); ?>">Все услуги</a></li>
-								</ul>
-								<?php
-							},
+					'fallback_cb'    => function() {
+						$footer_archive = get_post_type_archive_link( 'gociss_service' );
+						$nav_categories = gociss_get_nav_service_categories();
+						?>
+						<ul class="site-footer__menu">
+							<?php foreach ( $nav_categories as $fc ) :
+								$fc_link = gociss_get_service_cat_url( $fc['names'], $fc['slugs'], $fc['slugs'][0] );
+							?>
+								<li><a href="<?php echo esc_url( $fc_link ); ?>"><?php echo esc_html( $fc['label'] ); ?></a></li>
+							<?php endforeach; ?>
+							<li><a href="<?php echo esc_url( home_url( '/edu/' ) ); ?>">Учебный центр</a></li>
+							<li><a href="<?php echo esc_url( $footer_archive ); ?>">Все услуги</a></li>
+						</ul>
+						<?php
+					},
 						)
 					);
 					?>
@@ -91,8 +93,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 								?>
 								<ul class="site-footer__menu">
 									<li><a href="<?php echo esc_url( home_url( '/reestr/' ) ); ?>">Реестры</a></li>
-									<li><a href="<?php echo esc_url( get_post_type_archive_link( 'gociss_article' ) ); ?>">Новости</a></li>
-									<li><a href="<?php echo esc_url( get_post_type_archive_link( 'gociss_article' ) ); ?>">Статьи</a></li>
+									<li><a href="<?php echo esc_url( get_post_type_archive_link( 'gociss_article' ) ); ?>">Блог</a></li>
 									<li><a href="<?php echo esc_url( gociss_get_page_url_by_template( 'page-gost.php' ) ); ?>">ГОСТы</a></li>
 									<li><a href="<?php echo esc_url( get_post_type_archive_link( 'gociss_faq' ) ); ?>">Вопрос-ответ</a></li>
 								</ul>
@@ -117,10 +118,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 							'fallback_cb'    => function() {
 								?>
 								<ul class="site-footer__menu">
-									<li><a href="<?php echo esc_url( home_url( '/' ) ); ?>">О компании</a></li>
-									<li><a href="<?php echo esc_url( home_url( '/' ) ); ?>">Аккредитация</a></li>
-									<li><a href="<?php echo esc_url( home_url( '/contacts/' ) ); ?>">Контакты</a></li>
-									<li><a href="<?php echo esc_url( gociss_get_page_url_by_template( 'page-vacancies.php' ) ); ?>">Вакансии</a></li>
+									<li><a href="<?php echo esc_url( home_url( '/o-kompanii/' ) ); ?>">О компании</a></li>
+									<li><a href="<?php echo esc_url( home_url( '/akkreditaciya/' ) ); ?>">Аккредитация</a></li>
+									<li><a href="<?php echo esc_url( home_url( '/kontakty/' ) ); ?>">Контакты</a></li>
+									<li><a href="<?php echo esc_url( home_url( '/vakansii/' ) ); ?>">Вакансии</a></li>
 								</ul>
 								<?php
 							},
@@ -186,6 +187,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<path d="M12 19V5M12 5L5 12M12 5L19 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 	</svg>
 </button>
+
+<?php
+// Глобальный попап "Есть вопросы" для шапки/подвала
+get_template_part( 'template-parts/forms/popup-callback' );
+?>
 
 <?php wp_footer(); ?>
 

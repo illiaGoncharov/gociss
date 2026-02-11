@@ -1,6 +1,9 @@
 <?php
 /**
- * Секция FAQ (фиксированные поля ACF)
+ * Секция FAQ (универсальная)
+ *
+ * Читает вопросы из Relationship-поля gociss_faq_items (записи CPT FAQ).
+ * Если поле пусто — показывает заглушки.
  *
  * @package Gociss
  */
@@ -19,17 +22,18 @@ if ( ! $faq_subtitle ) {
 	$faq_subtitle = 'Ответы на самые популярные вопросы о сертификации';
 }
 
-// Собираем FAQ из фиксированных полей
-$faqs = array();
-for ( $i = 1; $i <= 8; $i++ ) {
-	$question = function_exists( 'get_field' ) ? get_field( 'gociss_faq_' . $i . '_question' ) : '';
-	$answer   = function_exists( 'get_field' ) ? get_field( 'gociss_faq_' . $i . '_answer' ) : '';
+// Читаем выбранные FAQ из Relationship-поля
+$faqs          = array();
+$faq_relations = function_exists( 'get_field' ) ? get_field( 'gociss_faq_items' ) : null;
 
-	if ( $question && $answer ) {
-		$faqs[] = array(
-			'question' => $question,
-			'answer'   => $answer,
-		);
+if ( ! empty( $faq_relations ) && is_array( $faq_relations ) ) {
+	foreach ( $faq_relations as $faq_post ) {
+		if ( is_object( $faq_post ) && ! empty( $faq_post->post_title ) ) {
+			$faqs[] = array(
+				'question' => $faq_post->post_title,
+				'answer'   => apply_filters( 'the_content', $faq_post->post_content ),
+			);
+		}
 	}
 }
 

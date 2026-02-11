@@ -82,6 +82,54 @@
 }
 
 
+/* ==========================================================================
+   Drag-and-drop сортировка экспертов
+   ========================================================================== */
+
+.gociss-sortable-table tbody tr {
+	cursor: default;
+}
+
+.gociss-drag-handle {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 24px;
+	height: 24px;
+	margin-right: 8px;
+	cursor: grab;
+	color: #8c8f94;
+	font-size: 16px;
+	vertical-align: middle;
+	border-radius: 3px;
+	transition: all 0.15s ease;
+}
+
+.gociss-drag-handle:hover {
+	background: #f0f0f1;
+	color: #2271b1;
+}
+
+.gociss-drag-handle:active {
+	cursor: grabbing;
+}
+
+.gociss-sortable-table tbody tr.ui-sortable-helper {
+	background: #f0f7ff !important;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.gociss-sortable-table tbody tr.ui-sortable-placeholder {
+	visibility: visible !important;
+	background: #e8f0fe !important;
+	border: 2px dashed #2271b1 !important;
+}
+
+.gociss-sort-notice {
+	margin: 10px 0 !important;
+}
+
+
 
 
 

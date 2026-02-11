@@ -16,13 +16,13 @@ get_header();
 
 <main class="accreditation-page">
 	<!-- Хлебные крошки -->
-	<section class="breadcrumbs">
+	<nav class="breadcrumbs" aria-label="Хлебные крошки">
 		<div class="container">
 			<a href="<?php echo esc_url( home_url( '/' ) ); ?>">Главная</a>
-			<span class="breadcrumbs__separator">&rarr;</span>
+			<span class="breadcrumbs__separator">→</span>
 			<span class="breadcrumbs__current">Аккредитация</span>
 		</div>
-	</section>
+	</nav>
 
 	<?php
 	// Подключаем все секции страницы "Аккредитация"

@@ -1039,14 +1039,27 @@ body {
 }
 
 /* Стили для Contact Form 7 */
+.contact-form form,
 .contact-form .wpcf7-form {
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
 
+.contact-form form p,
 .contact-form .wpcf7-form p {
     margin: 0;
+}
+
+/* Если CF7 кладёт несколько полей в один <p> с <br> — делаем flex с gap */
+.contact-form .wpcf7-form > p {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.contact-form .wpcf7-form > p > br {
+    display: none;
 }
 
 .contact-form .form-row {
@@ -4099,33 +4112,45 @@ body {
     font-family: var(--font-primary);
 }
 
+/* ==========================================================================
+   Хлебные крошки — унифицированные стили
+   ========================================================================== */
+
 .breadcrumbs {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    gap: 8px;
-    padding: 12px 0;
+    gap: 10px;
+    padding: 20px 0;
     margin-bottom: 0;
-    font-size: 16px;
+    font-size: 14px;
     font-family: var(--font-primary);
 }
 
+.breadcrumbs .container {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
 .breadcrumbs a {
-    color: #9CA3AF;
+    color: #6B7280;
     text-decoration: none;
     transition: color 0.2s ease;
 }
 
 .breadcrumbs a:hover {
-    color: #0052CC;
+    color: var(--color-button, #0052CC);
 }
 
 .breadcrumbs__separator {
-    color: #9CA3AF;
+    color: #D1D5DB;
+    font-size: 12px;
 }
 
 .breadcrumbs__current {
-    color: #051945;
+    color: var(--color-primary, #051945);
     font-weight: 500;
 }
 
@@ -5482,34 +5507,9 @@ body {
     margin: 0 0 24px;
 }
 
-/* Хлебные крошки (архив услуг) */
+/* Хлебные крошки в архиве услуг — доп. отступ снизу */
 .services-archive .breadcrumbs {
-    font-family: var(--font-primary);
-    font-size: 14px;
     margin-bottom: 32px;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 8px;
-}
-
-.breadcrumbs a {
-    color: #6B7280;
-    text-decoration: none;
-    transition: color 0.2s ease;
-}
-
-.breadcrumbs a:hover {
-    color: var(--color-button);
-}
-
-.breadcrumbs__separator {
-    color: #D1D5DB;
-}
-
-.breadcrumbs__current {
-    color: var(--color-primary);
-    font-weight: 500;
 }
 
 /* Адаптив архива услуг */
@@ -7050,6 +7050,105 @@ body {
     }
 }
 
+/* Тултип подтверждения региона при первом визите */
+.region-tooltip {
+    position: absolute;
+    top: calc(100% + 12px);
+    left: 0;
+    min-width: 260px;
+    background-color: var(--color-white);
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    padding: 16px 20px;
+    z-index: 1001;
+    animation: regionTooltipIn 0.3s ease;
+}
+
+@keyframes regionTooltipIn {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.region-tooltip__arrow {
+    position: absolute;
+    top: -6px;
+    left: 24px;
+    width: 12px;
+    height: 12px;
+    background-color: var(--color-white);
+    transform: rotate(45deg);
+    box-shadow: -2px -2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.region-tooltip__text {
+    font-size: 14px;
+    font-family: var(--font-primary);
+    color: var(--color-text);
+    margin: 0 0 12px;
+    line-height: 1.4;
+}
+
+.region-tooltip__actions {
+    display: flex;
+    gap: 8px;
+}
+
+.region-tooltip__btn {
+    padding: 6px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    font-family: var(--font-primary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+}
+
+.region-tooltip__btn--yes {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    border-color: var(--color-primary);
+}
+
+.region-tooltip__btn--yes:hover {
+    background-color: #003d99;
+}
+
+.region-tooltip__btn--no {
+    background-color: transparent;
+    color: var(--color-primary);
+    border-color: #E5E7EB;
+}
+
+.region-tooltip__btn--no:hover {
+    background-color: rgba(0, 82, 204, 0.05);
+    border-color: var(--color-primary);
+}
+
+@media (max-width: 1200px) {
+    .region-tooltip {
+        left: auto;
+        right: 0;
+    }
+
+    .region-tooltip__arrow {
+        left: auto;
+        right: 12px;
+    }
+}
+
+@media (max-width: 768px) {
+    .region-tooltip {
+        display: none !important;
+    }
+}
+
 /* ==========================================
    РЕЕСТР СЕРТИФИКАТОВ
    ========================================== */
@@ -8246,11 +8345,11 @@ body {
 .gost-hero {
     position: relative;
     padding: 4rem 0;
-    min-height: 240px;
+    min-height: 280px;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    background-color: #E8EDF5;
+    background-color: var(--color-primary);
     display: flex;
     align-items: center;
 }
@@ -8261,7 +8360,7 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(90deg, rgba(232, 237, 245, 0.95) 0%, rgba(232, 237, 245, 0.7) 50%, rgba(232, 237, 245, 0.4) 100%);
+    background: linear-gradient(90deg, rgba(5, 25, 69, 0.85) 0%, rgba(5, 25, 69, 0.6) 100%);
 }
 
 .gost-hero .container {
@@ -8278,14 +8377,14 @@ body {
 .gost-hero__title {
     font-size: 40px;
     font-weight: 700;
-    color: var(--color-primary);
+    color: var(--color-white);
     margin-bottom: 1rem;
     line-height: 1.2;
 }
 
 .gost-hero__subtitle {
     font-size: 18px;
-    color: #4B5563;
+    color: rgba(255, 255, 255, 0.9);
     line-height: 1.6;
     margin: 0;
 }
@@ -9124,12 +9223,14 @@ body {
 .about-hero {
     position: relative;
     min-height: 320px;
-    background-color: #F3F4F6;
+    background-color: var(--color-primary);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     padding: 48px 0;
     overflow: hidden;
+    display: flex;
+    align-items: center;
 }
 
 .about-hero__overlay {
@@ -9138,9 +9239,7 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(2px);
-    -webkit-backdrop-filter: blur(2px);
+    background: linear-gradient(90deg, rgba(5, 25, 69, 0.85) 0%, rgba(5, 25, 69, 0.6) 100%);
 }
 
 .about-hero .container {
@@ -9186,7 +9285,7 @@ body {
 .about-hero__title {
     font-size: 48px;
     font-weight: 700;
-    color: #051945;
+    color: var(--color-white);
     margin-bottom: 16px;
     line-height: 1.2;
     font-family: var(--font-primary);
@@ -9194,7 +9293,7 @@ body {
 
 .about-hero__description {
     font-size: 18px;
-    color: #4B5563;
+    color: rgba(255, 255, 255, 0.9);
     line-height: 1.6;
     font-family: var(--font-primary);
 }
@@ -9809,6 +9908,121 @@ a.about-accred__card-link:hover {
     }
 }
 
+/* ===========================================
+   About Letters - Благодарственные письма
+   =========================================== */
+.about-letters {
+    padding: 80px 0;
+    background-color: var(--color-white);
+}
+
+.about-letters__title {
+    font-size: 36px;
+    font-weight: 700;
+    color: #051945;
+    text-align: center;
+    margin-bottom: 48px;
+    font-family: var(--font-primary);
+}
+
+.about-letters__slider {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.about-letters__track {
+    flex: 1;
+    overflow: hidden;
+}
+
+.about-letters__grid {
+    display: flex;
+    gap: 24px;
+    transition: transform 0.4s ease;
+}
+
+.about-letters__item {
+    flex: 0 0 calc(33.333% - 16px);
+    min-width: 0;
+    background: #F9FAFB;
+    border: 1px solid #E5E7EB;
+    border-radius: 12px;
+    overflow: hidden;
+    padding: 16px;
+}
+
+.about-letters__img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 4px;
+}
+
+.about-letters__nav {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 1px solid #E5E7EB;
+    background-color: var(--color-white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #374151;
+}
+
+.about-letters__nav:hover:not(:disabled) {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    background-color: rgba(0, 82, 204, 0.05);
+}
+
+.about-letters__nav:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+/* Адаптивность About Letters */
+@media (max-width: 1024px) {
+    .about-letters__item {
+        flex: 0 0 calc(50% - 12px);
+    }
+}
+
+@media (max-width: 768px) {
+    .about-letters {
+        padding: 60px 0;
+    }
+
+    .about-letters__title {
+        font-size: 28px;
+        margin-bottom: 32px;
+    }
+
+    .about-letters__nav {
+        width: 40px;
+        height: 40px;
+    }
+}
+
+@media (max-width: 576px) {
+    .about-letters__item {
+        flex: 0 0 100%;
+    }
+
+    .about-letters__slider {
+        gap: 8px;
+    }
+
+    .about-letters__nav {
+        width: 36px;
+        height: 36px;
+    }
+}
 
 /* ===========================================
    Страница Аккредитация
@@ -10201,5 +10415,1505 @@ a.about-accred__card-link:hover {
     .accred-cert__note {
         padding: 14px 16px;
         font-size: 13px;
+    }
+}
+
+
+/* ==========================================================================
+   Страница поиска
+   ========================================================================== */
+
+.search-page {
+    padding: 32px 0 80px;
+    background-color: var(--color-white);
+    min-height: 60vh;
+}
+
+.search-page .breadcrumbs {
+    margin-bottom: 32px;
+}
+
+.search-page__header {
+    margin-bottom: 32px;
+}
+
+.search-page__title {
+    font-family: var(--font-primary);
+    font-size: 42px;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin: 0 0 12px;
+    line-height: 1.2;
+}
+
+.search-page__query {
+    color: var(--color-button);
+}
+
+.search-page__count {
+    font-family: var(--font-primary);
+    font-size: 16px;
+    color: #6B7280;
+    margin: 0;
+}
+
+/* Форма поиска */
+.search-page__form {
+    margin-bottom: 48px;
+}
+
+.search-page__form .search-form {
+    display: flex;
+    gap: 12px;
+    max-width: 600px;
+}
+
+.search-page__form .search-form__input {
+    flex: 1;
+    padding: 14px 20px;
+    border: 2px solid var(--color-border);
+    border-radius: var(--border-radius);
+    font-family: var(--font-primary);
+    font-size: 16px;
+    color: var(--color-text);
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.search-page__form .search-form__input:focus {
+    border-color: var(--color-button);
+}
+
+.search-page__form .search-form__button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 28px;
+    background-color: var(--color-button);
+    color: var(--color-white);
+    border: none;
+    border-radius: var(--border-radius);
+    font-family: var(--font-primary);
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.search-page__form .search-form__button:hover {
+    background-color: var(--color-button-hover);
+}
+
+.search-page__form .search-form__button svg {
+    flex-shrink: 0;
+}
+
+/* Результаты поиска */
+.search-page__results {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.search-result {
+    display: flex;
+    gap: 24px;
+    padding: 24px;
+    background-color: #F8FAFC;
+    border-radius: 12px;
+    transition: box-shadow 0.2s ease;
+}
+
+.search-result:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.search-result__image {
+    flex-shrink: 0;
+    width: 180px;
+    height: 120px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.search-result__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.search-result__content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.search-result__type {
+    display: inline-block;
+    padding: 4px 12px;
+    background-color: var(--color-button);
+    color: var(--color-white);
+    border-radius: 20px;
+    font-family: var(--font-primary);
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    width: fit-content;
+}
+
+.search-result__title {
+    font-family: var(--font-primary);
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0;
+    line-height: 1.4;
+}
+
+.search-result__title a {
+    color: var(--color-primary);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.search-result__title a:hover {
+    color: var(--color-button);
+}
+
+.search-result__excerpt {
+    font-family: var(--font-primary);
+    font-size: 15px;
+    color: #6B7280;
+    margin: 0;
+    line-height: 1.6;
+}
+
+.search-result__link {
+    font-family: var(--font-primary);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-button);
+    text-decoration: none;
+    margin-top: auto;
+    transition: color 0.2s ease;
+}
+
+.search-result__link:hover {
+    color: var(--color-button-hover);
+}
+
+/* Пустое состояние */
+.search-page__empty {
+    text-align: center;
+    padding: 80px 20px;
+}
+
+.search-page__empty svg {
+    color: #D1D5DB;
+    margin-bottom: 24px;
+}
+
+.search-page__empty-title {
+    font-family: var(--font-primary);
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin: 0 0 12px;
+}
+
+.search-page__empty-text {
+    font-family: var(--font-primary);
+    font-size: 16px;
+    color: #6B7280;
+    margin: 0 0 32px;
+    line-height: 1.6;
+}
+
+/* Пагинация */
+.search-page__pagination {
+    margin-top: 48px;
+}
+
+/* Адаптив страницы поиска */
+@media (max-width: 768px) {
+    .search-page {
+        padding: 24px 0 60px;
+    }
+
+    .search-page__title {
+        font-size: 28px;
+    }
+
+    .search-page__form .search-form {
+        flex-direction: column;
+    }
+
+    .search-page__form .search-form__button {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .search-result {
+        flex-direction: column;
+        padding: 20px;
+    }
+
+    .search-result__image {
+        width: 100%;
+        height: 180px;
+    }
+
+    .search-result__title {
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 480px) {
+    .search-page__title {
+        font-size: 24px;
+    }
+
+    .search-page__empty-title {
+        font-size: 22px;
+    }
+
+    .search-result__image {
+        height: 140px;
+    }
+}
+
+
+/* ==========================================================================
+   Виджет Яндекса на странице контактов
+   ========================================================================== */
+
+.contacts__yandex-widget {
+    margin-top: 32px;
+    display: flex;
+    justify-content: center;
+}
+
+.contacts__yandex-widget iframe {
+    display: block;
+    border-radius: 12px;
+    /* Увеличиваем виджет в 2 раза */
+    transform: scale(2);
+    transform-origin: center center;
+    margin: 50px 0;
+}
+
+
+/* ==========================================================================
+   Страница 404
+   ========================================================================== */
+
+.error-404 {
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 0;
+    background: linear-gradient(180deg, #F8FAFC 0%, #FFFFFF 100%);
+}
+
+.error-404__content {
+    text-align: center;
+    max-width: 560px;
+    margin: 0 auto;
+}
+
+.error-404__code {
+    font-family: var(--font-primary);
+    font-size: 140px;
+    font-weight: 800;
+    line-height: 1;
+    color: var(--color-primary);
+    opacity: 0.1;
+    margin-bottom: -20px;
+}
+
+.error-404__title {
+    font-family: var(--font-primary);
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin: 0 0 16px;
+}
+
+.error-404__text {
+    font-family: var(--font-primary);
+    font-size: 16px;
+    line-height: 1.6;
+    color: #6B7280;
+    margin: 0 0 32px;
+}
+
+.error-404__actions {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    margin-bottom: 40px;
+}
+
+.error-404__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 28px;
+    font-family: var(--font-primary);
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.error-404__btn--primary {
+    background: var(--color-primary);
+    color: #fff;
+}
+
+.error-404__btn--primary:hover {
+    background: #03133a;
+    transform: translateY(-2px);
+}
+
+.error-404__btn--secondary {
+    background: #F3F4F6;
+    color: var(--color-primary);
+}
+
+.error-404__btn--secondary:hover {
+    background: #E5E7EB;
+}
+
+.error-404__search {
+    padding-top: 32px;
+    border-top: 1px solid #E5E7EB;
+}
+
+.error-404__search-label {
+    font-family: var(--font-primary);
+    font-size: 14px;
+    color: #9CA3AF;
+    margin: 0 0 16px;
+}
+
+.error-404__search-form {
+    display: flex;
+    max-width: 400px;
+    margin: 0 auto;
+    background: #fff;
+    border: 1px solid #E5E7EB;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.error-404__search-input {
+    flex: 1;
+    padding: 12px 16px;
+    border: none;
+    outline: none;
+    font-family: var(--font-primary);
+    font-size: 15px;
+    color: var(--color-primary);
+}
+
+.error-404__search-input::placeholder {
+    color: #9CA3AF;
+}
+
+.error-404__search-btn {
+    padding: 12px 16px;
+    background: var(--color-primary);
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.error-404__search-btn:hover {
+    background: #03133a;
+}
+
+@media (max-width: 640px) {
+    .error-404 {
+        padding: 60px 0;
+    }
+
+    .error-404__code {
+        font-size: 100px;
+    }
+
+    .error-404__title {
+        font-size: 28px;
+    }
+
+    .error-404__actions {
+        flex-direction: column;
+    }
+
+    .error-404__btn {
+        width: 100%;
+    }
+}
+
+/* ==========================================================================
+   ФОРМЫ ОБРАТНОЙ СВЯЗИ — 5 ТИПОВ
+   ========================================================================== */
+
+/* ----- Общие стили для всех форм ----- */
+.wpcf7 input[type="text"],
+.wpcf7 input[type="email"],
+.wpcf7 input[type="tel"],
+.wpcf7 textarea {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid #E5E7EB;
+    border-radius: 8px;
+    font-family: var(--font-primary);
+    font-size: 15px;
+    color: var(--color-text);
+    background: #fff;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.wpcf7 input[type="text"]:focus,
+.wpcf7 input[type="email"]:focus,
+.wpcf7 input[type="tel"]:focus,
+.wpcf7 textarea:focus {
+    outline: none;
+    border-color: var(--color-button);
+    box-shadow: 0 0 0 3px rgba(0, 82, 204, 0.1);
+}
+
+.wpcf7 input[type="text"]::placeholder,
+.wpcf7 input[type="email"]::placeholder,
+.wpcf7 input[type="tel"]::placeholder,
+.wpcf7 textarea::placeholder {
+    color: #9CA3AF;
+}
+
+.wpcf7 input[type="submit"] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 32px;
+    background: var(--color-primary);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-family: var(--font-primary);
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.wpcf7 input[type="submit"]:hover {
+    background: #03133a;
+    transform: translateY(-1px);
+}
+
+.wpcf7 .wpcf7-response-output {
+    margin: 16px 0 0;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.wpcf7 .wpcf7-mail-sent-ok {
+    background: #d1fae5;
+    border-color: #10b981;
+    color: #065f46;
+}
+
+.wpcf7 .wpcf7-validation-errors {
+    background: #fee2e2;
+    border-color: #ef4444;
+    color: #991b1b;
+}
+
+.wpcf7 .wpcf7-acceptance {
+    font-size: 13px;
+    color: #6B7280;
+    line-height: 1.5;
+}
+
+.wpcf7 .wpcf7-acceptance a {
+    color: var(--color-button);
+    text-decoration: none;
+}
+
+.wpcf7 .wpcf7-acceptance a:hover {
+    text-decoration: underline;
+}
+
+/* ==========================================================================
+   БАЗОВЫЕ СТИЛИ CF7 ДЛЯ ВСЕХ НОВЫХ ФОРМ
+   Эталон — .contact-form (главная страница)
+   Токены: border-radius:8px, border:#D1D5DB, padding:14px 16px, 
+           font-size:16px, submit bg:#183D61, gap:16px
+   ========================================================================== */
+
+/* Скрытые поля CF7 — не занимают места */
+.form-popup__form .wpcf7-form p:has(input[type="hidden"]:only-child),
+.form-consult__form .wpcf7-form p:has(input[type="hidden"]:only-child),
+.form-callback-simple__form .wpcf7-form p:has(input[type="hidden"]:only-child),
+.form-application-vertical__form .wpcf7-form p:has(input[type="hidden"]:only-child),
+.form-application-horizontal__form .wpcf7-form p:has(input[type="hidden"]:only-child),
+.form-popup__form .wpcf7-form p:empty,
+.form-consult__form .wpcf7-form p:empty,
+.form-callback-simple__form .wpcf7-form p:empty,
+.form-application-vertical__form .wpcf7-form p:empty,
+.form-application-horizontal__form .wpcf7-form p:empty {
+    display: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    height: 0 !important;
+    line-height: 0 !important;
+}
+
+/* --- Базовые инпуты --- */
+.form-popup__form .wpcf7-form-control:not(.wpcf7-submit):not(.wpcf7-acceptance):not(.wpcf7-checkbox),
+.form-consult__form .wpcf7-form-control:not(.wpcf7-submit):not(.wpcf7-acceptance):not(.wpcf7-checkbox),
+.form-callback-simple__form .wpcf7-form-control:not(.wpcf7-submit):not(.wpcf7-acceptance):not(.wpcf7-checkbox),
+.form-application-vertical__form .wpcf7-form-control:not(.wpcf7-submit):not(.wpcf7-acceptance):not(.wpcf7-checkbox),
+.form-application-horizontal__form .wpcf7-form-control:not(.wpcf7-submit):not(.wpcf7-acceptance):not(.wpcf7-checkbox) {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid #D1D5DB;
+    border-radius: 8px;
+    font-size: 16px;
+    font-family: var(--font-primary);
+    background-color: #fff;
+    color: var(--color-text);
+    transition: border-color 0.2s ease;
+    box-sizing: border-box;
+    outline: none;
+}
+
+.form-popup__form .wpcf7-form-control:not(.wpcf7-submit):not(.wpcf7-acceptance)::placeholder,
+.form-consult__form .wpcf7-form-control:not(.wpcf7-submit):not(.wpcf7-acceptance)::placeholder,
+.form-callback-simple__form .wpcf7-form-control:not(.wpcf7-submit):not(.wpcf7-acceptance)::placeholder,
+.form-application-vertical__form .wpcf7-form-control:not(.wpcf7-submit):not(.wpcf7-acceptance)::placeholder,
+.form-application-horizontal__form .wpcf7-form-control:not(.wpcf7-submit):not(.wpcf7-acceptance)::placeholder {
+    color: #9CA3AF;
+}
+
+.form-popup__form .wpcf7-form-control:not(.wpcf7-submit):not(.wpcf7-acceptance):focus,
+.form-consult__form .wpcf7-form-control:not(.wpcf7-submit):not(.wpcf7-acceptance):focus,
+.form-callback-simple__form .wpcf7-form-control:not(.wpcf7-submit):not(.wpcf7-acceptance):focus,
+.form-application-vertical__form .wpcf7-form-control:not(.wpcf7-submit):not(.wpcf7-acceptance):focus,
+.form-application-horizontal__form .wpcf7-form-control:not(.wpcf7-submit):not(.wpcf7-acceptance):focus {
+    border-color: #0052CC;
+    outline: none;
+}
+
+/* --- Базовая кнопка submit --- */
+.form-popup__form .wpcf7-submit,
+.form-consult__form .wpcf7-submit,
+.form-callback-simple__form .wpcf7-submit,
+.form-application-vertical__form .wpcf7-submit,
+.form-application-horizontal__form .wpcf7-submit {
+    display: inline-block;
+    padding: 16px 32px;
+    background-color: #183D61;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    font-family: var(--font-primary);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.form-popup__form .wpcf7-submit:hover,
+.form-consult__form .wpcf7-submit:hover,
+.form-callback-simple__form .wpcf7-submit:hover,
+.form-application-vertical__form .wpcf7-submit:hover,
+.form-application-horizontal__form .wpcf7-submit:hover {
+    background-color: #0d2a47;
+}
+
+/* --- Базовое согласие --- */
+.form-popup__form .wpcf7-acceptance,
+.form-consult__form .wpcf7-acceptance,
+.form-callback-simple__form .wpcf7-acceptance,
+.form-application-vertical__form .wpcf7-acceptance,
+.form-application-horizontal__form .wpcf7-acceptance {
+    display: block;
+}
+
+.form-popup__form .wpcf7-acceptance .wpcf7-list-item,
+.form-consult__form .wpcf7-acceptance .wpcf7-list-item,
+.form-callback-simple__form .wpcf7-acceptance .wpcf7-list-item,
+.form-application-vertical__form .wpcf7-acceptance .wpcf7-list-item,
+.form-application-horizontal__form .wpcf7-acceptance .wpcf7-list-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 0;
+}
+
+.form-popup__form .wpcf7-acceptance input[type="checkbox"],
+.form-consult__form .wpcf7-acceptance input[type="checkbox"],
+.form-callback-simple__form .wpcf7-acceptance input[type="checkbox"],
+.form-application-vertical__form .wpcf7-acceptance input[type="checkbox"],
+.form-application-horizontal__form .wpcf7-acceptance input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    min-width: 18px;
+    margin: 2px 0 0 0;
+    accent-color: #0052CC;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.form-popup__form .wpcf7-acceptance .wpcf7-list-item-label,
+.form-consult__form .wpcf7-acceptance .wpcf7-list-item-label,
+.form-callback-simple__form .wpcf7-acceptance .wpcf7-list-item-label,
+.form-application-vertical__form .wpcf7-acceptance .wpcf7-list-item-label,
+.form-application-horizontal__form .wpcf7-acceptance .wpcf7-list-item-label {
+    font-size: 14px;
+    color: #4B5563;
+    font-family: var(--font-primary);
+    line-height: 1.5;
+    cursor: pointer;
+}
+
+.form-popup__form .wpcf7-acceptance .wpcf7-list-item-label a,
+.form-consult__form .wpcf7-acceptance .wpcf7-list-item-label a,
+.form-callback-simple__form .wpcf7-acceptance .wpcf7-list-item-label a,
+.form-application-vertical__form .wpcf7-acceptance .wpcf7-list-item-label a,
+.form-application-horizontal__form .wpcf7-acceptance .wpcf7-list-item-label a {
+    color: #0052CC;
+    text-decoration: none;
+}
+
+.form-popup__form .wpcf7-acceptance .wpcf7-list-item-label a:hover,
+.form-consult__form .wpcf7-acceptance .wpcf7-list-item-label a:hover,
+.form-callback-simple__form .wpcf7-acceptance .wpcf7-list-item-label a:hover,
+.form-application-vertical__form .wpcf7-acceptance .wpcf7-list-item-label a:hover,
+.form-application-horizontal__form .wpcf7-acceptance .wpcf7-list-item-label a:hover {
+    text-decoration: underline;
+}
+
+/* --- Базовая валидация --- */
+.form-popup__form .wpcf7-not-valid-tip,
+.form-consult__form .wpcf7-not-valid-tip,
+.form-callback-simple__form .wpcf7-not-valid-tip,
+.form-application-vertical__form .wpcf7-not-valid-tip,
+.form-application-horizontal__form .wpcf7-not-valid-tip {
+    color: #EF4444;
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+/* --- Базовый response output --- */
+.form-popup__form .wpcf7-response-output,
+.form-consult__form .wpcf7-response-output,
+.form-callback-simple__form .wpcf7-response-output,
+.form-application-vertical__form .wpcf7-response-output,
+.form-application-horizontal__form .wpcf7-response-output {
+    margin: 20px 0 0 0;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 14px;
+    text-align: center;
+}
+
+/* --- Базовый спиннер --- */
+.form-popup__form .wpcf7-spinner,
+.form-consult__form .wpcf7-spinner,
+.form-callback-simple__form .wpcf7-spinner,
+.form-application-vertical__form .wpcf7-spinner,
+.form-application-horizontal__form .wpcf7-spinner {
+    margin: 0 auto;
+}
+
+
+/* ==========================================================================
+   ФОРМА 1: Попап "Есть вопросы" (шапка/подвал)
+   ========================================================================== */
+
+.form-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.form-popup.is-open {
+    opacity: 1;
+    visibility: visible;
+}
+
+.form-popup__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+}
+
+.form-popup__container {
+    position: relative;
+    z-index: 1;
+    width: 90%;
+    max-width: 680px;
+    background: linear-gradient(135deg, #051945 0%, #0a2a6b 100%);
+    border-radius: 16px;
+    overflow: hidden;
+    transform: scale(0.9) translateY(20px);
+    transition: transform 0.3s ease;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+}
+
+.form-popup.is-open .form-popup__container {
+    transform: scale(1) translateY(0);
+}
+
+.form-popup__close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 50%;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    z-index: 2;
+}
+
+.form-popup__close:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: rotate(90deg);
+}
+
+.form-popup__content {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    min-height: 360px;
+}
+
+.form-popup__info {
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-popup__title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #fff;
+    margin: 0 0 8px;
+    text-transform: uppercase;
+}
+
+.form-popup__subtitle {
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0 0 32px;
+}
+
+.form-popup__form-wrapper {
+    flex: 1;
+}
+
+/* Форма попапа — вертикальная раскладка с gap */
+.form-popup__form form,
+.form-popup__form .wpcf7-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.form-popup__form form > p,
+.form-popup__form .wpcf7-form > p {
+    margin: 0;
+}
+
+/* Попап: инпуты на тёмном фоне — белый bg, серая рамка */
+.form-popup__form .wpcf7-form-control:not(.wpcf7-submit):not(.wpcf7-acceptance):not(.wpcf7-checkbox) {
+    background-color: #fff;
+    border-color: #D1D5DB;
+}
+
+.form-popup__form .wpcf7-form-control:not(.wpcf7-submit):not(.wpcf7-acceptance):focus {
+    border-color: #fff;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
+}
+
+/* Попап: кнопка — белый фон, тёмный текст для контраста */
+.form-popup__form .wpcf7-submit {
+    width: 100%;
+    background-color: #fff !important;
+    color: #183D61 !important;
+}
+
+.form-popup__form .wpcf7-submit:hover {
+    background-color: #f0f0f0 !important;
+    color: #183D61 !important;
+}
+
+/* Попап: ВСЕ тексты внутри формы — светлые на тёмном фоне */
+.form-popup__form .wpcf7-acceptance .wpcf7-list-item-label,
+.form-popup__form .form-acceptance,
+.form-popup__form p.form-acceptance {
+    color: rgba(255, 255, 255, 0.7) !important;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.form-popup__form .wpcf7-acceptance .wpcf7-list-item-label a,
+.form-popup__form .form-acceptance a,
+.form-popup__form p.form-acceptance a {
+    color: #fff !important;
+}
+
+.form-popup__form .wpcf7-acceptance input[type="checkbox"] {
+    accent-color: #fff;
+}
+
+/* Попап: валидация — светлый красный на тёмном фоне */
+.form-popup__form .wpcf7-not-valid-tip {
+    color: #FCA5A5;
+}
+
+.form-popup__form .wpcf7-not-valid {
+    border-color: #FCA5A5 !important;
+}
+
+/* Попап: response output на тёмном фоне */
+.form-popup__form .wpcf7-response-output {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.form-popup__form .wpcf7-mail-sent-ok {
+    background: rgba(16, 185, 129, 0.2);
+    border-color: #10B981;
+}
+
+.form-popup__form .wpcf7-validation-errors,
+.form-popup__form .wpcf7-mail-sent-ng {
+    background: rgba(239, 68, 68, 0.15);
+    border-color: #FCA5A5;
+}
+
+.form-popup__image {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 20px 30px 0;
+}
+
+.form-popup__image img {
+    max-width: 200px;
+    height: auto;
+}
+
+/* Адаптив попапа */
+@media (max-width: 768px) {
+    .form-popup__content {
+        grid-template-columns: 1fr;
+    }
+
+    .form-popup__info {
+        padding: 32px 24px;
+    }
+
+    .form-popup__title {
+        font-size: 22px;
+    }
+
+    .form-popup__subtitle {
+        font-size: 16px;
+        margin-bottom: 24px;
+    }
+
+    .form-popup__image {
+        display: none;
+    }
+}
+
+
+/* ==========================================================================
+   ФОРМА 2: "Готовы проконсультировать" (сквозная)
+   ========================================================================== */
+
+.form-consult {
+    padding: 60px 0;
+    background: #F8FAFC;
+}
+
+.form-consult__wrapper {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 48px;
+    align-items: start;
+    background: #fff;
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+}
+
+.form-consult__consultant {
+    text-align: center;
+}
+
+.form-consult__photo {
+    width: 140px;
+    height: 140px;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 12px;
+}
+
+.form-consult__photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.form-consult__role {
+    font-size: 13px;
+    color: #6B7280;
+}
+
+.form-consult__content {
+    flex: 1;
+}
+
+.form-consult__title {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin: 0 0 24px;
+}
+
+/* Consult form: вертикальная раскладка с gap */
+.form-consult__form form,
+.form-consult__form .wpcf7-form {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important;
+}
+
+.form-consult__form form > p,
+.form-consult__form .wpcf7-form > p,
+.form-consult__form form > div,
+.form-consult__form .wpcf7-form > div {
+    margin: 0 !important;
+}
+
+/* Consult: скрытые поля не занимают места */
+.form-consult__form .wpcf7-form > p:first-child {
+    display: none !important;
+}
+
+/* Consult: textarea — низкая высота */
+.form-consult__form textarea,
+.form-consult__form .wpcf7-textarea {
+    resize: none;
+    height: 80px;
+}
+
+/* Consult: .form-row > p — CF7 кладёт все поля в один <p> с <br> между ними */
+.form-consult__form .form-row > p {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 16px !important;
+    margin: 0 !important;
+}
+
+/* Consult: убрать <br> между полями */
+.form-consult__form .form-row > p > br {
+    display: none !important;
+}
+
+/* Consult: инпуты (span-обёртки) — по 50% в строку */
+.form-consult__form .form-row .wpcf7-form-control-wrap {
+    flex: 1 1 calc(50% - 8px) !important;
+    min-width: 150px !important;
+}
+
+/* Consult: кнопка — на новую строку, по центру */
+.form-consult__form .form-row .wpcf7-submit {
+    flex-basis: 100% !important;
+    max-width: 280px !important;
+    margin: 8px auto 0 !important;
+    display: block !important;
+}
+
+/* Consult: спиннер рядом с кнопкой — не ломает layout */
+.form-consult__form .form-row .wpcf7-spinner {
+    flex-basis: 100% !important;
+    text-align: center !important;
+}
+
+/* Consult: без фото — одна колонка */
+.form-consult__wrapper--no-photo {
+    grid-template-columns: 1fr;
+}
+
+/* Адаптив формы "Готовы проконсультировать" */
+@media (max-width: 992px) {
+    .form-consult__wrapper {
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
+
+    .form-consult__consultant {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        text-align: left;
+    }
+
+    .form-consult__photo {
+        width: 80px;
+        height: 80px;
+        margin-bottom: 0;
+    }
+
+    .form-consult__form .form-row {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .form-consult__form .form-row .wpcf7-submit {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 768px) {
+    .form-consult {
+        padding: 40px 0;
+    }
+
+    .form-consult__wrapper {
+        padding: 24px;
+    }
+
+    .form-consult__title {
+        font-size: 20px;
+        margin-bottom: 20px;
+    }
+
+    .form-consult__form .form-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* ==========================================================================
+   ФОРМА 3: "Остались вопросы" (компактная горизонтальная)
+   ========================================================================== */
+
+.form-callback-simple {
+    padding: 48px 0;
+    background: #F8FAFC;
+}
+
+.form-callback-simple__wrapper {
+    padding: 40px 0;
+    text-align: center;
+}
+
+.form-callback-simple__title {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin: 0 0 32px;
+}
+
+/* Callback-simple: горизонтальный layout через flex на <form> */
+.form-callback-simple__form .wpcf7 {
+    width: 100%;
+}
+
+.form-callback-simple__form .wpcf7-form,
+.form-callback-simple__form > .wpcf7 > form,
+.form-callback-simple__form > form {
+    display: flex !important;
+    flex-flow: row wrap !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 16px !important;
+}
+
+.form-callback-simple__form .wpcf7-form > p,
+.form-callback-simple__form form > p {
+    margin: 0 !important;
+    flex-shrink: 0;
+}
+
+/* Callback-simple: инпуты фиксированной ширины */
+.form-callback-simple__form .wpcf7-form-control:not(.wpcf7-submit):not(.wpcf7-acceptance):not(.wpcf7-checkbox) {
+    width: 240px;
+}
+
+/* Callback-simple: кнопка автоширины */
+.form-callback-simple__form .wpcf7-submit {
+    padding: 16px 48px;
+}
+
+/* Callback-simple: согласие на новую строку */
+.form-callback-simple__form .form-acceptance,
+.form-callback-simple__form p.form-acceptance,
+.form-callback-simple__form p:has(.wpcf7-acceptance) {
+    flex-basis: 100% !important;
+    text-align: center !important;
+    margin-top: 4px !important;
+}
+
+/* Callback-simple: response output на полную строку */
+.form-callback-simple__form .wpcf7-response-output {
+    width: 100% !important;
+    flex-basis: 100% !important;
+}
+
+/* Callback-simple: спиннер на полную строку */
+.form-callback-simple__form .wpcf7-spinner {
+    flex-basis: 100%;
+}
+
+/* Callback-simple: .form-row > p — все поля в одном <p> с <br> */
+.form-callback-simple__form .form-row > p {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 16px !important;
+    margin: 0 !important;
+}
+
+/* Callback-simple: убрать <br> между полями */
+.form-callback-simple__form .form-row > p > br {
+    display: none !important;
+}
+
+/* Callback-simple: инпуты шире (280px) */
+.form-callback-simple__form .form-row .wpcf7-form-control-wrap {
+    flex: 0 0 280px !important;
+}
+
+/* Callback-simple: спиннер внутри form-row не ломает layout */
+.form-callback-simple__form .form-row .wpcf7-spinner {
+    display: none;
+}
+
+/* Адаптив формы "Остались вопросы" */
+@media (max-width: 768px) {
+    .form-callback-simple {
+        padding: 32px 0;
+    }
+
+    .form-callback-simple__wrapper {
+        padding: 28px 0;
+    }
+
+    .form-callback-simple__title {
+        font-size: 20px;
+        margin-bottom: 24px;
+    }
+
+    .form-callback-simple__form .wpcf7-form,
+    .form-callback-simple__form > .wpcf7 > form,
+    .form-callback-simple__form > form {
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 16px !important;
+    }
+
+    /* Мобильный: .form-row > p — вертикальная раскладка */
+    .form-callback-simple__form .form-row > p {
+        flex-direction: column !important;
+        align-items: center !important;
+    }
+
+    .form-callback-simple__form .form-row .wpcf7-form-control-wrap {
+        flex: 0 0 auto !important;
+        width: 100% !important;
+        max-width: 340px !important;
+    }
+
+    .form-callback-simple__form .wpcf7-form-control:not(.wpcf7-submit):not(.wpcf7-acceptance):not(.wpcf7-checkbox) {
+        width: 100%;
+        max-width: 340px;
+    }
+
+    .form-callback-simple__form .wpcf7-submit {
+        width: 100%;
+        max-width: 340px;
+    }
+}
+
+
+/* ==========================================================================
+   ФОРМА 4: "Онлайн заявка" вертикальная (боковая колонка)
+   ========================================================================== */
+
+.form-application-vertical {
+    width: 100%;
+}
+
+.form-application-vertical__card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+    border: 1px solid #E5E7EB;
+    max-width: 420px;
+    margin: 0 auto;
+}
+
+.form-application-vertical__title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin: 0 0 20px;
+    text-align: center;
+}
+
+.form-application-vertical__service {
+    background: #F3F4F6;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.form-application-vertical__service-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-text);
+}
+
+/* Vertical: вертикальная раскладка с gap */
+.form-application-vertical__form form,
+.form-application-vertical__form .wpcf7-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.form-application-vertical__form form > p,
+.form-application-vertical__form .wpcf7-form > p {
+    margin: 0;
+}
+
+/* Vertical: кнопка на полную ширину */
+.form-application-vertical__form .wpcf7-submit {
+    width: 100%;
+}
+
+
+/* ==========================================================================
+   ФОРМА 5: "Онлайн заявка" горизонтальная
+   ========================================================================== */
+
+.form-application-horizontal {
+    padding: 48px 0;
+    background: #183D61;
+}
+
+.form-application-horizontal__wrapper {
+    text-align: center;
+}
+
+.form-application-horizontal__title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #fff;
+    margin: 0 0 32px;
+}
+
+/* Horizontal: flex-строка на <form> */
+.form-application-horizontal__form .wpcf7 {
+    width: 100%;
+}
+
+.form-application-horizontal__form .wpcf7-form,
+.form-application-horizontal__form > .wpcf7 > form,
+.form-application-horizontal__form > form {
+    display: flex !important;
+    flex-flow: row wrap !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 16px !important;
+}
+
+.form-application-horizontal__form .wpcf7-form > p,
+.form-application-horizontal__form form > p {
+    margin: 0 !important;
+    flex-shrink: 0;
+}
+
+/* Horizontal: инпуты фиксированной ширины, белый фон */
+.form-application-horizontal__form .wpcf7-form-control:not(.wpcf7-submit):not(.wpcf7-acceptance):not(.wpcf7-checkbox) {
+    width: 220px;
+    background-color: #fff;
+    border-color: transparent;
+}
+
+.form-application-horizontal__form .wpcf7-form-control:not(.wpcf7-submit):not(.wpcf7-acceptance):focus {
+    background-color: #fff;
+    border-color: #fff;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+}
+
+/* Horizontal: кнопка — белая на тёмном фоне */
+.form-application-horizontal__form .wpcf7-submit {
+    padding: 16px 48px;
+    background-color: #fff !important;
+    color: #183D61 !important;
+    border-color: #fff !important;
+}
+
+.form-application-horizontal__form .wpcf7-submit:hover {
+    background-color: #E5E7EB !important;
+    border-color: #E5E7EB !important;
+}
+
+/* Horizontal: согласие на новую строку, светлый текст */
+.form-application-horizontal__form .form-acceptance,
+.form-application-horizontal__form p.form-acceptance,
+.form-application-horizontal__form p:has(.wpcf7-acceptance) {
+    flex-basis: 100% !important;
+    text-align: center !important;
+    margin-top: 4px !important;
+}
+
+.form-application-horizontal__form .wpcf7-acceptance .wpcf7-list-item-label {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.form-application-horizontal__form .wpcf7-acceptance .wpcf7-list-item-label a {
+    color: #fff;
+}
+
+.form-application-horizontal__form .wpcf7-acceptance input[type="checkbox"] {
+    accent-color: #fff;
+}
+
+/* Horizontal: response output */
+.form-application-horizontal__form .wpcf7-response-output {
+    width: 100% !important;
+    flex-basis: 100% !important;
+    color: #fff;
+}
+
+/* Horizontal: валидация — светлый красный */
+.form-application-horizontal__form .wpcf7-not-valid-tip {
+    color: #FCA5A5;
+}
+
+/* Horizontal: спиннер */
+.form-application-horizontal__form .wpcf7-spinner {
+    flex-basis: 100%;
+}
+
+/* Horizontal: .form-row > p — все поля в одном <p> с <br> */
+.form-application-horizontal__form .form-row > p {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 16px !important;
+    margin: 0 !important;
+    font-size: 0 !important;       /* скрыть сырой текст (невалидные CF7-теги) */
+    color: transparent !important;
+}
+
+/* Horizontal: восстановить font-size на дочерних элементах */
+.form-application-horizontal__form .form-row > p > * {
+    font-size: 16px !important;
+}
+
+/* Horizontal: убрать <br> между полями */
+.form-application-horizontal__form .form-row > p > br {
+    display: none !important;
+}
+
+/* Horizontal: инпуты (span-обёртки) фиксированная ширина */
+.form-application-horizontal__form .form-row .wpcf7-form-control-wrap {
+    flex: 0 0 220px !important;
+}
+
+/* Horizontal: спиннер внутри form-row не ломает layout */
+.form-application-horizontal__form .form-row .wpcf7-spinner {
+    display: none;
+}
+
+/* Адаптив формы "Онлайн заявка горизонтальная" */
+@media (max-width: 992px) {
+    .form-application-horizontal__form .wpcf7-form-control:not(.wpcf7-submit):not(.wpcf7-acceptance):not(.wpcf7-checkbox) {
+        width: 180px;
+    }
+}
+
+@media (max-width: 768px) {
+    .form-application-horizontal {
+        padding: 32px 0;
+    }
+
+    .form-application-horizontal__title {
+        font-size: 22px;
+        margin-bottom: 24px;
+    }
+
+    .form-application-horizontal__form .wpcf7-form,
+    .form-application-horizontal__form > .wpcf7 > form,
+    .form-application-horizontal__form > form {
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 16px !important;
+    }
+
+    /* Мобильный: .form-row > p — вертикальная раскладка */
+    .form-application-horizontal__form .form-row > p {
+        flex-direction: column !important;
+        align-items: center !important;
+    }
+
+    .form-application-horizontal__form .form-row .wpcf7-form-control-wrap {
+        flex: 0 0 auto !important;
+        width: 100% !important;
+        max-width: 320px !important;
+    }
+
+    .form-application-horizontal__form .wpcf7-form-control:not(.wpcf7-submit):not(.wpcf7-acceptance):not(.wpcf7-checkbox) {
+        width: 100%;
+        max-width: 320px;
+    }
+
+    .form-application-horizontal__form .wpcf7-submit {
+        width: 100%;
+        max-width: 320px;
     }
 }
