@@ -59,7 +59,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 							'menu_class'     => 'site-footer__menu',
 							'depth'          => 1,
 					'fallback_cb'    => function() {
-						$footer_archive = get_post_type_archive_link( 'gociss_service' );
+						$footer_archive = home_url( '/uslugi/' );
 						$nav_categories = gociss_get_nav_service_categories();
 						?>
 						<ul class="site-footer__menu">

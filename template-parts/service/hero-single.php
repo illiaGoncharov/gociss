@@ -32,15 +32,21 @@ if ( $service_terms && ! is_wp_error( $service_terms ) ) {
 	}
 }
 
+// Базовый заголовок: сначала ACF поле, потом title поста
+$hero_title_base = function_exists( 'get_field' ) ? get_field( 'gociss_service_hero_title_base' ) : '';
+if ( empty( $hero_title_base ) ) {
+	$hero_title_base = get_the_title();
+}
+
 // Формируем заголовок с учётом региона
-// Сначала проверяем региональный заголовок, потом автогенерацию
+// Сначала проверяем полностью кастомный региональный заголовок
 $regional_hero_title = '';
 if ( $current_region && function_exists( 'get_field' ) ) {
 	$regional_hero_title = get_field( 'gociss_region_hero_title', 'term_' . $current_region->term_id );
 }
 
 if ( ! empty( $regional_hero_title ) ) {
-	// Используем полностью кастомный региональный заголовок
+	// Используем полностью кастомный региональный заголовок (приоритет)
 	$hero_title = $regional_hero_title;
 } else {
 	// Получаем название региона в предложном падеже
@@ -71,11 +77,11 @@ if ( ! empty( $regional_hero_title ) ) {
 		$region_prepositional = isset( $cities_map[ $region_name ] ) ? $cities_map[ $region_name ] : $region_name;
 	}
 
-	// Формируем заголовок
+	// Формируем заголовок: базовый + регион (суффикс менеджер пишет сам в ACF)
 	if ( $region_prepositional ) {
-		$hero_title = get_the_title() . ' в ' . $region_prepositional . ' в аккредитованном органе<br>без посредников и переплат';
+		$hero_title = $hero_title_base . ' в ' . $region_prepositional;
 	} else {
-		$hero_title = get_the_title() . ' в аккредитованном органе<br>без посредников и переплат';
+		$hero_title = $hero_title_base;
 	}
 }
 
@@ -88,12 +94,27 @@ if ( ! empty( $regional_hero_subtitle ) ) {
 	$service_subtitle = $regional_hero_subtitle;
 }
 
-$hero_bullets = array(
-	'Государственная аккредитация',
-	'Официальное оформление',
-	'Короткие сроки получения',
-	'Работаем по всей России',
-);
+// Поинты hero секции: читаем из ACF, если заполнены; иначе — значения по умолчанию
+$hero_bullets    = array();
+$has_acf_bullets = false;
+if ( function_exists( 'get_field' ) ) {
+	for ( $i = 1; $i <= 6; $i++ ) {
+		$bullet = get_field( 'gociss_service_bullet_' . $i );
+		if ( ! empty( $bullet ) ) {
+			$hero_bullets[]  = $bullet;
+			$has_acf_bullets = true;
+		}
+	}
+}
+// Если ни один поинт не заполнен — используем дефолтные
+if ( ! $has_acf_bullets ) {
+	$hero_bullets = array(
+		'Государственная аккредитация',
+		'Официальное оформление',
+		'Короткие сроки получения',
+		'Работаем по всей России',
+	);
+}
 
 $hero_btn_primary = array(
 	'text' => 'Обратный звонок',

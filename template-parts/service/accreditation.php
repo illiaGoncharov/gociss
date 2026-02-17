@@ -68,8 +68,9 @@ if ( ! $accreditation_text ) {
 	<div class="container">
 		<!-- Основной блок -->
 		<div class="accreditation__main">
-			<!-- Изображение сертификата -->
+			<!-- Изображение сертификата (ссылка на страницу аккредитации) -->
 			<div class="accreditation__image">
+				<a href="<?php echo esc_url( home_url( '/akkreditaciya/' ) ); ?>" target="_blank" rel="noopener noreferrer">
 				<?php if ( $accreditation_cert_image && ! empty( $accreditation_cert_image['ID'] ) ) : ?>
 					<?php
 					echo wp_get_attachment_image(
@@ -85,6 +86,7 @@ if ( ! $accreditation_text ) {
 				<?php else : ?>
 					<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/sertificate.png' ); ?>" alt="Аттестат аккредитации" class="accreditation__cert-img">
 				<?php endif; ?>
+				</a>
 			</div>
 
 			<!-- Контент -->

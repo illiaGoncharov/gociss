@@ -36,8 +36,10 @@ if ( ! $info_btn_url ) {
 	$info_btn_url = 'https://pub.fsa.gov.ru/ral/view/8579/accreditation';
 }
 
-// Логотип (один файл с обоими логотипами)
-$logos_url = get_template_directory_uri() . '/assets/images/accreditation/acc-logos.png';
+// Логотипы: ACF поля с fallback на хардкод
+$logos_fallback = get_template_directory_uri() . '/assets/images/accreditation/acc-logos.png';
+$has_logo1      = ! empty( $info_logo1 ) && is_array( $info_logo1 ) && ! empty( $info_logo1['url'] );
+$has_logo2      = ! empty( $info_logo2 ) && is_array( $info_logo2 ) && ! empty( $info_logo2['url'] );
 ?>
 
 <section class="accred-info">
@@ -83,7 +85,16 @@ $logos_url = get_template_directory_uri() . '/assets/images/accreditation/acc-lo
 
 				<!-- Логотипы -->
 				<div class="accred-info__logos">
-					<img src="<?php echo esc_url( $logos_url ); ?>" alt="Аккредитация Росаккредитации и ISO 17021">
+					<?php if ( $has_logo1 || $has_logo2 ) : ?>
+						<?php if ( $has_logo1 ) : ?>
+							<img src="<?php echo esc_url( $info_logo1['url'] ); ?>" alt="<?php echo esc_attr( $info_logo1['alt'] ?? 'Логотип аккредитации' ); ?>">
+						<?php endif; ?>
+						<?php if ( $has_logo2 ) : ?>
+							<img src="<?php echo esc_url( $info_logo2['url'] ); ?>" alt="<?php echo esc_attr( $info_logo2['alt'] ?? 'Логотип ISO' ); ?>">
+						<?php endif; ?>
+					<?php else : ?>
+						<img src="<?php echo esc_url( $logos_fallback ); ?>" alt="Аккредитация Росаккредитации и ISO 17021">
+					<?php endif; ?>
 				</div>
 			</div>
 		</div>

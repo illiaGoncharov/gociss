@@ -14,7 +14,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 $cert_title       = function_exists( 'get_field' ) ? get_field( 'gociss_service_cert_title' ) : '';
 $cert_description = function_exists( 'get_field' ) ? get_field( 'gociss_service_cert_description' ) : '';
 $cert_btn_text    = function_exists( 'get_field' ) ? get_field( 'gociss_service_cert_btn_text' ) : '';
-$cert_image       = function_exists( 'get_field' ) ? get_field( 'gociss_service_cert_image' ) : null;
+$cert_image          = function_exists( 'get_field' ) ? get_field( 'gociss_service_cert_image' ) : null;
+$cert_form_shortcode = function_exists( 'get_field' ) ? get_field( 'gociss_service_cert_form_shortcode' ) : '';
 
 // Собираем пункты расшифровки
 $cert_points = array();
@@ -25,8 +26,8 @@ for ( $i = 1; $i <= 4; $i++ ) {
 	}
 }
 
-// Если нет ни описания, ни изображения, ни пунктов — не показываем секцию
-if ( empty( $cert_description ) && empty( $cert_image ) && empty( $cert_points ) ) {
+// Если нет ни описания, ни изображения, ни пунктов, ни формы — не показываем секцию
+if ( empty( $cert_description ) && empty( $cert_image ) && empty( $cert_points ) && empty( $cert_form_shortcode ) ) {
 	return;
 }
 
@@ -46,7 +47,7 @@ if ( ! $cert_btn_text ) {
 		<div class="service-cert-example__content">
 			<!-- Левая колонка: текст -->
 			<div class="service-cert-example__text">
-				<h2 class="service-cert-example__title"><?php echo esc_html( $cert_title ); ?></h2>
+				<h2 class="service-cert-example__title"><?php echo wp_kses_post( $cert_title ); ?></h2>
 
 				<?php if ( $cert_description ) : ?>
 					<div class="service-cert-example__description">
@@ -62,8 +63,8 @@ if ( ! $cert_btn_text ) {
 			<!-- Правая колонка: изображение сертификата -->
 			<?php if ( $cert_image && ! empty( $cert_image['url'] ) ) : ?>
 				<div class="service-cert-example__image">
-					<img 
-						src="<?php echo esc_url( $cert_image['url'] ); ?>" 
+					<img
+						src="<?php echo esc_url( $cert_image['url'] ); ?>"
 						alt="<?php echo esc_attr( $cert_image['alt'] ?? $cert_title ); ?>"
 						class="service-cert-example__cert-img"
 					>
@@ -85,6 +86,19 @@ if ( ! $cert_btn_text ) {
 						</div>
 					</div>
 				<?php endforeach; ?>
+			</div>
+		<?php endif; ?>
+
+		<?php if ( ! empty( $cert_form_shortcode ) ) : ?>
+			<?php
+			$cert_form_title = function_exists( 'get_field' ) ? get_field( 'gociss_service_cert_form_title' ) : '';
+			if ( ! $cert_form_title ) {
+				$cert_form_title = 'Оставить заявку';
+			}
+			?>
+			<div class="service-cert-example__form">
+				<h3 class="service-cert-example__form-title"><?php echo esc_html( $cert_form_title ); ?></h3>
+				<?php echo do_shortcode( $cert_form_shortcode ); ?>
 			</div>
 		<?php endif; ?>
 	</div>

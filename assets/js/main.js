@@ -15,6 +15,7 @@
         initForm();
         initHeroSlider();
         initExpertsSlider();
+        initPartnersSlider();
         initNewsSlider();
         initLettersSlider();
         initSearch();
@@ -25,6 +26,7 @@
         initRegistrySearch();
         initCallbackPopup();
         initFormsMetrika();
+        initMegaMenu();
         // initInteractiveMap(); // Карта теперь статичная PNG
         // initServicesMenu(); // Услуги теперь в мобильном меню
     });
@@ -412,6 +414,90 @@
     }
 
     /**
+     * Инициализация слайдера партнёров на странице услуги
+     */
+    function initPartnersSlider() {
+        var slider = document.querySelector('.service-partners-slider__slider');
+
+        if (!slider) {
+            return;
+        }
+
+        var prevBtn = slider.querySelector('.service-partners-slider__nav--prev');
+        var nextBtn = slider.querySelector('.service-partners-slider__nav--next');
+        var grid = slider.querySelector('.service-partners-slider__grid');
+        var track = slider.querySelector('.service-partners-slider__track');
+
+        if (!prevBtn || !nextBtn || !grid || !track) {
+            return;
+        }
+
+        var currentIndex = 0;
+        var items = grid.querySelectorAll('.service-partners-slider__card');
+        var totalItems = items.length;
+
+        function getItemsPerView() {
+            if (window.innerWidth <= 480) return 2;
+            if (window.innerWidth <= 768) return 3;
+            if (window.innerWidth <= 1024) return 4;
+            return 5;
+        }
+
+        function getItemWidth() {
+            if (items.length === 0) return 0;
+            var item = items[0];
+            var gap = 16;
+            return item.offsetWidth + gap;
+        }
+
+        function updateSlider() {
+            var itemWidth = getItemWidth();
+            var translateX = -currentIndex * itemWidth;
+            grid.style.transform = 'translateX(' + translateX + 'px)';
+            updateButtons();
+        }
+
+        function updateButtons() {
+            var itemsPerView = getItemsPerView();
+            var maxIndex = Math.max(0, totalItems - itemsPerView);
+
+            prevBtn.disabled = currentIndex <= 0;
+            nextBtn.disabled = currentIndex >= maxIndex;
+        }
+
+        prevBtn.addEventListener('click', function() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateSlider();
+            }
+        });
+
+        nextBtn.addEventListener('click', function() {
+            var itemsPerView = getItemsPerView();
+            var maxIndex = Math.max(0, totalItems - itemsPerView);
+            if (currentIndex < maxIndex) {
+                currentIndex++;
+                updateSlider();
+            }
+        });
+
+        var resizeTimeout;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(function() {
+                var itemsPerView = getItemsPerView();
+                var maxIndex = Math.max(0, totalItems - itemsPerView);
+                if (currentIndex > maxIndex) {
+                    currentIndex = maxIndex;
+                }
+                updateSlider();
+            }, 100);
+        });
+
+        updateButtons();
+    }
+
+    /**
      * Инициализация слайдера новостей
      */
     function initNewsSlider() {
@@ -690,6 +776,74 @@
             link.addEventListener('click', function() {
                 closeMobileMenu();
             });
+        });
+    }
+
+    /**
+     * Инициализация мега-меню «Все услуги» в хедере
+     */
+    function initMegaMenu() {
+        var megaWrap = document.querySelector('.header-services__mega-wrap');
+        if (!megaWrap) {
+            return;
+        }
+
+        var megaMenu = megaWrap.querySelector('.header-services__mega-menu');
+        if (!megaMenu) {
+            return;
+        }
+
+        var catItems = megaMenu.querySelectorAll('.header-services__mega-cat');
+        var serviceLists = megaMenu.querySelectorAll('.header-services__mega-list');
+        var hideTimeout = null;
+
+        function showMenu() {
+            clearTimeout(hideTimeout);
+            megaWrap.classList.add('is-open');
+        }
+
+        function hideMenu() {
+            hideTimeout = setTimeout(function() {
+                megaWrap.classList.remove('is-open');
+            }, 200);
+        }
+
+        // Показываем меню при наведении на «Все услуги»
+        megaWrap.addEventListener('mouseenter', showMenu);
+        megaWrap.addEventListener('mouseleave', hideMenu);
+
+        // При наведении на категорию — показываем её услуги
+        catItems.forEach(function(catItem) {
+            catItem.addEventListener('mouseenter', function() {
+                var catKey = this.getAttribute('data-category');
+
+                catItems.forEach(function(item) {
+                    item.classList.remove('is-active');
+                });
+                this.classList.add('is-active');
+
+                serviceLists.forEach(function(list) {
+                    list.classList.remove('is-active');
+                });
+                var targetList = megaMenu.querySelector('.header-services__mega-list[data-category="' + catKey + '"]');
+                if (targetList) {
+                    targetList.classList.add('is-active');
+                }
+            });
+        });
+
+        // Закрытие по Escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && megaWrap.classList.contains('is-open')) {
+                megaWrap.classList.remove('is-open');
+            }
+        });
+
+        // Закрытие при клике вне меню
+        document.addEventListener('click', function(e) {
+            if (!megaWrap.contains(e.target)) {
+                megaWrap.classList.remove('is-open');
+            }
         });
     }
 

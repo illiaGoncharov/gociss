@@ -56,6 +56,12 @@ $current_region = function_exists( 'gociss_get_current_region' ) ? gociss_get_cu
 	// Отзывы
 	get_template_part( 'template-parts/service/reviews' );
 
+	// Наши ведущие эксперты (универсальная секция из CPT gociss_expert)
+	get_template_part( 'template-parts/experts' );
+
+	// Наши партнёры (слайдер)
+	get_template_part( 'template-parts/service/partners-slider' );
+
 	// FAQ (использует gociss_service_faq_items для услуг)
 	get_template_part( 'template-parts/service/faq-single' );
 
@@ -64,9 +70,6 @@ $current_region = function_exists( 'gociss_get_current_region' ) ? gociss_get_cu
 
 	// Форма обратной связи (вариант выбирается через ACF на каждой услуге)
 	get_template_part( 'template-parts/form' );
-
-	// Партнеры
-	get_template_part( 'template-parts/partners' );
 	?>
 </main>
 

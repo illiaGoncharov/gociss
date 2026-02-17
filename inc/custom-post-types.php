@@ -584,6 +584,21 @@ function gociss_get_current_page_region_url( $region_slug ) {
  * ВАЖНО: Исключаем известные пути, чтобы не конфликтовать с другими архивами
  */
 function gociss_add_service_rewrite_rules() {
+	// Архив услуг: /uslugi/ → post_type=gociss_service
+	// Нужно вручную, т.к. rewrite => false отключает автоматическую генерацию
+	add_rewrite_rule(
+		'^uslugi/?$',
+		'index.php?post_type=gociss_service',
+		'top'
+	);
+
+	// Пагинация архива: /uslugi/page/2/
+	add_rewrite_rule(
+		'^uslugi/page/([0-9]+)/?$',
+		'index.php?post_type=gociss_service&paged=$matches[1]',
+		'top'
+	);
+
 	// Список исключений - эти пути НЕ должны перехватываться как услуги
 	// Используем negative lookahead с учётом слеша или конца строки
 	$excluded_prefixes = 'blog/|blog$|vopros-otvet/|vopros-otvet$|uslugi/|uslugi$|wp-admin|wp-content|wp-includes|wp-json|feed|comments|author|page|tag|category';
@@ -843,9 +858,9 @@ add_action( 'after_switch_theme', 'gociss_flush_rewrite_rules_on_activation' );
  * УДАЛИТЬ после того как URL заработают!
  */
 function gociss_force_flush_rewrite_rules() {
-	if ( get_option( 'gociss_flush_rewrite_v7' ) !== 'done' ) {
+	if ( get_option( 'gociss_flush_rewrite_v8' ) !== 'done' ) {
 		flush_rewrite_rules();
-		update_option( 'gociss_flush_rewrite_v7', 'done' );
+		update_option( 'gociss_flush_rewrite_v8', 'done' );
 	}
 }
 add_action( 'init', 'gociss_force_flush_rewrite_rules', 999 );

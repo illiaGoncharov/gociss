@@ -107,7 +107,7 @@ if ( empty( $process_steps ) ) {
 						<?php if ( ! empty( $step['icon'] ) && ! empty( $step['icon']['url'] ) ) : ?>
 							<img src="<?php echo esc_url( $step['icon']['url'] ); ?>" alt="">
 						<?php else : ?>
-							<img src="<?php echo esc_url( $default_icons[ $step_index % 8 ] ); ?>" alt="">
+							<img src="<?php echo esc_url( $default_icons[ $step_index % count( $default_icons ) ] ); ?>" alt="">
 						<?php endif; ?>
 					</div>
 

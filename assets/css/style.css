@@ -590,6 +590,150 @@ body {
     overflow: hidden;
 }
 
+/* ============================================
+   Мега-меню «Все услуги»
+   ============================================ */
+
+.header-services__mega-wrap {
+    position: relative;
+}
+
+.header-services__mega-arrow {
+    width: 10px;
+    height: 6px;
+    color: var(--color-white);
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+}
+
+.header-services__mega-wrap.is-open .header-services__mega-arrow {
+    transform: rotate(180deg);
+}
+
+.header-services__mega-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 100;
+    margin-top: 12px;
+    background: var(--color-white);
+    border-radius: 12px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15), 0 4px 12px rgba(0, 0, 0, 0.08);
+    min-width: 680px;
+    overflow: hidden;
+}
+
+.header-services__mega-wrap.is-open .header-services__mega-menu {
+    display: flex;
+}
+
+.header-services__mega-categories {
+    flex: 0 0 260px;
+    padding: 16px 0;
+    background: #F8F9FA;
+    border-right: 1px solid #E5E7EB;
+    display: flex;
+    flex-direction: column;
+}
+
+.header-services__mega-cat {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 20px;
+    color: #051945;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: var(--font-primary);
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.header-services__mega-cat img {
+    width: 16px;
+    height: 16px;
+    filter: brightness(0) saturate(100%) invert(12%) sepia(53%) saturate(2845%) hue-rotate(213deg) brightness(90%) contrast(102%);
+}
+
+.header-services__mega-cat:hover,
+.header-services__mega-cat.is-active {
+    background: var(--color-white);
+    color: #0052CC;
+}
+
+.header-services__mega-cat.is-active img {
+    filter: brightness(0) saturate(100%) invert(26%) sepia(95%) saturate(2087%) hue-rotate(210deg) brightness(95%) contrast(103%);
+}
+
+.header-services__mega-cat-arrow {
+    width: 6px;
+    height: 10px;
+    margin-left: auto;
+    color: #9CA3AF;
+    transition: color 0.15s ease;
+}
+
+.header-services__mega-cat:hover .header-services__mega-cat-arrow,
+.header-services__mega-cat.is-active .header-services__mega-cat-arrow {
+    color: #0052CC;
+}
+
+.header-services__mega-services {
+    flex: 1;
+    padding: 16px 0;
+    min-height: 200px;
+}
+
+.header-services__mega-list {
+    display: none;
+    flex-direction: column;
+}
+
+.header-services__mega-list.is-active {
+    display: flex;
+}
+
+.header-services__mega-service {
+    display: block;
+    padding: 10px 24px;
+    color: #374151;
+    text-decoration: none;
+    font-size: 14px;
+    font-family: var(--font-primary);
+    line-height: 1.4;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.header-services__mega-service:hover {
+    background: #F3F4F6;
+    color: #0052CC;
+}
+
+.header-services__mega-empty {
+    display: block;
+    padding: 10px 24px;
+    color: #9CA3AF;
+    font-size: 14px;
+    font-style: italic;
+    font-family: var(--font-primary);
+}
+
+/* Скрываем мега-меню на мобильных */
+@media (max-width: 1199px) {
+    .header-services__mega-wrap {
+        position: static;
+    }
+
+    .header-services__mega-menu {
+        display: none !important;
+    }
+
+    .header-services__mega-arrow {
+        display: none;
+    }
+}
+
 /* Hero секция */
 .hero {
     padding: 60px 0 80px;
@@ -1055,17 +1199,38 @@ body {
 .contact-form .wpcf7-form > p {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 20px;
 }
 
 .contact-form .wpcf7-form > p > br {
     display: none;
 }
 
+/* Текст политики — обычный блок, не flex-column */
+.contact-form .wpcf7-form > p.form-acceptance {
+    display: block;
+    text-align: center;
+}
+
 .contact-form .form-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 20px;
+}
+
+/* CF7 оборачивает поля в <p> внутри form-row — убираем из потока,
+   чтобы grid работал с инпутами напрямую */
+.contact-form .form-row > p {
+    display: contents;
+}
+
+.contact-form .form-row > p > br {
+    display: none;
+}
+
+/* Кнопка отправки внутри form-row занимает обе колонки */
+.contact-form .form-row .wpcf7-submit {
+    grid-column: 1 / -1;
 }
 
 .contact-form .wpcf7-form label {
@@ -1086,6 +1251,13 @@ body {
     font-family: var(--font-primary);
     background-color: var(--color-white);
     transition: border-color 0.2s ease;
+}
+
+/* Ограничиваем высоту textarea */
+.contact-form textarea.wpcf7-form-control {
+    min-height: 100px;
+    max-height: 160px;
+    resize: vertical;
 }
 
 .contact-form .wpcf7-form-control:not(.wpcf7-submit):not(.wpcf7-checkbox):not(.wpcf7-acceptance):focus {
@@ -1168,6 +1340,12 @@ body {
     border-radius: 8px;
     font-size: 14px;
     text-align: center;
+}
+
+/* Скрытый response-output не занимает место */
+.contact-form .wpcf7-response-output[aria-hidden="true"] {
+    margin: 0;
+    padding: 0;
 }
 
 .contact-form .wpcf7-mail-sent-ok {
@@ -2103,6 +2281,160 @@ body {
 
     .experts__item {
         scroll-snap-align: center;
+    }
+}
+
+/* ============================================
+   Слайдер партнёров на странице услуги
+   ============================================ */
+
+.service-partners-slider {
+    padding: 80px 0;
+    background: var(--color-white);
+}
+
+.service-partners-slider__title {
+    font-family: var(--font-primary);
+    font-size: 36px;
+    font-weight: 700;
+    color: #051945;
+    text-align: center;
+    margin: 0 0 16px;
+}
+
+.service-partners-slider__subtitle {
+    font-family: var(--font-primary);
+    font-size: 16px;
+    color: var(--color-text-light);
+    text-align: center;
+    margin: 0 0 48px;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.service-partners-slider__slider {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.service-partners-slider__track {
+    flex: 1;
+    overflow: hidden;
+}
+
+.service-partners-slider__grid {
+    display: flex;
+    gap: 16px;
+    transition: transform 0.3s ease;
+}
+
+.service-partners-slider__card {
+    flex: 0 0 calc(20% - 13px);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 20px;
+    background: #F8F9FA;
+    border: 1px solid #E5E7EB;
+    border-radius: 12px;
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.service-partners-slider__card:hover {
+    border-color: #0052CC;
+    box-shadow: 0 4px 12px rgba(0, 82, 204, 0.1);
+}
+
+.service-partners-slider__card-icon {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    color: #051945;
+}
+
+.service-partners-slider__card-name {
+    font-family: var(--font-primary);
+    font-size: 14px;
+    font-weight: 500;
+    color: #051945;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.service-partners-slider__nav {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    border: 2px solid #E5E7EB;
+    border-radius: 8px;
+    background: var(--color-white);
+    color: #051945;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.service-partners-slider__nav:hover {
+    border-color: #0052CC;
+    color: #0052CC;
+}
+
+.service-partners-slider__nav:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+@media (max-width: 1024px) {
+    .service-partners-slider__card {
+        flex: 0 0 calc(25% - 12px);
+    }
+}
+
+@media (max-width: 768px) {
+    .service-partners-slider {
+        padding: 48px 0;
+    }
+
+    .service-partners-slider__title {
+        font-size: 28px;
+    }
+
+    .service-partners-slider__card {
+        flex: 0 0 calc(33.333% - 11px);
+    }
+
+    .service-partners-slider__nav {
+        width: 36px;
+        height: 36px;
+    }
+}
+
+@media (max-width: 480px) {
+    .service-partners-slider__title {
+        font-size: 24px;
+    }
+
+    .service-partners-slider__card {
+        flex: 0 0 calc(50% - 8px);
+    }
+
+    .service-partners-slider__nav {
+        display: none;
+    }
+
+    .service-partners-slider__grid {
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .service-partners-slider__card {
+        scroll-snap-align: start;
     }
 }
 
@@ -4890,6 +5222,275 @@ body {
     }
 }
 
+/* Форма внутри секции стоимости */
+.service-pricing__form {
+    margin-top: 48px;
+}
+
+/* ============================================
+   Общие стили CF7 для встроенных форм (cert-example, pricing)
+   ============================================ */
+
+/* Обёртка формы — центрирование */
+.service-cert-example__form,
+.service-pricing__form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Заголовок над формой */
+.service-cert-example__form-title,
+.service-pricing__form-title {
+    width: 100%;
+    max-width: 700px;
+    margin: 0 0 20px;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-text-primary, #1f2937);
+    text-align: center;
+    font-family: var(--font-primary);
+}
+
+.service-cert-example__form .wpcf7-form,
+.service-pricing__form .wpcf7-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 700px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.service-cert-example__form .wpcf7-form p,
+.service-pricing__form .wpcf7-form p {
+    margin: 0;
+}
+
+.service-cert-example__form .wpcf7-form > p,
+.service-pricing__form .wpcf7-form > p {
+    display: flex;
+    flex-direction: column;
+	text-align: center;
+}
+
+/* Уменьшаем отступ между кнопкой и текстом согласия */
+.service-cert-example__form .wpcf7-form > p.form-acceptance,
+.service-cert-example__form .wpcf7-form > p:has(.wpcf7-acceptance),
+.service-pricing__form .wpcf7-form > p.form-acceptance,
+.service-pricing__form .wpcf7-form > p:has(.wpcf7-acceptance) {
+    margin-top: -8px;
+}
+
+.service-cert-example__form .wpcf7-form > p > br,
+.service-pricing__form .wpcf7-form > p > br {
+    display: none;
+}
+
+.service-cert-example__form .wpcf7-form label,
+.service-pricing__form .wpcf7-form label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 8px;
+    font-family: var(--font-primary);
+}
+
+.service-cert-example__form .wpcf7-form-control:not(.wpcf7-submit):not(.wpcf7-checkbox):not(.wpcf7-acceptance),
+.service-pricing__form .wpcf7-form-control:not(.wpcf7-submit):not(.wpcf7-checkbox):not(.wpcf7-acceptance) {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid #D1D5DB;
+    border-radius: 8px;
+    font-size: 16px;
+    font-family: var(--font-primary);
+    background-color: var(--color-white);
+    transition: border-color 0.2s ease;
+}
+
+.service-cert-example__form .wpcf7-form-control:not(.wpcf7-submit):not(.wpcf7-checkbox):not(.wpcf7-acceptance):focus,
+.service-pricing__form .wpcf7-form-control:not(.wpcf7-submit):not(.wpcf7-checkbox):not(.wpcf7-acceptance):focus {
+    outline: none;
+    border-color: #0052CC;
+}
+
+.service-cert-example__form .wpcf7-form-control::placeholder,
+.service-pricing__form .wpcf7-form-control::placeholder {
+    color: #9CA3AF;
+}
+
+.service-cert-example__form textarea.wpcf7-form-control,
+.service-pricing__form textarea.wpcf7-form-control {
+    min-height: 100px;
+    max-height: 160px;
+    resize: vertical;
+}
+
+.service-cert-example__form select.wpcf7-form-control,
+.service-pricing__form select.wpcf7-form-control {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 20px;
+    padding-right: 44px;
+}
+
+.service-cert-example__form .wpcf7-acceptance,
+.service-pricing__form .wpcf7-acceptance {
+    display: block;
+}
+
+.service-cert-example__form .wpcf7-acceptance .wpcf7-list-item,
+.service-pricing__form .wpcf7-acceptance .wpcf7-list-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 0;
+}
+
+.service-cert-example__form .wpcf7-acceptance input[type="checkbox"],
+.service-pricing__form .wpcf7-acceptance input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    min-width: 18px;
+    margin: 2px 0 0 0;
+    accent-color: #0052CC;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.service-cert-example__form .wpcf7-acceptance .wpcf7-list-item-label,
+.service-pricing__form .wpcf7-acceptance .wpcf7-list-item-label {
+    font-size: 14px;
+    color: #4B5563;
+    font-family: var(--font-primary);
+    line-height: 1.5;
+    cursor: pointer;
+}
+
+.service-cert-example__form .wpcf7-acceptance .wpcf7-list-item-label a,
+.service-pricing__form .wpcf7-acceptance .wpcf7-list-item-label a {
+    color: #0052CC;
+    text-decoration: none;
+}
+
+.service-cert-example__form .wpcf7-acceptance .wpcf7-list-item-label a:hover,
+.service-pricing__form .wpcf7-acceptance .wpcf7-list-item-label a:hover {
+    text-decoration: underline;
+}
+
+.service-cert-example__form .wpcf7-submit,
+.service-pricing__form .wpcf7-submit {
+    width: 100%;
+    padding: 16px 32px;
+    background-color: #183D61;
+    color: var(--color-white);
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    font-family: var(--font-primary);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.service-cert-example__form .wpcf7-submit:hover,
+.service-pricing__form .wpcf7-submit:hover {
+    background-color: #0d2a47;
+}
+
+.service-cert-example__form .wpcf7-response-output,
+.service-pricing__form .wpcf7-response-output {
+    margin: 20px 0 0 0;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 14px;
+    text-align: center;
+}
+
+.service-cert-example__form .wpcf7-response-output[aria-hidden="true"],
+.service-pricing__form .wpcf7-response-output[aria-hidden="true"] {
+    margin: 0;
+    padding: 0;
+}
+
+.service-cert-example__form .wpcf7-mail-sent-ok,
+.service-pricing__form .wpcf7-mail-sent-ok {
+    background-color: #D1FAE5;
+    border-color: #10B981;
+    color: #065F46;
+}
+
+.service-cert-example__form .wpcf7-validation-errors,
+.service-cert-example__form .wpcf7-mail-sent-ng,
+.service-pricing__form .wpcf7-validation-errors,
+.service-pricing__form .wpcf7-mail-sent-ng {
+    background-color: #FEE2E2;
+    border-color: #EF4444;
+    color: #991B1B;
+}
+
+.service-cert-example__form .wpcf7-not-valid-tip,
+.service-pricing__form .wpcf7-not-valid-tip {
+    color: #EF4444;
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+.service-cert-example__form .wpcf7-spinner,
+.service-pricing__form .wpcf7-spinner {
+    margin: 0 auto;
+}
+
+/* form-row: горизонтальная раскладка (имя + телефон в ряд, кнопка на всю ширину) */
+.service-cert-example__form .form-row,
+.service-pricing__form .form-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.service-cert-example__form .form-row > p,
+.service-pricing__form .form-row > p {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    width: 100%;
+}
+
+.service-cert-example__form .form-row > p > br,
+.service-pricing__form .form-row > p > br {
+    display: none;
+}
+
+/* Поля имя и телефон — в ряд, равная ширина (wpcf7-form-control-wrap не оборачивает submit) */
+.service-cert-example__form .form-row .wpcf7-form-control-wrap,
+.service-pricing__form .form-row .wpcf7-form-control-wrap {
+    flex: 1 1 200px;
+    min-width: 0;
+}
+
+/* Кнопка — на всю ширину */
+.service-cert-example__form .form-row .wpcf7-submit,
+.service-pricing__form .form-row .wpcf7-submit {
+    flex: 1 1 100%;
+}
+
+.service-cert-example__form .form-row .wpcf7-spinner,
+.service-pricing__form .form-row .wpcf7-spinner {
+    flex: 0 0 auto;
+    align-self: center;
+}
+
+@media (max-width: 600px) {
+    .service-cert-example__form .form-row .wpcf7-form-control-wrap,
+    .service-pricing__form .form-row .wpcf7-form-control-wrap {
+        flex: 1 1 100%;
+    }
+}
+
 /* ============================================================
    Секция процесса
    ============================================================ */
@@ -6923,6 +7524,11 @@ body {
         flex-direction: row;
         align-items: flex-start;
     }
+}
+
+/* Форма внутри секции примера сертификата */
+.service-cert-example__form {
+    margin-top: 48px;
 }
 
 /* ============================================
@@ -10955,7 +11561,7 @@ a.about-accred__card-link:hover {
 /* ==========================================================================
    БАЗОВЫЕ СТИЛИ CF7 ДЛЯ ВСЕХ НОВЫХ ФОРМ
    Эталон — .contact-form (главная страница)
-   Токены: border-radius:8px, border:#D1D5DB, padding:14px 16px, 
+   Токены: border-radius:8px, border:#D1D5DB, padding:14px 16px,
            font-size:16px, submit bg:#183D61, gap:16px
    ========================================================================== */
 
@@ -11102,6 +11708,38 @@ a.about-accred__card-link:hover {
 .form-callback-simple__form .wpcf7-acceptance .wpcf7-list-item-label a:hover,
 .form-application-vertical__form .wpcf7-acceptance .wpcf7-list-item-label a:hover,
 .form-application-horizontal__form .wpcf7-acceptance .wpcf7-list-item-label a:hover {
+    text-decoration: underline;
+}
+
+/* --- Базовые стили .form-acceptance (текст политики конфиденциальности) --- */
+.form-popup__form .form-acceptance,
+.form-consult__form .form-acceptance,
+.form-callback-simple__form .form-acceptance,
+.form-application-vertical__form .form-acceptance,
+.form-application-horizontal__form .form-acceptance,
+.contact-form .form-acceptance {
+    font-size: 13px;
+    color: #6B7280;
+    line-height: 1.5;
+    margin-top: 8px;
+}
+
+.form-popup__form .form-acceptance a,
+.form-consult__form .form-acceptance a,
+.form-callback-simple__form .form-acceptance a,
+.form-application-vertical__form .form-acceptance a,
+.form-application-horizontal__form .form-acceptance a,
+.contact-form .form-acceptance a {
+    color: #0052CC;
+    text-decoration: none;
+}
+
+.form-popup__form .form-acceptance a:hover,
+.form-consult__form .form-acceptance a:hover,
+.form-callback-simple__form .form-acceptance a:hover,
+.form-application-vertical__form .form-acceptance a:hover,
+.form-application-horizontal__form .form-acceptance a:hover,
+.contact-form .form-acceptance a:hover {
     text-decoration: underline;
 }
 
@@ -11465,7 +12103,7 @@ a.about-accred__card-link:hover {
 /* Consult: кнопка — на новую строку, по центру */
 .form-consult__form .form-row .wpcf7-submit {
     flex-basis: 100% !important;
-    max-width: 280px !important;
+    max-width: 400px !important;
     margin: 8px auto 0 !important;
     display: block !important;
 }
@@ -11690,6 +12328,7 @@ a.about-accred__card-link:hover {
     border: 1px solid #E5E7EB;
     max-width: 420px;
     margin: 0 auto;
+	margin-bottom: 50px;
 }
 
 .form-application-vertical__title {
@@ -11725,6 +12364,29 @@ a.about-accred__card-link:hover {
 .form-application-vertical__form form > p,
 .form-application-vertical__form .wpcf7-form > p {
     margin: 0;
+}
+
+/* Vertical: CF7 кладёт поля в один <p> с <br> — делаем flex-column */
+.form-application-vertical__form .wpcf7-form > p:not(.form-acceptance) {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.form-application-vertical__form .wpcf7-form > p > br {
+    display: none;
+}
+
+/* Vertical: текст политики — обычный блок */
+.form-application-vertical__form .wpcf7-form > p.form-acceptance {
+    display: block;
+    text-align: center;
+}
+
+/* Vertical: скрытый response-output не занимает место */
+.form-application-vertical__form .wpcf7-response-output[aria-hidden="true"] {
+    margin: 0;
+    padding: 0;
 }
 
 /* Vertical: кнопка на полную ширину */
@@ -11806,7 +12468,19 @@ a.about-accred__card-link:hover {
 .form-application-horizontal__form p:has(.wpcf7-acceptance) {
     flex-basis: 100% !important;
     text-align: center !important;
-    margin-top: 4px !important;
+    margin-top: 12px !important;
+}
+
+/* Horizontal: текст политики — белый на синем фоне */
+.form-application-horizontal__form .form-acceptance,
+.form-application-horizontal .form-acceptance {
+    color: rgba(255, 255, 255, 0.7) !important;
+    font-size: 13px;
+}
+
+.form-application-horizontal__form .form-acceptance a,
+.form-application-horizontal .form-acceptance a {
+    color: #fff !important;
 }
 
 .form-application-horizontal__form .wpcf7-acceptance .wpcf7-list-item-label {

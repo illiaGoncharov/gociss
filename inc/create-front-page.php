@@ -269,14 +269,15 @@ add_action( 'after_switch_theme', 'gociss_create_primary_menu', 20 );
  * Пункты добавляются как произвольные ссылки.
  * Иконки задаются через CSS-классы: icon-ham, icon-iso, icon-grad, icon-pack, icon-user, icon-file
  * Если страница ещё не создана — ссылка будет вести на 404, пока страница не появится.
+ *
+ * @param bool $force Принудительно пересоздать пункты меню (удаляет старые, создаёт с актуальными URL).
  */
-function gociss_create_services_menu() {
+function gociss_create_services_menu( $force = false ) {
 	$menu_name   = 'Меню услуг';
 	$menu_exists = wp_get_nav_menu_object( $menu_name );
 
-	// Если меню уже существует — не трогаем (пользователь мог настроить)
-	if ( $menu_exists ) {
-		// Просто привязываем к позиции, если ещё не привязано
+	if ( $menu_exists && ! $force ) {
+		// Без принудительного обновления — просто привязываем к позиции, если не привязано
 		$locations = get_theme_mod( 'nav_menu_locations' );
 		if ( empty( $locations['services'] ) ) {
 			$locations['services'] = $menu_exists->term_id;
@@ -285,16 +286,26 @@ function gociss_create_services_menu() {
 		return;
 	}
 
-	$menu_id = wp_create_nav_menu( $menu_name );
-
-	if ( is_wp_error( $menu_id ) ) {
-		return;
+	if ( $menu_exists && $force ) {
+		// Принудительное обновление — удаляем все старые пункты меню
+		$menu_id    = $menu_exists->term_id;
+		$menu_items = wp_get_nav_menu_items( $menu_id );
+		if ( $menu_items ) {
+			foreach ( $menu_items as $menu_item ) {
+				wp_delete_post( $menu_item->ID, true );
+			}
+		}
+	} else {
+		// Создаём новое меню
+		$menu_id = wp_create_nav_menu( $menu_name );
+		if ( is_wp_error( $menu_id ) ) {
+			return;
+		}
 	}
 
-	$service_archive = get_post_type_archive_link( 'gociss_service' );
-	if ( ! $service_archive ) {
-		$service_archive = home_url( '/uslugi/' );
-	}
+	// Архивная ссылка — используем /uslugi/ напрямую, т.к. get_post_type_archive_link()
+	// может вернуть ?post_type=... если rewrite rules ещё не зарегистрированы
+	$service_archive = home_url( '/uslugi/' );
 
 	// Получаем категории из единого источника (theme-setup.php)
 	$nav_categories = gociss_get_nav_service_categories();
@@ -351,6 +362,95 @@ function gociss_create_services_menu() {
 	set_theme_mod( 'nav_menu_locations', $locations );
 }
 add_action( 'after_switch_theme', 'gociss_create_services_menu', 25 );
+
+/**
+ * Создание меню «Футер: Услуги» при активации темы
+ *
+ * Аналогично меню услуг в хедере, но для позиции footer-services.
+ *
+ * @param bool $force Принудительно пересоздать пункты меню.
+ */
+function gociss_create_footer_services_menu( $force = false ) {
+	$menu_name   = 'Футер: Услуги';
+	$menu_exists = wp_get_nav_menu_object( $menu_name );
+
+	if ( $menu_exists && ! $force ) {
+		$locations = get_theme_mod( 'nav_menu_locations' );
+		if ( empty( $locations['footer-services'] ) ) {
+			$locations['footer-services'] = $menu_exists->term_id;
+			set_theme_mod( 'nav_menu_locations', $locations );
+		}
+		return;
+	}
+
+	if ( $menu_exists && $force ) {
+		$menu_id    = $menu_exists->term_id;
+		$menu_items = wp_get_nav_menu_items( $menu_id );
+		if ( $menu_items ) {
+			foreach ( $menu_items as $menu_item ) {
+				wp_delete_post( $menu_item->ID, true );
+			}
+		}
+	} else {
+		$menu_id = wp_create_nav_menu( $menu_name );
+		if ( is_wp_error( $menu_id ) ) {
+			return;
+		}
+	}
+
+	$nav_categories = gociss_get_nav_service_categories();
+
+	$order = 1;
+	foreach ( $nav_categories as $cat ) {
+		$cat_url = gociss_get_service_cat_url( $cat['names'], $cat['slugs'], $cat['slugs'][0] );
+
+		wp_update_nav_menu_item(
+			$menu_id,
+			0,
+			array(
+				'menu-item-title'    => $cat['label'],
+				'menu-item-url'      => $cat_url,
+				'menu-item-type'     => 'custom',
+				'menu-item-status'   => 'publish',
+				'menu-item-position' => $order,
+			)
+		);
+		$order++;
+	}
+
+	// Учебный центр
+	wp_update_nav_menu_item(
+		$menu_id,
+		0,
+		array(
+			'menu-item-title'    => 'Учебный центр',
+			'menu-item-url'      => home_url( '/edu/' ),
+			'menu-item-type'     => 'custom',
+			'menu-item-status'   => 'publish',
+			'menu-item-position' => $order,
+		)
+	);
+	$order++;
+
+	// Все услуги
+	$service_archive = home_url( '/uslugi/' );
+	wp_update_nav_menu_item(
+		$menu_id,
+		0,
+		array(
+			'menu-item-title'    => 'Все услуги',
+			'menu-item-url'      => $service_archive,
+			'menu-item-type'     => 'custom',
+			'menu-item-status'   => 'publish',
+			'menu-item-position' => $order,
+		)
+	);
+
+	$locations                    = get_theme_mod( 'nav_menu_locations' );
+	$locations['footer-services'] = $menu_id;
+	set_theme_mod( 'nav_menu_locations', $locations );
+}
+add_action( 'after_switch_theme', 'gociss_create_footer_services_menu', 26 );
 
 /**
  * Создание страниц и меню вручную (однократный запуск)

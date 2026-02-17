@@ -28,6 +28,36 @@ function gociss_acf_json_load_point( $paths ) {
 add_filter( 'acf/settings/load_json', 'gociss_acf_json_load_point' );
 
 /**
+ * Динамическое заполнение select-полей списком CF7-форм
+ * Применяется к полям выбора формы в секциях cert-example и pricing
+ */
+function gociss_load_cf7_forms_choices( $field ) {
+	// Первый вариант — «Без формы»
+	$field['choices'] = array(
+		'' => '— Без формы —',
+	);
+
+	// Получаем все формы CF7
+	$cf7_forms = get_posts( array(
+		'post_type'      => 'wpcf7_contact_form',
+		'posts_per_page' => -1,
+		'orderby'        => 'title',
+		'order'          => 'ASC',
+	) );
+
+	if ( $cf7_forms ) {
+		foreach ( $cf7_forms as $form ) {
+			$shortcode = sprintf( '[contact-form-7 id="%s" title="%s"]', $form->ID, esc_attr( $form->post_title ) );
+			$field['choices'][ $shortcode ] = $form->post_title;
+		}
+	}
+
+	return $field;
+}
+add_filter( 'acf/load_field/key=field_gociss_service_pricing_form_shortcode', 'gociss_load_cf7_forms_choices' );
+add_filter( 'acf/load_field/key=field_gociss_service_cert_form_shortcode', 'gociss_load_cf7_forms_choices' );
+
+/**
  * Регистрация ACF групп полей
  *
  * Примечание: Этот файл содержит JSON-структуру полей ACF.
@@ -1585,6 +1615,37 @@ function gociss_register_acf_fields() {
 						),
 					),
 				),
+				// Выбор формы для вставки после карточек стоимости
+				array(
+					'key'               => 'field_gociss_service_pricing_form_shortcode',
+					'label'             => 'Форма в секции',
+					'name'              => 'gociss_service_pricing_form_shortcode',
+					'type'              => 'select',
+					'instructions'      => 'Выберите форму CF7 для вставки после карточек стоимости. «Без формы» — форма не показывается.',
+					'choices'           => array(
+						'' => '— Без формы —',
+					),
+					'default_value'     => '',
+					'allow_null'        => 0,
+					'return_format'     => 'value',
+				),
+				array(
+					'key'               => 'field_gociss_service_pricing_form_title',
+					'label'             => 'Заголовок формы',
+					'name'              => 'gociss_service_pricing_form_title',
+					'type'              => 'text',
+					'instructions'      => 'Заголовок над формой. По умолчанию: «Оставить заявку». Оставьте пустым для значения по умолчанию.',
+					'placeholder'       => 'Оставить заявку',
+					'conditional_logic' => array(
+						array(
+							array(
+								'field'    => 'field_gociss_service_pricing_form_shortcode',
+								'operator' => '!=',
+								'value'    => '',
+							),
+						),
+					),
+				),
 			),
 			'location'              => array(
 				array(
@@ -1592,6 +1653,13 @@ function gociss_register_acf_fields() {
 						'param'    => 'page_template',
 						'operator' => '==',
 						'value'    => 'page-service.php',
+					),
+				),
+				array(
+					array(
+						'param'    => 'post_type',
+						'operator' => '==',
+						'value'    => 'gociss_service',
 					),
 				),
 			),
@@ -1869,6 +1937,13 @@ function gociss_register_acf_fields() {
 						'value'    => 'page-service.php',
 					),
 				),
+				array(
+					array(
+						'param'    => 'post_type',
+						'operator' => '==',
+						'value'    => 'gociss_service',
+					),
+				),
 			),
 			'menu_order'            => 2,
 		)
@@ -2104,6 +2179,13 @@ function gociss_register_acf_fields() {
 						'param'    => 'page_template',
 						'operator' => '==',
 						'value'    => 'page-service.php',
+					),
+				),
+				array(
+					array(
+						'param'    => 'post_type',
+						'operator' => '==',
+						'value'    => 'gociss_service',
 					),
 				),
 			),
@@ -2628,28 +2710,78 @@ function gociss_register_service_acf_fields() {
 					'preview_size'      => 'medium',
 					'library'           => 'all',
 				),
+			array(
+				'key'               => 'field_gociss_service_hero_subtitle',
+				'label'             => 'Подзаголовок hero-секции',
+				'name'              => 'gociss_service_hero_subtitle',
+				'type'              => 'text',
+				'instructions'      => 'Например: "Комплексная поддержка на всех этапах"',
+			),
+			array(
+				'key'               => 'field_gociss_service_hero_title_base',
+				'label'             => 'Заголовок hero секции (общий для всех регионов)',
+				'name'              => 'gociss_service_hero_title_base',
+				'type'              => 'textarea',
+				'rows'              => 2,
+				'instructions'      => 'Базовый заголовок hero-секции. Регион добавляется автоматически. Пример: "Сертификация ISO 45001" → на сайте: "Сертификация ISO 45001 в Москве в аккредитованном органе без посредников и переплат". Если не заполнено — используется название записи.',
+			),
+			// Поинты hero секции (общие для всех регионов)
+			array(
+				'key'               => 'field_gociss_service_bullet_1',
+				'label'             => 'Поинт 1',
+				'name'              => 'gociss_service_bullet_1',
+				'type'              => 'text',
+				'instructions'      => 'Поинты отображаются в hero секции после подзаголовка. Если все пусты — используются значения по умолчанию.',
+				'placeholder'       => 'Государственная аккредитация',
+			),
+			array(
+				'key'               => 'field_gociss_service_bullet_2',
+				'label'             => 'Поинт 2',
+				'name'              => 'gociss_service_bullet_2',
+				'type'              => 'text',
+				'placeholder'       => 'Официальное оформление',
+			),
+			array(
+				'key'               => 'field_gociss_service_bullet_3',
+				'label'             => 'Поинт 3',
+				'name'              => 'gociss_service_bullet_3',
+				'type'              => 'text',
+				'placeholder'       => 'Короткие сроки получения',
+			),
+			array(
+				'key'               => 'field_gociss_service_bullet_4',
+				'label'             => 'Поинт 4',
+				'name'              => 'gociss_service_bullet_4',
+				'type'              => 'text',
+				'placeholder'       => 'Работаем по всей России',
+			),
+			array(
+				'key'               => 'field_gociss_service_bullet_5',
+				'label'             => 'Поинт 5',
+				'name'              => 'gociss_service_bullet_5',
+				'type'              => 'text',
+			),
+			array(
+				'key'               => 'field_gociss_service_bullet_6',
+				'label'             => 'Поинт 6',
+				'name'              => 'gociss_service_bullet_6',
+				'type'              => 'text',
+			),
+		),
+		'location'              => array(
+			array(
 				array(
-					'key'               => 'field_gociss_service_hero_subtitle',
-					'label'             => 'Подзаголовок hero-секции',
-					'name'              => 'gociss_service_hero_subtitle',
-					'type'              => 'text',
-					'instructions'      => 'Например: "Комплексная поддержка на всех этапах"',
+					'param'    => 'post_type',
+					'operator' => '==',
+					'value'    => 'gociss_service',
 				),
 			),
-			'location'              => array(
-				array(
-					array(
-						'param'    => 'post_type',
-						'operator' => '==',
-						'value'    => 'gociss_service',
-					),
-				),
-			),
-			'menu_order'            => 0,
-			'position'              => 'normal',
-			'style'                 => 'default',
-		)
-	);
+		),
+		'menu_order'            => 0,
+		'position'              => 'normal',
+		'style'                 => 'default',
+	)
+);
 
 	// Секция аккредитации для услуг
 	acf_add_local_field_group(
@@ -2829,13 +2961,15 @@ function gociss_register_service_acf_fields() {
 			'key'                   => 'group_gociss_service_cert_example',
 			'title'                 => 'Секция "Пример сертификата"',
 			'fields'                => array(
-				array(
-					'key'               => 'field_gociss_service_cert_title',
-					'label'             => 'Заголовок секции',
-					'name'              => 'gociss_service_cert_title',
-					'type'              => 'text',
-					'instructions'      => 'Например: "Сертификат ISO 45001". Если не заполнено, используется название услуги',
-				),
+			array(
+				'key'               => 'field_gociss_service_cert_title',
+				'label'             => 'Заголовок секции',
+				'name'              => 'gociss_service_cert_title',
+				'type'              => 'wysiwyg',
+				'instructions'      => 'Например: "Сертификат ISO 45001". Если не заполнено, используется название услуги. Поддерживает форматирование.',
+				'toolbar'           => 'basic',
+				'media_upload'      => 0,
+			),
 				array(
 					'key'               => 'field_gociss_service_cert_description',
 					'label'             => 'Описание сертификата',
@@ -2951,6 +3085,37 @@ function gociss_register_service_acf_fields() {
 							'name'  => 'description',
 							'type'  => 'textarea',
 							'rows'  => 3,
+						),
+					),
+				),
+				// Выбор формы для вставки после основного контента секции
+				array(
+					'key'               => 'field_gociss_service_cert_form_shortcode',
+					'label'             => 'Форма в секции',
+					'name'              => 'gociss_service_cert_form_shortcode',
+					'type'              => 'select',
+					'instructions'      => 'Выберите форму CF7 для вставки после контента секции. «Без формы» — форма не показывается.',
+					'choices'           => array(
+						'' => '— Без формы —',
+					),
+					'default_value'     => '',
+					'allow_null'        => 0,
+					'return_format'     => 'value',
+				),
+				array(
+					'key'               => 'field_gociss_service_cert_form_title',
+					'label'             => 'Заголовок формы',
+					'name'              => 'gociss_service_cert_form_title',
+					'type'              => 'text',
+					'instructions'      => 'Заголовок над формой. По умолчанию: «Оставить заявку». Оставьте пустым для значения по умолчанию.',
+					'placeholder'       => 'Оставить заявку',
+					'conditional_logic' => array(
+						array(
+							array(
+								'field'    => 'field_gociss_service_cert_form_shortcode',
+								'operator' => '!=',
+								'value'    => '',
+							),
 						),
 					),
 				),

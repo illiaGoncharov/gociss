@@ -183,20 +183,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 				</button>
 			<nav class="header-services__nav">
 					<?php
-					// Меню услуг — настраивается в Внешний вид → Меню → «Меню услуг (синяя панель)»
-					// Иконки задаются через CSS-классы пунктов: icon-ham, icon-iso, icon-grad, icon-pack, icon-user, icon-file
-					wp_nav_menu(
-						array(
-							'theme_location' => 'services',
-							'container'      => false,
-							'items_wrap'     => '%3$s',
-							'walker'         => new Gociss_Services_Walker(),
-							'link_class'     => 'header-services__item',
-							'icon_class'     => 'header-services__icon',
-							'text_class'     => 'header-services__text',
-							'fallback_cb'    => 'gociss_services_menu_fallback',
-						)
-					);
+					// Меню услуг — рендерится динамически из gociss_get_nav_service_categories()
+					// URL генерируются при каждой загрузке, без зависимости от сохранённых пунктов меню в БД
+					gociss_render_services_nav( 'desktop' );
 					?>
 				</nav>
 			</div>
@@ -259,19 +248,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 					<h3 class="header-mobile-menu__services-title">Услуги</h3>
 					<nav class="header-mobile-menu__services-nav">
 						<?php
-						// Мобильная версия — то же меню услуг, другие CSS-классы
-						wp_nav_menu(
-							array(
-								'theme_location' => 'services',
-								'container'      => false,
-								'items_wrap'     => '%3$s',
-								'walker'         => new Gociss_Services_Walker(),
-								'link_class'     => 'header-mobile-menu__services-item',
-								'icon_class'     => 'header-mobile-menu__services-icon',
-								'text_class'     => '',
-								'fallback_cb'    => 'gociss_services_menu_fallback_mobile',
-							)
-						);
+						// Мобильная версия — динамический рендер, как и десктоп
+						gociss_render_services_nav( 'mobile' );
 						?>
 					</nav>
 				</div>
