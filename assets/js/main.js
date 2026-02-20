@@ -926,6 +926,7 @@
                 expires.setTime(expires.getTime() + 30 * 24 * 60 * 60 * 1000);
                 document.cookie = 'gociss_selected_region=spb; path=/; expires=' + expires.toUTCString();
                 tooltip.style.display = 'none';
+                location.reload();
             });
         }
 

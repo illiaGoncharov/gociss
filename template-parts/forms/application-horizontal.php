@@ -38,11 +38,6 @@ if ( isset( $args['service_name'] ) && ! empty( $args['service_name'] ) ) {
 					echo '<p style="color: rgba(255,255,255,0.8); font-size: 14px;">Укажите шорткод формы в <strong>Внешний вид → Формы → Онлайн заявка горизонтальная</strong></p>';
 				}
 				?>
-				<p class="form-acceptance"><?php echo wp_kses_post( sprintf(
-					/* translators: %s — ссылка на политику конфиденциальности */
-					__( 'При нажатии на кнопку "Отправить" Вы даёте своё согласие на <a href="%s" target="_blank">обработку персональных данных</a>', 'gociss' ),
-					esc_url( get_privacy_policy_url() ? get_privacy_policy_url() : '/privacy-policy/' )
-				) ); ?></p>
 			</div>
 		</div>
 	</div>

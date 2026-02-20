@@ -29,15 +29,13 @@ add_filter( 'acf/settings/load_json', 'gociss_acf_json_load_point' );
 
 /**
  * Динамическое заполнение select-полей списком CF7-форм
- * Применяется к полям выбора формы в секциях cert-example и pricing
+ * Значение — числовой ID формы (не шорткод), label — название формы
  */
 function gociss_load_cf7_forms_choices( $field ) {
-	// Первый вариант — «Без формы»
 	$field['choices'] = array(
 		'' => '— Без формы —',
 	);
 
-	// Получаем все формы CF7
 	$cf7_forms = get_posts( array(
 		'post_type'      => 'wpcf7_contact_form',
 		'posts_per_page' => -1,
@@ -47,8 +45,7 @@ function gociss_load_cf7_forms_choices( $field ) {
 
 	if ( $cf7_forms ) {
 		foreach ( $cf7_forms as $form ) {
-			$shortcode = sprintf( '[contact-form-7 id="%s" title="%s"]', $form->ID, esc_attr( $form->post_title ) );
-			$field['choices'][ $shortcode ] = $form->post_title;
+			$field['choices'][ $form->ID ] = $form->post_title;
 		}
 	}
 
@@ -56,6 +53,25 @@ function gociss_load_cf7_forms_choices( $field ) {
 }
 add_filter( 'acf/load_field/key=field_gociss_service_pricing_form_shortcode', 'gociss_load_cf7_forms_choices' );
 add_filter( 'acf/load_field/key=field_gociss_service_cert_form_shortcode', 'gociss_load_cf7_forms_choices' );
+
+/**
+ * Хелпер: получить шорткод CF7 по значению ACF-поля (ID или готовый шорткод)
+ */
+function gociss_get_cf7_shortcode( $value ) {
+	if ( empty( $value ) ) {
+		return '';
+	}
+	$value = (string) $value;
+	// Если это уже шорткод — возвращаем как есть (обратная совместимость)
+	if ( strpos( $value, '[contact-form-7' ) !== false ) {
+		return $value;
+	}
+	// Числовой ID — строим шорткод
+	if ( is_numeric( $value ) ) {
+		return sprintf( '[contact-form-7 id="%d"]', (int) $value );
+	}
+	return '';
+}
 
 /**
  * Регистрация ACF групп полей

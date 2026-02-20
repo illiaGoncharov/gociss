@@ -153,11 +153,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 						</div>
 					</div>
 					<div class="site-footer__social">
-						<a href="#" class="site-footer__social-link" aria-label="Telegram">
+						<a href="https://t.me/+79062622952" class="site-footer__social-link" target="_blank" rel="noopener noreferrer" aria-label="Telegram">
 							<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/social_tg.svg' ); ?>" alt="Telegram">
 						</a>
-						<a href="#" class="site-footer__social-link" aria-label="WhatsApp">
+						<a href="https://api.whatsapp.com/send?phone=79062622952" class="site-footer__social-link" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
 							<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/social_wu.svg' ); ?>" alt="WhatsApp">
+						</a>
+						<a href="http://vk.com/gociss" class="site-footer__social-link" target="_blank" rel="noopener noreferrer" aria-label="ВКонтакте">
+							<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/social_vk.svg' ); ?>" alt="ВКонтакте">
 						</a>
 					</div>
 				</div>

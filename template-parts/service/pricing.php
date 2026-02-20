@@ -22,7 +22,8 @@ $pricing_subtitle = function_exists( 'gociss_get_regional_field' )
 	? gociss_get_regional_field( 'gociss_region_pricing_subtitle', 'gociss_service_pricing_subtitle' )
 	: ( function_exists( 'get_field' ) ? get_field( 'gociss_service_pricing_subtitle' ) : '' );
 
-$pricing_form_shortcode = function_exists( 'get_field' ) ? get_field( 'gociss_service_pricing_form_shortcode' ) : '';
+$pricing_form_raw       = function_exists( 'get_field' ) ? get_field( 'gociss_service_pricing_form_shortcode' ) : '';
+$pricing_form_shortcode = function_exists( 'gociss_get_cf7_shortcode' ) ? gociss_get_cf7_shortcode( $pricing_form_raw ) : $pricing_form_raw;
 
 // Собираем карточки из отдельных group полей
 $pricing_items = array();
@@ -148,8 +149,13 @@ if ( empty( $pricing_items ) ) {
 			}
 			?>
 			<div class="service-pricing__form">
-				<h3 class="service-pricing__form-title"><?php echo esc_html( $pricing_form_title ); ?></h3>
-				<?php echo do_shortcode( $pricing_form_shortcode ); ?>
+				<?php
+				get_template_part( 'template-parts/forms/embedded-consult', null, array(
+					'shortcode' => $pricing_form_shortcode,
+					'title'     => $pricing_form_title,
+					'form_id'   => $pricing_form_raw,
+				) );
+				?>
 			</div>
 		<?php endif; ?>
 	</div>

@@ -17,7 +17,7 @@ $service_short_desc = function_exists( 'get_field' ) ? get_field( 'gociss_servic
 
 // Мультирегиональность: получаем текущий регион из URL
 $current_region = function_exists( 'gociss_get_current_region' ) ? gociss_get_current_region() : null;
-$region_name    = $current_region ? $current_region->name : '';
+$region_name    = $current_region ? $current_region->name : 'Санкт-Петербург';
 
 // Получаем категории услуги для breadcrumbs
 $service_terms = get_the_terms( get_the_ID(), 'gociss_service_cat' );
@@ -149,14 +149,8 @@ if ( $service_banner && ! empty( $service_banner['url'] ) ) {
 			<span class="breadcrumbs__separator">→</span>
 			<a href="<?php echo esc_url( get_term_link( $primary_term ) ); ?>"><?php echo esc_html( $primary_term->name ); ?></a>
 		<?php endif; ?>
-		<span class="breadcrumbs__separator">→</span>
-		<?php if ( $current_region ) : ?>
-			<a href="<?php echo esc_url( get_permalink() ); ?>"><?php echo esc_html( get_the_title() ); ?></a>
-			<span class="breadcrumbs__separator">→</span>
-			<span class="breadcrumbs__current"><?php echo esc_html( $current_region->name ); ?></span>
-		<?php else : ?>
-			<span class="breadcrumbs__current"><?php echo esc_html( get_the_title() ); ?></span>
-		<?php endif; ?>
+	<span class="breadcrumbs__separator">→</span>
+	<span class="breadcrumbs__current"><?php echo esc_html( get_the_title() ); ?></span>
 	</nav>
 	</div>
 

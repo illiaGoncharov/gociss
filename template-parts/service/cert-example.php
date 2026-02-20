@@ -15,7 +15,8 @@ $cert_title       = function_exists( 'get_field' ) ? get_field( 'gociss_service_
 $cert_description = function_exists( 'get_field' ) ? get_field( 'gociss_service_cert_description' ) : '';
 $cert_btn_text    = function_exists( 'get_field' ) ? get_field( 'gociss_service_cert_btn_text' ) : '';
 $cert_image          = function_exists( 'get_field' ) ? get_field( 'gociss_service_cert_image' ) : null;
-$cert_form_shortcode = function_exists( 'get_field' ) ? get_field( 'gociss_service_cert_form_shortcode' ) : '';
+$cert_form_raw       = function_exists( 'get_field' ) ? get_field( 'gociss_service_cert_form_shortcode' ) : '';
+$cert_form_shortcode = function_exists( 'gociss_get_cf7_shortcode' ) ? gociss_get_cf7_shortcode( $cert_form_raw ) : $cert_form_raw;
 
 // Собираем пункты расшифровки
 $cert_points = array();
@@ -97,8 +98,13 @@ if ( ! $cert_btn_text ) {
 			}
 			?>
 			<div class="service-cert-example__form">
-				<h3 class="service-cert-example__form-title"><?php echo esc_html( $cert_form_title ); ?></h3>
-				<?php echo do_shortcode( $cert_form_shortcode ); ?>
+				<?php
+				get_template_part( 'template-parts/forms/embedded-consult', null, array(
+					'shortcode' => $cert_form_shortcode,
+					'title'     => $cert_form_title,
+					'form_id'   => $cert_form_raw,
+				) );
+				?>
 			</div>
 		<?php endif; ?>
 	</div>
