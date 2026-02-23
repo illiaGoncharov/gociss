@@ -147,16 +147,49 @@ if ( empty( $pricing_items ) ) {
 			if ( ! $pricing_form_title ) {
 				$pricing_form_title = 'Оставить заявку';
 			}
+			$pricing_design = 'default';
+			if ( $pricing_form_raw && is_numeric( $pricing_form_raw ) && function_exists( 'gociss_detect_form_design' ) ) {
+				$pricing_design = gociss_detect_form_design( (int) $pricing_form_raw );
+			}
 			?>
-			<div class="service-pricing__form">
-				<?php
-				get_template_part( 'template-parts/forms/embedded-consult', null, array(
-					'shortcode' => $pricing_form_shortcode,
-					'title'     => $pricing_form_title,
-					'form_id'   => $pricing_form_raw,
-				) );
-				?>
-			</div>
+			<?php
+			switch ( $pricing_design ) {
+				case 'consult':
+					echo '<div class="service-pricing__form">';
+					get_template_part( 'template-parts/forms/embedded-consult', null, array(
+						'shortcode'  => $pricing_form_shortcode,
+						'title'      => $pricing_form_title,
+						'form_id'    => $pricing_form_raw,
+						'is_consult' => true,
+					) );
+					echo '</div>';
+					break;
+				case 'horizontal':
+					get_template_part( 'template-parts/forms/application-horizontal', null, array(
+						'cf7_shortcode' => $pricing_form_shortcode,
+					) );
+					break;
+				case 'callback':
+					get_template_part( 'template-parts/forms/callback-simple', null, array(
+						'cf7_shortcode' => $pricing_form_shortcode,
+					) );
+					break;
+				case 'vertical':
+					get_template_part( 'template-parts/forms/application-vertical', null, array(
+						'cf7_shortcode' => $pricing_form_shortcode,
+					) );
+					break;
+				default:
+					echo '<div class="service-pricing__form">';
+					get_template_part( 'template-parts/forms/embedded-consult', null, array(
+						'shortcode' => $pricing_form_shortcode,
+						'title'     => $pricing_form_title,
+						'form_id'   => $pricing_form_raw,
+					) );
+					echo '</div>';
+					break;
+			}
+			?>
 		<?php endif; ?>
 	</div>
 </section>

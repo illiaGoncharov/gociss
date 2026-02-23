@@ -96,16 +96,49 @@ if ( ! $cert_btn_text ) {
 			if ( ! $cert_form_title ) {
 				$cert_form_title = 'Оставить заявку';
 			}
+			$cert_design = 'default';
+			if ( $cert_form_raw && is_numeric( $cert_form_raw ) && function_exists( 'gociss_detect_form_design' ) ) {
+				$cert_design = gociss_detect_form_design( (int) $cert_form_raw );
+			}
 			?>
-			<div class="service-cert-example__form">
-				<?php
-				get_template_part( 'template-parts/forms/embedded-consult', null, array(
-					'shortcode' => $cert_form_shortcode,
-					'title'     => $cert_form_title,
-					'form_id'   => $cert_form_raw,
-				) );
-				?>
-			</div>
+			<?php
+			switch ( $cert_design ) {
+				case 'consult':
+					echo '<div class="service-cert-example__form">';
+					get_template_part( 'template-parts/forms/embedded-consult', null, array(
+						'shortcode'  => $cert_form_shortcode,
+						'title'      => $cert_form_title,
+						'form_id'    => $cert_form_raw,
+						'is_consult' => true,
+					) );
+					echo '</div>';
+					break;
+				case 'horizontal':
+					get_template_part( 'template-parts/forms/application-horizontal', null, array(
+						'cf7_shortcode' => $cert_form_shortcode,
+					) );
+					break;
+				case 'callback':
+					get_template_part( 'template-parts/forms/callback-simple', null, array(
+						'cf7_shortcode' => $cert_form_shortcode,
+					) );
+					break;
+				case 'vertical':
+					get_template_part( 'template-parts/forms/application-vertical', null, array(
+						'cf7_shortcode' => $cert_form_shortcode,
+					) );
+					break;
+				default:
+					echo '<div class="service-cert-example__form">';
+					get_template_part( 'template-parts/forms/embedded-consult', null, array(
+						'shortcode' => $cert_form_shortcode,
+						'title'     => $cert_form_title,
+						'form_id'   => $cert_form_raw,
+					) );
+					echo '</div>';
+					break;
+			}
+			?>
 		<?php endif; ?>
 	</div>
 </section>

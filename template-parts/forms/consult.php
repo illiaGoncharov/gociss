@@ -12,8 +12,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-// Данные из настроек (Внешний вид → Формы) или ACF Options
-$consult_shortcode = function_exists( 'gociss_form_option' ) ? gociss_form_option( 'gociss_form_consult_shortcode' ) : get_option( 'gociss_form_consult_shortcode', '' );
+// Override из диспетчера (form.php передаёт cf7_shortcode выбранной формы)
+$consult_shortcode = ! empty( $args['cf7_shortcode'] ) ? $args['cf7_shortcode'] : '';
+
+// Fallback: настройки (Внешний вид → Формы)
+if ( ! $consult_shortcode ) {
+	$consult_shortcode = function_exists( 'gociss_form_option' ) ? gociss_form_option( 'gociss_form_consult_shortcode' ) : get_option( 'gociss_form_consult_shortcode', '' );
+}
 $consult_photo     = function_exists( 'gociss_form_option' ) ? gociss_form_option( 'gociss_form_consult_photo' ) : get_option( 'gociss_form_consult_photo', '' );
 $consult_name      = function_exists( 'gociss_form_option' ) ? gociss_form_option( 'gociss_form_consult_name' ) : get_option( 'gociss_form_consult_name', '' );
 

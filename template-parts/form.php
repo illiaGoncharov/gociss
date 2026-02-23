@@ -2,10 +2,10 @@
 /**
  * Форма обратной связи — диспетчер вариантов
  *
- * Логика:
- * 1. Проверяем ACF-поле gociss_form_variant на странице
- * 2. Если variant != 'default' — рендерим кастомный шаблон
- * 3. Если 'default' или пусто — рендерим основную форму .contact-form
+ * Приоритет:
+ * 1. Шорткод (gociss_form_shortcode) — если заполнен, рендерим его напрямую
+ * 2. Вариант формы (gociss_form_variant) — ID формы CF7, дизайн по названию
+ * 3. Основная форма из настроек темы (fallback)
  *
  * @package Gociss
  */
@@ -14,49 +14,69 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-// Определяем вариант формы из ACF (или default)
-$form_variant = function_exists( 'get_field' ) ? get_field( 'gociss_form_variant' ) : '';
-if ( ! $form_variant ) {
-	$form_variant = 'default';
+// === Приоритет 1: пользовательский шорткод ===
+$form_shortcode = function_exists( 'get_field' ) ? get_field( 'gociss_form_shortcode' ) : '';
+
+if ( $form_shortcode ) {
+	echo do_shortcode( $form_shortcode );
+	return;
 }
 
-// Кастомные варианты — рендерим соответствующий шаблон и выходим
-switch ( $form_variant ) {
+// === Приоритет 2: выбор формы из списка CF7 ===
+$form_variant_raw = function_exists( 'get_field' ) ? get_field( 'gociss_form_variant' ) : '';
+
+$legacy_keys = array( 'consult', 'callback', 'vertical', 'horizontal' );
+
+if ( in_array( $form_variant_raw, $legacy_keys, true ) ) {
+	$design       = $form_variant_raw;
+	$cf7_shortcode = '';
+} elseif ( $form_variant_raw && is_numeric( $form_variant_raw ) ) {
+	$design        = function_exists( 'gociss_detect_form_design' )
+		? gociss_detect_form_design( (int) $form_variant_raw )
+		: 'default';
+	$cf7_shortcode = function_exists( 'gociss_get_cf7_shortcode' )
+		? gociss_get_cf7_shortcode( $form_variant_raw )
+		: '';
+} else {
+	$design        = 'default';
+	$cf7_shortcode = '';
+}
+
+$template_args = array( 'cf7_shortcode' => $cf7_shortcode );
+
+switch ( $design ) {
 	case 'consult':
-		get_template_part( 'template-parts/forms/consult' );
+		get_template_part( 'template-parts/forms/consult', null, $template_args );
 		return;
 
 	case 'callback':
-		get_template_part( 'template-parts/forms/callback-simple' );
+		get_template_part( 'template-parts/forms/callback-simple', null, $template_args );
 		return;
 
 	case 'vertical':
-		get_template_part( 'template-parts/forms/application-vertical' );
+		get_template_part( 'template-parts/forms/application-vertical', null, $template_args );
 		return;
 
 	case 'horizontal':
-		get_template_part( 'template-parts/forms/application-horizontal' );
+		get_template_part( 'template-parts/forms/application-horizontal', null, $template_args );
 		return;
 }
 
-// === Вариант «По умолчанию» — основная форма .contact-form ===
+// === Приоритет 3: основная форма (дизайн «По умолчанию») ===
 
-// Данные из ACF страницы (менеджер может переопределить)
 $form_label       = function_exists( 'get_field' ) ? get_field( 'gociss_form_label' ) : '';
 $form_title       = function_exists( 'get_field' ) ? get_field( 'gociss_form_title' ) : '';
 $form_description = function_exists( 'get_field' ) ? get_field( 'gociss_form_description' ) : '';
-$form_shortcode   = function_exists( 'get_field' ) ? get_field( 'gociss_form_shortcode' ) : '';
 
-// Fallback: настройки темы → старый ключ → хардкод формы «Главная»
-if ( ! $form_shortcode ) {
-	$form_shortcode = function_exists( 'gociss_form_option' ) ? gociss_form_option( 'gociss_form_default_shortcode' ) : get_option( 'gociss_form_default_shortcode', '' );
+$default_shortcode = $cf7_shortcode;
+
+if ( ! $default_shortcode ) {
+	$default_shortcode = function_exists( 'gociss_form_option' ) ? gociss_form_option( 'gociss_form_default_shortcode' ) : get_option( 'gociss_form_default_shortcode', '' );
 }
-if ( ! $form_shortcode ) {
-	// Совместимость: старый ключ из предыдущей версии настроек
-	$form_shortcode = function_exists( 'gociss_form_option' ) ? gociss_form_option( 'gociss_form_consult_shortcode' ) : get_option( 'gociss_form_consult_shortcode', '' );
+if ( ! $default_shortcode ) {
+	$default_shortcode = function_exists( 'gociss_form_option' ) ? gociss_form_option( 'gociss_form_consult_shortcode' ) : get_option( 'gociss_form_consult_shortcode', '' );
 }
 
-// Заглушки текстов
 if ( ! $form_label ) {
 	$form_label = 'Связаться с нами';
 }
@@ -86,8 +106,8 @@ if ( ! $form_description ) {
 
 		<div class="contact-form__wrapper">
 			<?php
-			if ( $form_shortcode ) {
-				echo do_shortcode( $form_shortcode );
+			if ( $default_shortcode ) {
+				echo do_shortcode( $default_shortcode );
 			}
 			?>
 		</div>

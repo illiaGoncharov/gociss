@@ -22,35 +22,48 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$shortcode = ! empty( $args['shortcode'] ) ? $args['shortcode'] : '';
-$title     = ! empty( $args['title'] ) ? $args['title'] : '';
-$form_id   = ! empty( $args['form_id'] ) ? (int) $args['form_id'] : 0;
+$shortcode  = ! empty( $args['shortcode'] ) ? $args['shortcode'] : '';
+$title      = ! empty( $args['title'] ) ? $args['title'] : '';
+$form_id    = ! empty( $args['form_id'] ) ? (int) $args['form_id'] : 0;
+$is_consult = ! empty( $args['is_consult'] );
+
+// Fallback: извлекаем ID из шорткода (для старых значений-строк)
+if ( ! $form_id && $shortcode && preg_match( '/id=["\']?(\d+)/', $shortcode, $m ) ) {
+	$form_id = (int) $m[1];
+}
 
 if ( ! $shortcode ) {
 	return;
 }
 
-// Определяем, является ли выбранная форма «Готовы проконсультировать»
+// Если флаг не передан явно — определяем по названию CF7-формы
+if ( ! $is_consult && $form_id > 0 ) {
+	$form_post = get_post( $form_id );
+	if ( $form_post ) {
+		$title_lower = mb_strtolower( $form_post->post_title );
+		$is_consult  = ( mb_strpos( $title_lower, 'консульт' ) !== false
+						|| strpos( $title_lower, 'consult' ) !== false );
+	}
+}
+
 $consult_photo = '';
 $consult_name  = '';
 
-if ( $form_id > 0 && function_exists( 'gociss_form_option' ) ) {
-	$consult_sc = gociss_form_option( 'gociss_form_consult_shortcode' );
-	$form_post  = get_post( $form_id );
-	$is_consult = false;
-
-	if ( $form_post && $consult_sc ) {
-		// Сравниваем по названию формы — самый надёжный способ
-		$is_consult = ( strpos( $consult_sc, $form_post->post_title ) !== false );
-	}
-
-	if ( $is_consult ) {
+if ( $is_consult ) {
+	if ( function_exists( 'gociss_form_option' ) ) {
 		$consult_photo = gociss_form_option( 'gociss_form_consult_photo' );
 		$consult_name  = gociss_form_option( 'gociss_form_consult_name' );
-		if ( ! $consult_name ) {
-			$consult_name = 'Специалист-консультант';
+	}
+
+	if ( ! $consult_photo ) {
+		$fallback_path = get_template_directory() . '/assets/images/forms/consultant.jpg';
+		if ( file_exists( $fallback_path ) ) {
+			$consult_photo = get_template_directory_uri() . '/assets/images/forms/consultant.jpg';
 		}
 	}
+}
+if ( ! $consult_name ) {
+	$consult_name = 'Специалист-консультант';
 }
 ?>
 
