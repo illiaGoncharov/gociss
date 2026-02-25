@@ -2742,6 +2742,13 @@ function gociss_register_acf_fields() {
 						'value'    => 'page-service.php',
 					),
 				),
+				array(
+					array(
+						'param'    => 'post_type',
+						'operator' => '==',
+						'value'    => 'gociss_service',
+					),
+				),
 			),
 			'menu_order'            => 5,
 		)
@@ -2897,6 +2904,50 @@ function gociss_register_service_acf_fields() {
 				'name'              => 'gociss_service_bullet_6',
 				'type'              => 'text',
 			),
+			array(
+				'key'               => 'field_gociss_service_btn_primary',
+				'label'             => 'Основная кнопка hero (залитая)',
+				'name'              => 'gociss_service_hero_btn_primary',
+				'type'              => 'group',
+				'sub_fields'        => array(
+					array(
+						'key'   => 'field_gociss_service_btn_primary_text',
+						'label' => 'Текст',
+						'name'  => 'text',
+						'type'  => 'text',
+						'placeholder' => 'Обратный звонок',
+					),
+					array(
+						'key'   => 'field_gociss_service_btn_primary_url',
+						'label' => 'Ссылка',
+						'name'  => 'url',
+						'type'  => 'text',
+						'placeholder' => '#form',
+					),
+				),
+			),
+			array(
+				'key'               => 'field_gociss_service_btn_secondary',
+				'label'             => 'Вторичная кнопка hero (с рамкой)',
+				'name'              => 'gociss_service_hero_btn_secondary',
+				'type'              => 'group',
+				'sub_fields'        => array(
+					array(
+						'key'   => 'field_gociss_service_btn_secondary_text',
+						'label' => 'Текст',
+						'name'  => 'text',
+						'type'  => 'text',
+						'placeholder' => 'Рассчитать стоимость',
+					),
+					array(
+						'key'   => 'field_gociss_service_btn_secondary_url',
+						'label' => 'Ссылка',
+						'name'  => 'url',
+						'type'  => 'text',
+						'placeholder' => '#pricing',
+					),
+				),
+			),
 		),
 		'location'              => array(
 			array(
@@ -3031,6 +3082,23 @@ function gociss_register_service_acf_fields() {
 						),
 					),
 				),
+				array(
+					'key'               => 'field_gociss_accreditation_button_url',
+					'label'             => 'Ссылка кнопки',
+					'name'              => 'gociss_accreditation_button_url',
+					'type'              => 'text',
+					'default_value'     => '#form',
+					'instructions'      => 'Якорь (#form, #pricing) или полный URL',
+					'conditional_logic' => array(
+						array(
+							array(
+								'field'    => 'field_gociss_accreditation_show',
+								'operator' => '==',
+								'value'    => '1',
+							),
+						),
+					),
+				),
 			),
 			'location'              => array(
 				array(
@@ -3115,7 +3183,14 @@ function gociss_register_service_acf_fields() {
 					'name'              => 'gociss_service_cert_btn_text',
 					'type'              => 'text',
 					'default_value'     => 'Бесплатная консультация',
-					'instructions'      => 'Кнопка ведёт на форму (#form)',
+				),
+				array(
+					'key'               => 'field_gociss_service_cert_btn_url',
+					'label'             => 'Ссылка кнопки',
+					'name'              => 'gociss_service_cert_btn_url',
+					'type'              => 'text',
+					'default_value'     => '#form',
+					'instructions'      => 'Якорь (#form, #pricing) или полный URL',
 				),
 				array(
 					'key'               => 'field_gociss_service_cert_image',

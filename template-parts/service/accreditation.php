@@ -26,6 +26,7 @@ $accreditation_info_blocks = function_exists( 'get_field' ) ? get_field( 'gociss
 $accreditation_cert_image  = function_exists( 'get_field' ) ? get_field( 'gociss_accreditation_cert_image' ) : null;
 $accreditation_text        = function_exists( 'get_field' ) ? get_field( 'gociss_accreditation_text' ) : '';
 $accreditation_button_text = function_exists( 'get_field' ) ? get_field( 'gociss_accreditation_button_text' ) : '';
+$accreditation_button_url  = function_exists( 'get_field' ) ? get_field( 'gociss_accreditation_button_url' ) : '';
 
 // Заглушки
 if ( ! $accreditation_title ) {
@@ -34,6 +35,9 @@ if ( ! $accreditation_title ) {
 
 if ( ! $accreditation_button_text ) {
 	$accreditation_button_text = 'Заказать звонок';
+}
+if ( ! $accreditation_button_url ) {
+	$accreditation_button_url = '#form';
 }
 
 // Заглушки для информационных блоков
@@ -100,7 +104,7 @@ if ( ! $accreditation_text ) {
 				<?php endif; ?>
 
 				<div class="accreditation__button">
-					<a href="#form" class="btn btn--primary">
+					<a href="<?php echo esc_url( $accreditation_button_url ); ?>" class="btn btn--primary">
 						<?php echo esc_html( $accreditation_button_text ); ?>
 					</a>
 				</div>

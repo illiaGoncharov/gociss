@@ -14,6 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 $cert_title       = function_exists( 'get_field' ) ? get_field( 'gociss_service_cert_title' ) : '';
 $cert_description = function_exists( 'get_field' ) ? get_field( 'gociss_service_cert_description' ) : '';
 $cert_btn_text    = function_exists( 'get_field' ) ? get_field( 'gociss_service_cert_btn_text' ) : '';
+$cert_btn_url     = function_exists( 'get_field' ) ? get_field( 'gociss_service_cert_btn_url' ) : '';
 $cert_image          = function_exists( 'get_field' ) ? get_field( 'gociss_service_cert_image' ) : null;
 $cert_form_raw       = function_exists( 'get_field' ) ? get_field( 'gociss_service_cert_form_shortcode' ) : '';
 $cert_form_shortcode = function_exists( 'gociss_get_cf7_shortcode' ) ? gociss_get_cf7_shortcode( $cert_form_raw ) : $cert_form_raw;
@@ -37,9 +38,12 @@ if ( ! $cert_title ) {
 	$cert_title = get_the_title();
 }
 
-// Текст кнопки по умолчанию
+// Текст и ссылка кнопки по умолчанию
 if ( ! $cert_btn_text ) {
 	$cert_btn_text = 'Бесплатная консультация';
+}
+if ( ! $cert_btn_url ) {
+	$cert_btn_url = '#form';
 }
 ?>
 
@@ -56,7 +60,7 @@ if ( ! $cert_btn_text ) {
 					</div>
 				<?php endif; ?>
 
-				<a href="#form" class="service-cert-example__btn">
+				<a href="<?php echo esc_url( $cert_btn_url ); ?>" class="service-cert-example__btn">
 					<?php echo esc_html( $cert_btn_text ); ?>
 				</a>
 			</div>

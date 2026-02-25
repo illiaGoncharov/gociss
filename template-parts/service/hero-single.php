@@ -116,15 +116,27 @@ if ( ! $has_acf_bullets ) {
 	);
 }
 
-$hero_btn_primary = array(
-	'text' => 'Обратный звонок',
-	'url'  => '#form',
-);
+$hero_btn_primary = function_exists( 'get_field' ) ? get_field( 'gociss_service_hero_btn_primary' ) : null;
+if ( empty( $hero_btn_primary['text'] ) ) {
+	$hero_btn_primary = array(
+		'text' => 'Обратный звонок',
+		'url'  => '#form',
+	);
+}
+if ( empty( $hero_btn_primary['url'] ) ) {
+	$hero_btn_primary['url'] = '#form';
+}
 
-$hero_btn_secondary = array(
-	'text' => 'Рассчитать стоимость',
-	'url'  => '#pricing',
-);
+$hero_btn_secondary = function_exists( 'get_field' ) ? get_field( 'gociss_service_hero_btn_secondary' ) : null;
+if ( empty( $hero_btn_secondary['text'] ) ) {
+	$hero_btn_secondary = array(
+		'text' => 'Рассчитать стоимость',
+		'url'  => '#pricing',
+	);
+}
+if ( empty( $hero_btn_secondary['url'] ) ) {
+	$hero_btn_secondary['url'] = '#pricing';
+}
 
 // URL баннера для фона
 $banner_url = '';
