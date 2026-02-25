@@ -44,12 +44,12 @@ function gociss_theme_setup() {
 	// Регистрация меню
 	register_nav_menus(
 		array(
-			'primary'         => esc_html__( 'Основное меню', 'gociss' ),
-			'services'        => esc_html__( 'Меню услуг (синяя панель)', 'gociss' ),
-			'footer'          => esc_html__( 'Меню в футере', 'gociss' ),
-			'footer-services' => esc_html__( 'Футер: Услуги', 'gociss' ),
-			'footer-info'     => esc_html__( 'Футер: Информация', 'gociss' ),
-			'footer-company'  => esc_html__( 'Футер: Компания', 'gociss' ),
+			'primary'          => esc_html__( 'Основное меню', 'gociss' ),
+			'services'         => esc_html__( 'Меню услуг (синяя панель)', 'gociss' ),
+			'footer'           => esc_html__( 'Меню в футере', 'gociss' ),
+			'footer-services'  => esc_html__( 'Футер: Услуги', 'gociss' ),
+			'footer-info'      => esc_html__( 'Футер: Информация', 'gociss' ),
+			'footer-company'   => esc_html__( 'Футер: Компания', 'gociss' ),
 		)
 	);
 
@@ -335,52 +335,137 @@ function gociss_get_service_cat_url( $names, $slugs, $fallback_slug = '' ) {
 }
 
 /**
- * Общий массив категорий услуг для навигации
+ * Маппинг для одноразовой миграции иконок существующих категорий
+ */
+function gociss_get_legacy_icon_map() {
+	return array(
+		'sertifikaciya-sistem-menedzhmenta-kachestva' => array( 'icon' => 'icon-iso', 'order' => 10 ),
+		'iso'                                        => array( 'icon' => 'icon-iso', 'order' => 10 ),
+		'sertifikaciya-iso'                          => array( 'icon' => 'icon-iso', 'order' => 10 ),
+		'opyt-i-reputaciya'                          => array( 'icon' => 'icon-grad', 'order' => 20 ),
+		'reputation'                                 => array( 'icon' => 'icon-grad', 'order' => 20 ),
+		'sertifikaciya-produkcii'                    => array( 'icon' => 'icon-pack', 'order' => 30 ),
+		'product'                                    => array( 'icon' => 'icon-pack', 'order' => 30 ),
+		'sertifikaciya-personala'                    => array( 'icon' => 'icon-user', 'order' => 40 ),
+		'personnel'                                  => array( 'icon' => 'icon-user', 'order' => 40 ),
+		'dobrovolnaya-sertifikaciya'                 => array( 'icon' => 'icon-file', 'order' => 50 ),
+		'voluntary'                                  => array( 'icon' => 'icon-file', 'order' => 50 ),
+	);
+}
+
+/**
+ * Одноразовая миграция: проставить ACF-поля иконок и порядка существующим категориям
+ */
+function gociss_migrate_service_cat_icons() {
+	$version = 2; // v2: исправлено имя поля nav_icon
+	if ( (int) get_option( 'gociss_service_cat_icons_migrated' ) >= $version ) {
+		return;
+	}
+
+	if ( ! function_exists( 'update_field' ) ) {
+		return;
+	}
+
+	$legacy_map = gociss_get_legacy_icon_map();
+	$terms      = get_terms(
+		array(
+			'taxonomy'   => 'gociss_service_cat',
+			'hide_empty' => false,
+		)
+	);
+
+	if ( empty( $terms ) || is_wp_error( $terms ) ) {
+		return;
+	}
+
+	foreach ( $terms as $term ) {
+		$term_acf_id = 'gociss_service_cat_' . $term->term_id;
+
+		if ( isset( $legacy_map[ $term->slug ] ) ) {
+			$data = $legacy_map[ $term->slug ];
+			update_field( 'gociss_service_cat_nav_icon', $data['icon'], $term_acf_id );
+			update_field( 'gociss_service_cat_nav_order', $data['order'], $term_acf_id );
+			update_field( 'gociss_service_cat_show_in_nav', 1, $term_acf_id );
+		} else {
+			update_field( 'gociss_service_cat_nav_icon', 'icon-file', $term_acf_id );
+			update_field( 'gociss_service_cat_nav_order', 99, $term_acf_id );
+			update_field( 'gociss_service_cat_show_in_nav', 1, $term_acf_id );
+		}
+	}
+
+	update_option( 'gociss_service_cat_icons_migrated', $version );
+}
+add_action( 'admin_init', 'gociss_migrate_service_cat_icons' );
+
+/**
+ * Динамический массив категорий услуг для навигации
  *
- * Используется при автосоздании меню и в fallback-ах.
- * Каждый элемент содержит возможные имена, слаги, иконку и ярлык.
+ * Получает top-level термины из таксономии gociss_service_cat,
+ * иконки и порядок берёт из ACF-полей.
  *
- * @return array
+ * @return array Массив категорий: slug => [ 'term', 'icon', 'label', 'url' ]
  */
 function gociss_get_nav_service_categories() {
-	return array(
-		'iso'        => array(
-			'names' => array( 'Сертификация ISO', 'Сертификация систем менеджмента качества' ),
-			'slugs' => array( 'sertifikaciya-sistem-menedzhmenta-kachestva', 'iso', 'sertifikaciya-iso' ),
-			'icon'  => 'icon-iso',
-			'label' => 'Сертификация ISO',
-		),
-		'reputation' => array(
-			'names' => array( 'Опыт и репутация' ),
-			'slugs' => array( 'opyt-i-reputaciya', 'reputation' ),
-			'icon'  => 'icon-grad',
-			'label' => 'Опыт и репутация',
-		),
-		'product'    => array(
-			'names' => array( 'Сертификация продукции' ),
-			'slugs' => array( 'sertifikaciya-produkcii', 'product' ),
-			'icon'  => 'icon-pack',
-			'label' => 'Сертификация продукции',
-		),
-		'personnel'  => array(
-			'names' => array( 'Сертификация персонала' ),
-			'slugs' => array( 'sertifikaciya-personala', 'personnel' ),
-			'icon'  => 'icon-user',
-			'label' => 'Сертификация персонала',
-		),
-		'voluntary'  => array(
-			'names' => array( 'Добровольная сертификация' ),
-			'slugs' => array( 'dobrovolnaya-sertifikaciya', 'voluntary' ),
-			'icon'  => 'icon-file',
-			'label' => 'Добровольная сертификация',
-		),
+	$terms = get_terms(
+		array(
+			'taxonomy'   => 'gociss_service_cat',
+			'hide_empty' => false,
+			'parent'     => 0,
+		)
 	);
+
+	if ( empty( $terms ) || is_wp_error( $terms ) ) {
+		return array();
+	}
+
+	$categories = array();
+	foreach ( $terms as $term ) {
+		$term_acf_id  = 'gociss_service_cat_' . $term->term_id;
+		$show_in_nav  = function_exists( 'get_field' ) ? get_field( 'gociss_service_cat_show_in_nav', $term_acf_id ) : true;
+
+		// Пропускаем скрытые категории
+		if ( ! $show_in_nav && $show_in_nav !== null ) {
+			continue;
+		}
+
+		$icon      = function_exists( 'get_field' ) ? get_field( 'gociss_service_cat_nav_icon', $term_acf_id ) : 'icon-file';
+		$nav_order = function_exists( 'get_field' ) ? get_field( 'gociss_service_cat_nav_order', $term_acf_id ) : 0;
+
+		if ( ! $icon ) {
+			$icon = 'icon-file';
+		}
+
+		$url = get_term_link( $term );
+		if ( is_wp_error( $url ) ) {
+			$url = home_url( '/uslugi/category/' . $term->slug . '/' );
+		}
+
+		$categories[ $term->slug ] = array(
+			'term'      => $term,
+			'names'     => array( $term->name ),
+			'slugs'     => array( $term->slug ),
+			'icon'      => $icon,
+			'label'     => $term->name,
+			'url'       => $url,
+			'nav_order' => (int) $nav_order,
+		);
+	}
+
+	// Сортировка по nav_order, затем по имени
+	uasort( $categories, function ( $a, $b ) {
+		if ( $a['nav_order'] === $b['nav_order'] ) {
+			return strcmp( $a['label'], $b['label'] );
+		}
+		return $a['nav_order'] - $b['nav_order'];
+	});
+
+	return $categories;
 }
 
 /**
  * Получить услуги, сгруппированные по категориям таксономии gociss_service_cat
  *
- * Возвращает массив: [ term_slug => [ 'term' => WP_Term, 'services' => [ WP_Post, ... ] ], ... ]
+ * Возвращает массив: [ term_slug => [ 'term' => WP_Term, 'services' => [...], ... ] ]
  *
  * @return array
  */
@@ -389,30 +474,12 @@ function gociss_get_services_by_category() {
 	$categories = gociss_get_nav_service_categories();
 
 	foreach ( $categories as $key => $cat_data ) {
-		// Ищем реальный терм в таксономии
-		$term = null;
-		foreach ( $cat_data['slugs'] as $slug ) {
-			$found = get_term_by( 'slug', $slug, 'gociss_service_cat' );
-			if ( $found && ! is_wp_error( $found ) ) {
-				$term = $found;
-				break;
-			}
-		}
-		if ( ! $term ) {
-			foreach ( $cat_data['names'] as $name ) {
-				$found = get_term_by( 'name', $name, 'gociss_service_cat' );
-				if ( $found && ! is_wp_error( $found ) ) {
-					$term = $found;
-					break;
-				}
-			}
-		}
+		$term = isset( $cat_data['term'] ) ? $cat_data['term'] : null;
 
 		if ( ! $term ) {
 			continue;
 		}
 
-		// Получаем услуги этой категории
 		$services_query = new WP_Query(
 			array(
 				'post_type'      => 'gociss_service',
@@ -446,7 +513,7 @@ function gociss_get_services_by_category() {
 			'term'     => $term,
 			'label'    => $cat_data['label'],
 			'icon'     => $cat_data['icon'],
-			'url'      => gociss_get_service_cat_url( $cat_data['names'], $cat_data['slugs'], $cat_data['slugs'][0] ),
+			'url'      => $cat_data['url'],
 			'services' => $services,
 		);
 	}
@@ -455,17 +522,14 @@ function gociss_get_services_by_category() {
 }
 
 /**
- * Динамический рендер меню услуг (десктоп или мобильный вариант)
+ * Маппинг CSS-класса иконки → файл SVG
  *
- * Генерирует HTML напрямую из gociss_get_nav_service_categories(),
- * без зависимости от сохранённых пунктов меню в БД.
- * URL формируются при каждой загрузке страницы через gociss_get_service_cat_url().
+ * Используется в навигации хедера, мега-меню и ручных пунктах меню.
  *
- * @param string $variant 'desktop' или 'mobile'.
+ * @return array
  */
-function gociss_render_services_nav( $variant = 'desktop' ) {
-	// Маппинг icon-класса → файл иконки (как в Gociss_Services_Walker)
-	$icon_map = array(
+function gociss_get_icon_map() {
+	return array(
 		'icon-ham'  => 'ui_ham[white].svg',
 		'icon-iso'  => 'ui_iso[white].svg',
 		'icon-grad' => 'ui_grad[white].svg',
@@ -473,6 +537,18 @@ function gociss_render_services_nav( $variant = 'desktop' ) {
 		'icon-user' => 'ui_user[white].svg',
 		'icon-file' => 'ui_file[white].svg',
 	);
+}
+
+/**
+ * Динамический рендер меню услуг (десктоп или мобильный вариант)
+ *
+ * Автоматическая часть: категории из таксономии gociss_service_cat (ACF-поля).
+ * Ручная часть: пункты из меню «services», которые не являются gociss_service_cat.
+ *
+ * @param string $variant 'desktop' или 'mobile'.
+ */
+function gociss_render_services_nav( $variant = 'desktop' ) {
+	$icon_map = gociss_get_icon_map();
 
 	$is_mobile  = ( 'mobile' === $variant );
 	$link_class = $is_mobile ? 'header-mobile-menu__services-item' : 'header-services__item';
@@ -553,12 +629,11 @@ function gociss_render_services_nav( $variant = 'desktop' ) {
 		<?php
 	}
 
-	// Категории услуг
+	// Автоматические категории услуг из таксономии
 	foreach ( $categories as $cat ) {
-		$url       = gociss_get_service_cat_url( $cat['names'], $cat['slugs'], $cat['slugs'][0] );
 		$icon_file = isset( $icon_map[ $cat['icon'] ] ) ? $icon_map[ $cat['icon'] ] : '';
 		?>
-		<a href="<?php echo esc_url( $url ); ?>" class="<?php echo esc_attr( $link_class ); ?>">
+		<a href="<?php echo esc_url( $cat['url'] ); ?>" class="<?php echo esc_attr( $link_class ); ?>">
 			<?php if ( $icon_file ) : ?>
 				<img src="<?php echo esc_url( $images_uri . $icon_file ); ?>" alt="" class="<?php echo esc_attr( $icon_class ); ?>" width="16" height="16">
 			<?php endif; ?>
@@ -571,19 +646,45 @@ function gociss_render_services_nav( $variant = 'desktop' ) {
 		<?php
 	}
 
-	// «Учебный центр»
-	$edu_url   = home_url( '/edu/' );
-	$edu_icon  = $icon_map['icon-file'];
-	?>
-	<a href="<?php echo esc_url( $edu_url ); ?>" class="<?php echo esc_attr( $link_class ); ?>">
-		<img src="<?php echo esc_url( $images_uri . $edu_icon ); ?>" alt="" class="<?php echo esc_attr( $icon_class ); ?>" width="16" height="16">
-		<?php if ( $text_class ) : ?>
-			<span class="<?php echo esc_attr( $text_class ); ?>">Учебный центр</span>
-		<?php else : ?>
-			<span>Учебный центр</span>
-		<?php endif; ?>
-	</a>
-	<?php
+	// Ручные пункты из основного меню «services» (всё, что не gociss_service_cat)
+	gociss_render_manual_nav_items( 'services', $link_class, $icon_class, $text_class, $icon_map, $images_uri );
+}
+
+/**
+ * Рендер ручных (не-таксономических) пунктов из WordPress-меню
+ *
+ * Пропускает пункты, которые являются терминами gociss_service_cat (они рендерятся автоматически).
+ * Иконка определяется из meta-поля `_gociss_menu_icon`.
+ *
+ * @param string $menu_location Локация меню WordPress.
+ * @param string $link_class    CSS-класс ссылки.
+ * @param string $icon_class    CSS-класс иконки.
+ * @param string $text_class    CSS-класс текста (пустая строка для мобильной версии).
+ * @param array  $icon_map      Маппинг CSS-класс → файл иконки.
+ * @param string $images_uri    URI папки с изображениями.
+ */
+function gociss_render_manual_nav_items( $menu_location, $link_class, $icon_class, $text_class, $icon_map, $images_uri ) {
+	$manual_items = gociss_get_manual_menu_items( $menu_location );
+	if ( empty( $manual_items ) ) {
+		return;
+	}
+
+	foreach ( $manual_items as $item ) {
+		$icon_key  = get_post_meta( $item->ID, '_gociss_menu_icon', true );
+		$icon_file = isset( $icon_map[ $icon_key ] ) ? $icon_map[ $icon_key ] : '';
+		?>
+		<a href="<?php echo esc_url( $item->url ); ?>" class="<?php echo esc_attr( $link_class ); ?>">
+			<?php if ( $icon_file ) : ?>
+				<img src="<?php echo esc_url( $images_uri . $icon_file ); ?>" alt="" class="<?php echo esc_attr( $icon_class ); ?>" width="16" height="16">
+			<?php endif; ?>
+			<?php if ( $text_class ) : ?>
+				<span class="<?php echo esc_attr( $text_class ); ?>"><?php echo esc_html( $item->title ); ?></span>
+			<?php else : ?>
+				<span><?php echo esc_html( $item->title ); ?></span>
+			<?php endif; ?>
+		</a>
+		<?php
+	}
 }
 
 /**
@@ -598,6 +699,29 @@ function gociss_services_menu_fallback() {
  */
 function gociss_services_menu_fallback_mobile() {
 	gociss_render_services_nav( 'mobile' );
+}
+
+/**
+ * Fallback для колонки «Услуги» в футере
+ *
+ * Автоматические категории из таксономии + ручные пункты из меню «services».
+ */
+function gociss_footer_services_fallback() {
+	$nav_categories = gociss_get_nav_service_categories();
+
+	// Ручные пункты из основного меню «services» (не-таксономические)
+	$manual_items = gociss_get_manual_menu_items( 'services' );
+	?>
+	<ul class="site-footer__menu">
+		<?php foreach ( $nav_categories as $fc ) : ?>
+			<li><a href="<?php echo esc_url( $fc['url'] ); ?>"><?php echo esc_html( $fc['label'] ); ?></a></li>
+		<?php endforeach; ?>
+		<?php foreach ( $manual_items as $item ) : ?>
+			<li><a href="<?php echo esc_url( $item->url ); ?>"><?php echo esc_html( $item->title ); ?></a></li>
+		<?php endforeach; ?>
+		<li><a href="<?php echo esc_url( home_url( '/uslugi/' ) ); ?>">Все услуги</a></li>
+	</ul>
+	<?php
 }
 
 /**
@@ -636,71 +760,11 @@ function gociss_ajax_regenerate_menus() {
 /**
  * Создание категорий услуг (таксономия gociss_service_cat), если их нет в базе
  *
- * Берёт данные из gociss_get_nav_service_categories() и создаёт термины,
- * которых ещё не существует. Вызывается при регенерации меню.
+ * Сохранена для обратной совместимости. Категории теперь управляются
+ * через админку WordPress (Записи → Категории услуг).
  */
 function gociss_ensure_service_categories_exist() {
-	if ( ! function_exists( 'gociss_get_nav_service_categories' ) ) {
-		return;
-	}
-
-	$nav_categories  = gociss_get_nav_service_categories();
-	$expected_slug_0 = ''; // первый (основной) слаг из массива
-
-	foreach ( $nav_categories as $cat ) {
-		$expected_slug_0 = $cat['slugs'][0];
-		$found_term      = null;
-
-		// Ищем существующую категорию по имени
-		foreach ( $cat['names'] as $name ) {
-			$term = get_term_by( 'name', $name, 'gociss_service_cat' );
-			if ( $term && ! is_wp_error( $term ) ) {
-				$found_term = $term;
-				break;
-			}
-		}
-
-		// Если не нашли по имени — ищем по любому из слагов
-		if ( ! $found_term ) {
-			foreach ( $cat['slugs'] as $slug ) {
-				$term = get_term_by( 'slug', $slug, 'gociss_service_cat' );
-				if ( $term && ! is_wp_error( $term ) ) {
-					$found_term = $term;
-					break;
-				}
-			}
-		}
-
-		if ( $found_term ) {
-			// Категория существует — проверяем слаг, обновляем если отличается от ожидаемого
-			if ( $found_term->slug !== $expected_slug_0 ) {
-				$update_result = wp_update_term(
-					$found_term->term_id,
-					'gociss_service_cat',
-					array( 'slug' => $expected_slug_0 )
-				);
-				// Очищаем кеш термина, чтобы get_term_link() вернул актуальный URL
-				if ( ! is_wp_error( $update_result ) ) {
-					clean_term_cache( $found_term->term_id, 'gociss_service_cat' );
-				} else {
-					error_log( 'ГоЦИСС: Не удалось обновить слаг "' . $found_term->slug . '" → "' . $expected_slug_0 . '": ' . $update_result->get_error_message() );
-				}
-			}
-		} else {
-			// Категория не найдена — создаём с правильным слагом
-			$result = wp_insert_term(
-				$cat['label'],
-				'gociss_service_cat',
-				array(
-					'slug' => $expected_slug_0,
-				)
-			);
-
-			if ( is_wp_error( $result ) ) {
-				error_log( 'ГоЦИСС: Не удалось создать категорию "' . $cat['label'] . '": ' . $result->get_error_message() );
-			}
-		}
-	}
+	// Категории управляются через админку, функция сохранена для совместимости
 }
 add_action( 'admin_post_gociss_regenerate_menus', 'gociss_ajax_regenerate_menus' );
 
@@ -731,3 +795,99 @@ function gociss_admin_menu_regenerate_notice() {
 }
 add_action( 'admin_notices', 'gociss_admin_menu_regenerate_notice' );
 
+/**
+ * Dropdown выбора иконки для пунктов WordPress-меню
+ *
+ * Добавляет поле «Иконка (синяя панель)» в интерфейс редактирования
+ * каждого пункта меню. Значение хранится в post meta `_gociss_menu_icon`.
+ *
+ * @param int      $item_id ID пункта меню.
+ * @param WP_Post  $menu_item Объект пункта меню.
+ * @param int      $depth Глубина вложенности.
+ * @param stdClass $args Аргументы.
+ */
+function gociss_menu_item_icon_field( $item_id, $menu_item, $depth, $args ) {
+	$current = get_post_meta( $item_id, '_gociss_menu_icon', true );
+	$icons   = array(
+		''          => '— Без иконки —',
+		'icon-iso'  => 'ISO (сертификат)',
+		'icon-grad' => 'Опыт (шапочка)',
+		'icon-pack' => 'Продукция (коробка)',
+		'icon-user' => 'Персонал (человек)',
+		'icon-file' => 'Документ (файл)',
+	);
+	?>
+	<p class="field-gociss-icon description description-wide">
+		<label for="edit-menu-item-gociss-icon-<?php echo esc_attr( $item_id ); ?>">
+			Иконка (синяя панель)
+			<select id="edit-menu-item-gociss-icon-<?php echo esc_attr( $item_id ); ?>"
+			        name="gociss_menu_icon[<?php echo esc_attr( $item_id ); ?>]"
+			        class="widefat">
+				<?php foreach ( $icons as $value => $label ) : ?>
+					<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $current, $value ); ?>>
+						<?php echo esc_html( $label ); ?>
+					</option>
+				<?php endforeach; ?>
+			</select>
+		</label>
+	</p>
+	<?php
+}
+add_action( 'wp_nav_menu_item_custom_fields', 'gociss_menu_item_icon_field', 10, 4 );
+
+/**
+ * Сохранение выбранной иконки при обновлении меню
+ *
+ * @param int   $menu_id         ID меню.
+ * @param int   $menu_item_db_id ID пункта меню (post ID).
+ * @param array $args            Аргументы пункта меню.
+ */
+function gociss_save_menu_item_icon( $menu_id, $menu_item_db_id, $args ) {
+	if ( isset( $_POST['gociss_menu_icon'][ $menu_item_db_id ] ) ) {
+		$icon = sanitize_text_field( wp_unslash( $_POST['gociss_menu_icon'][ $menu_item_db_id ] ) );
+		update_post_meta( $menu_item_db_id, '_gociss_menu_icon', $icon );
+	}
+}
+add_action( 'wp_update_nav_menu_item', 'gociss_save_menu_item_icon', 10, 3 );
+
+/**
+ * Получение ручных пунктов из WordPress-меню
+ *
+ * Возвращает пункты, которые НЕ дублируют автоматические категории gociss_service_cat.
+ * Фильтрует по типу таксономии И по URL (на случай произвольных ссылок с тем же адресом).
+ * Также пропускает пункт «Все услуги» (/uslugi/), т.к. он рендерится кодом отдельно.
+ *
+ * @param string $menu_location Локация меню.
+ * @return array Массив пунктов меню.
+ */
+function gociss_get_manual_menu_items( $menu_location ) {
+	$locations = get_nav_menu_locations();
+	if ( empty( $locations[ $menu_location ] ) ) {
+		return array();
+	}
+
+	$all_items = wp_get_nav_menu_items( $locations[ $menu_location ] );
+	if ( empty( $all_items ) ) {
+		return array();
+	}
+
+	// URL автоматических категорий + «Все услуги» — их пропускаем
+	$auto_urls = array( trailingslashit( home_url( '/uslugi/' ) ) );
+	$nav_cats  = gociss_get_nav_service_categories();
+	foreach ( $nav_cats as $cat ) {
+		$auto_urls[] = trailingslashit( $cat['url'] );
+	}
+
+	$manual = array();
+	foreach ( $all_items as $item ) {
+		if ( 'taxonomy' === $item->type && 'gociss_service_cat' === $item->object ) {
+			continue;
+		}
+		if ( in_array( trailingslashit( $item->url ), $auto_urls, true ) ) {
+			continue;
+		}
+		$manual[] = $item;
+	}
+
+	return $manual;
+}

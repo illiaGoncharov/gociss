@@ -13,8 +13,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-// Шорткод из настроек (Внешний вид → Формы) или ACF Options
-$horizontal_shortcode = function_exists( 'gociss_form_option' ) ? gociss_form_option( 'gociss_form_horizontal_shortcode' ) : get_option( 'gociss_form_horizontal_shortcode', '' );
+// Override из диспетчера (form.php передаёт cf7_shortcode выбранной формы)
+$horizontal_shortcode = ! empty( $args['cf7_shortcode'] ) ? $args['cf7_shortcode'] : '';
+
+// Fallback: настройки (Внешний вид → Формы)
+if ( ! $horizontal_shortcode ) {
+	$horizontal_shortcode = function_exists( 'gociss_form_option' ) ? gociss_form_option( 'gociss_form_horizontal_shortcode' ) : get_option( 'gociss_form_horizontal_shortcode', '' );
+}
 
 // Название услуги — приоритет: параметр → заголовок страницы
 $service_name = '';
@@ -38,11 +43,6 @@ if ( isset( $args['service_name'] ) && ! empty( $args['service_name'] ) ) {
 					echo '<p style="color: rgba(255,255,255,0.8); font-size: 14px;">Укажите шорткод формы в <strong>Внешний вид → Формы → Онлайн заявка горизонтальная</strong></p>';
 				}
 				?>
-				<p class="form-acceptance"><?php echo wp_kses_post( sprintf(
-					/* translators: %s — ссылка на политику конфиденциальности */
-					__( 'При нажатии на кнопку "Отправить" Вы даёте своё согласие на <a href="%s" target="_blank">обработку персональных данных</a>', 'gociss' ),
-					esc_url( get_privacy_policy_url() ? get_privacy_policy_url() : '/privacy-policy/' )
-				) ); ?></p>
 			</div>
 		</div>
 	</div>

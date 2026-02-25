@@ -398,18 +398,17 @@ function gociss_create_footer_services_menu( $force = false ) {
 		}
 	}
 
+	// Динамические категории из таксономии
 	$nav_categories = gociss_get_nav_service_categories();
 
 	$order = 1;
 	foreach ( $nav_categories as $cat ) {
-		$cat_url = gociss_get_service_cat_url( $cat['names'], $cat['slugs'], $cat['slugs'][0] );
-
 		wp_update_nav_menu_item(
 			$menu_id,
 			0,
 			array(
 				'menu-item-title'    => $cat['label'],
-				'menu-item-url'      => $cat_url,
+				'menu-item-url'      => $cat['url'],
 				'menu-item-type'     => 'custom',
 				'menu-item-status'   => 'publish',
 				'menu-item-position' => $order,
@@ -418,28 +417,30 @@ function gociss_create_footer_services_menu( $force = false ) {
 		$order++;
 	}
 
-	// Учебный центр
-	wp_update_nav_menu_item(
-		$menu_id,
-		0,
-		array(
-			'menu-item-title'    => 'Учебный центр',
-			'menu-item-url'      => home_url( '/edu/' ),
-			'menu-item-type'     => 'custom',
-			'menu-item-status'   => 'publish',
-			'menu-item-position' => $order,
-		)
-	);
-	$order++;
+	// Ручные пункты (не-таксономические) из основного меню «services»
+	$manual_items = gociss_get_manual_menu_items( 'services' );
+	foreach ( $manual_items as $item ) {
+		wp_update_nav_menu_item(
+			$menu_id,
+			0,
+			array(
+				'menu-item-title'    => $item->title,
+				'menu-item-url'      => $item->url,
+				'menu-item-type'     => 'custom',
+				'menu-item-status'   => 'publish',
+				'menu-item-position' => $order,
+			)
+		);
+		$order++;
+	}
 
 	// Все услуги
-	$service_archive = home_url( '/uslugi/' );
 	wp_update_nav_menu_item(
 		$menu_id,
 		0,
 		array(
 			'menu-item-title'    => 'Все услуги',
-			'menu-item-url'      => $service_archive,
+			'menu-item-url'      => home_url( '/uslugi/' ),
 			'menu-item-type'     => 'custom',
 			'menu-item-status'   => 'publish',
 			'menu-item-position' => $order,

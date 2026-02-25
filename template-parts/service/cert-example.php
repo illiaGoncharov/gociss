@@ -15,7 +15,8 @@ $cert_title       = function_exists( 'get_field' ) ? get_field( 'gociss_service_
 $cert_description = function_exists( 'get_field' ) ? get_field( 'gociss_service_cert_description' ) : '';
 $cert_btn_text    = function_exists( 'get_field' ) ? get_field( 'gociss_service_cert_btn_text' ) : '';
 $cert_image          = function_exists( 'get_field' ) ? get_field( 'gociss_service_cert_image' ) : null;
-$cert_form_shortcode = function_exists( 'get_field' ) ? get_field( 'gociss_service_cert_form_shortcode' ) : '';
+$cert_form_raw       = function_exists( 'get_field' ) ? get_field( 'gociss_service_cert_form_shortcode' ) : '';
+$cert_form_shortcode = function_exists( 'gociss_get_cf7_shortcode' ) ? gociss_get_cf7_shortcode( $cert_form_raw ) : $cert_form_raw;
 
 // Собираем пункты расшифровки
 $cert_points = array();
@@ -95,11 +96,49 @@ if ( ! $cert_btn_text ) {
 			if ( ! $cert_form_title ) {
 				$cert_form_title = 'Оставить заявку';
 			}
+			$cert_design = 'default';
+			if ( $cert_form_raw && is_numeric( $cert_form_raw ) && function_exists( 'gociss_detect_form_design' ) ) {
+				$cert_design = gociss_detect_form_design( (int) $cert_form_raw );
+			}
 			?>
-			<div class="service-cert-example__form">
-				<h3 class="service-cert-example__form-title"><?php echo esc_html( $cert_form_title ); ?></h3>
-				<?php echo do_shortcode( $cert_form_shortcode ); ?>
-			</div>
+			<?php
+			switch ( $cert_design ) {
+				case 'consult':
+					echo '<div class="service-cert-example__form">';
+					get_template_part( 'template-parts/forms/embedded-consult', null, array(
+						'shortcode'  => $cert_form_shortcode,
+						'title'      => $cert_form_title,
+						'form_id'    => $cert_form_raw,
+						'is_consult' => true,
+					) );
+					echo '</div>';
+					break;
+				case 'horizontal':
+					get_template_part( 'template-parts/forms/application-horizontal', null, array(
+						'cf7_shortcode' => $cert_form_shortcode,
+					) );
+					break;
+				case 'callback':
+					get_template_part( 'template-parts/forms/callback-simple', null, array(
+						'cf7_shortcode' => $cert_form_shortcode,
+					) );
+					break;
+				case 'vertical':
+					get_template_part( 'template-parts/forms/application-vertical', null, array(
+						'cf7_shortcode' => $cert_form_shortcode,
+					) );
+					break;
+				default:
+					echo '<div class="service-cert-example__form">';
+					get_template_part( 'template-parts/forms/embedded-consult', null, array(
+						'shortcode' => $cert_form_shortcode,
+						'title'     => $cert_form_title,
+						'form_id'   => $cert_form_raw,
+					) );
+					echo '</div>';
+					break;
+			}
+			?>
 		<?php endif; ?>
 	</div>
 </section>

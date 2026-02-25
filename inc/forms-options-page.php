@@ -28,6 +28,14 @@ function gociss_form_option( $key ) {
 	if ( is_array( $v ) && ! empty( $v['url'] ) ) {
 		return $v['url'];
 	}
+
+	// Поля-изображения: если сохранён ID вложения — конвертируем в URL
+	$image_keys = array( 'gociss_form_consult_photo', 'gociss_form_popup_image' );
+	if ( in_array( $key, $image_keys, true ) && is_numeric( $v ) && (int) $v > 0 ) {
+		$url = wp_get_attachment_image_url( (int) $v, 'medium_large' );
+		return $url ? $url : '';
+	}
+
 	return is_string( $v ) ? $v : '';
 }
 
@@ -102,6 +110,58 @@ function gociss_forms_add_admin_menu() {
 add_action( 'admin_menu', 'gociss_forms_add_admin_menu' );
 
 /**
+ * Подключение медиабиблиотеки на странице настроек форм
+ */
+function gociss_forms_enqueue_media( $hook ) {
+	if ( $hook !== 'appearance_page_gociss-forms-settings' ) {
+		return;
+	}
+	wp_enqueue_media();
+}
+add_action( 'admin_enqueue_scripts', 'gociss_forms_enqueue_media' );
+
+/**
+ * JS для медиа-загрузчика фото консультанта (выводится в футере админки)
+ */
+function gociss_forms_footer_scripts() {
+	$screen = get_current_screen();
+	if ( ! $screen || $screen->id !== 'appearance_page_gociss-forms-settings' ) {
+		return;
+	}
+	?>
+	<script>
+	jQuery(function($){
+		var frame;
+		$('#gociss_consult_photo_select').on('click',function(e){
+			e.preventDefault();
+			if(frame){frame.open();return;}
+			frame=wp.media({
+				title:'Выберите фото консультанта',
+				library:{type:'image'},
+				button:{text:'Использовать'},
+				multiple:false
+			});
+			frame.on('select',function(){
+				var att=frame.state().get('selection').first().toJSON();
+				$('#gociss_form_consult_photo').val(att.url);
+				$('#gociss_consult_photo_preview').html('<img src="'+att.url+'" alt="" style="max-width:150px;height:auto;display:block;border:1px solid #ddd;border-radius:4px;">');
+				$('#gociss_consult_photo_remove').show();
+			});
+			frame.open();
+		});
+		$('#gociss_consult_photo_remove').on('click',function(e){
+			e.preventDefault();
+			$('#gociss_form_consult_photo').val('');
+			$('#gociss_consult_photo_preview').html('<span class="gociss-media-placeholder" style="display:inline-block;padding:20px;background:#f5f5f5;border:1px dashed #ccc;border-radius:4px;color:#666;">Фото не выбрано</span>');
+			$(this).hide();
+		});
+	});
+	</script>
+	<?php
+}
+add_action( 'admin_print_footer_scripts', 'gociss_forms_footer_scripts' );
+
+/**
  * Сохранение настроек форм
  */
 function gociss_forms_save_options() {
@@ -125,12 +185,21 @@ function gociss_forms_save_options() {
 		'gociss_form_horizontal_shortcode',
 	);
 
+	// Поля-изображения: санитизируем как URL, а не как текст
+	$image_keys = array( 'gociss_form_consult_photo', 'gociss_form_popup_image' );
+
 	foreach ( $keys as $key ) {
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		$value = isset( $_POST[ $key ] ) ? wp_unslash( $_POST[ $key ] ) : '';
-		$value = is_string( $value ) ? sanitize_text_field( $value ) : '';
+		if ( in_array( $key, $image_keys, true ) ) {
+			$value = is_string( $value ) ? esc_url_raw( $value ) : '';
+		} else {
+			$value = is_string( $value ) ? sanitize_text_field( $value ) : '';
+		}
 		update_option( $key, $value );
 	}
+
+	set_transient( 'gociss_forms_saved', true, 30 );
 }
 
 /**
@@ -138,6 +207,12 @@ function gociss_forms_save_options() {
  */
 function gociss_forms_options_page_render() {
 	gociss_forms_save_options();
+
+	// Уведомление об успешном сохранении
+	if ( get_transient( 'gociss_forms_saved' ) ) {
+		delete_transient( 'gociss_forms_saved' );
+		echo '<div class="notice notice-success is-dismissible"><p>Настройки форм сохранены.</p></div>';
+	}
 
 	$default_shortcode    = get_option( 'gociss_form_default_shortcode', '' );
 	$popup_shortcode      = get_option( 'gociss_form_popup_shortcode', '' );
@@ -213,7 +288,26 @@ function gociss_forms_options_page_render() {
 				<tr>
 					<th scope="row"><label for="gociss_form_consult_photo">Фото консультанта</label></th>
 					<td>
-						<input type="url" name="gociss_form_consult_photo" id="gociss_form_consult_photo" value="<?php echo esc_attr( $consult_photo ); ?>" class="large-text" placeholder="https://...">
+						<?php
+						$consult_photo_url = '';
+						if ( $consult_photo ) {
+							$consult_photo_url = is_numeric( $consult_photo )
+								? wp_get_attachment_image_url( (int) $consult_photo, 'medium' )
+								: $consult_photo;
+						}
+						?>
+						<input type="text" name="gociss_form_consult_photo" id="gociss_form_consult_photo" value="<?php echo esc_attr( $consult_photo ); ?>" class="large-text" placeholder="ID вложения или URL изображения">
+						<p class="description">Введите URL изображения или нажмите «Выбрать» для выбора из медиабиблиотеки.</p>
+						<p class="description" style="color:#888;"><strong>Текущее значение в БД:</strong> <code><?php echo esc_html( $consult_photo ? $consult_photo : '(пусто)' ); ?></code></p>
+						<div style="margin:10px 0;">
+							<button type="button" class="button" id="gociss_consult_photo_select">Выбрать из медиабиблиотеки</button>
+							<button type="button" class="button" id="gociss_consult_photo_remove" <?php echo $consult_photo ? '' : ' style="display:none;"'; ?>>Удалить</button>
+						</div>
+						<div id="gociss_consult_photo_preview" class="gociss-media-preview">
+							<?php if ( $consult_photo_url ) : ?>
+								<img src="<?php echo esc_url( $consult_photo_url ); ?>" alt="" style="max-width:150px;height:auto;display:block;border:1px solid #ddd;border-radius:4px;">
+							<?php endif; ?>
+						</div>
 					</td>
 				</tr>
 				<tr>

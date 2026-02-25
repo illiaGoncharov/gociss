@@ -38,6 +38,7 @@ require_once GOCISS_THEME_PATH . '/inc/legal-pages.php';
 require_once GOCISS_THEME_PATH . '/inc/faq-helpers.php';
 require_once GOCISS_THEME_PATH . '/inc/class-gociss-services-walker.php';
 require_once GOCISS_THEME_PATH . '/inc/forms-options-page.php';
+require_once GOCISS_THEME_PATH . '/inc/search.php';
 
 /**
  * Отключение проверки обновлений WordPress для локальной разработки

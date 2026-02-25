@@ -12,8 +12,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-// Шорткод из настроек (Внешний вид → Формы) или ACF Options
-$callback_shortcode = function_exists( 'gociss_form_option' ) ? gociss_form_option( 'gociss_form_callback_shortcode' ) : get_option( 'gociss_form_callback_shortcode', '' );
+// Override из диспетчера (form.php передаёт cf7_shortcode выбранной формы)
+$callback_shortcode = ! empty( $args['cf7_shortcode'] ) ? $args['cf7_shortcode'] : '';
+
+// Fallback: настройки (Внешний вид → Формы)
+if ( ! $callback_shortcode ) {
+	$callback_shortcode = function_exists( 'gociss_form_option' ) ? gociss_form_option( 'gociss_form_callback_shortcode' ) : get_option( 'gociss_form_callback_shortcode', '' );
+}
 
 // Название услуги для скрытого поля
 $service_name = '';

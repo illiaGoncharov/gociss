@@ -28,16 +28,81 @@ function gociss_acf_json_load_point( $paths ) {
 add_filter( 'acf/settings/load_json', 'gociss_acf_json_load_point' );
 
 /**
- * Динамическое заполнение select-полей списком CF7-форм
- * Применяется к полям выбора формы в секциях cert-example и pricing
+ * Получить ID формы-попапа из настроек (Внешний вид → Формы)
+ *
+ * Если в настройках шорткод не указан — ищет CF7-форму с «попап»/«popup» в названии.
+ *
+ * @return int ID формы или 0
+ */
+function gociss_get_popup_form_id() {
+	$popup_sc = get_option( 'gociss_form_popup_shortcode', '' );
+	if ( $popup_sc && preg_match( '/id=["\']?(\d+)/', $popup_sc, $m ) ) {
+		return (int) $m[1];
+	}
+	return 0;
+}
+
+/**
+ * Проверить, является ли CF7-форма попапом (по ID или по названию)
+ *
+ * @param WP_Post $form_post Объект CF7-формы.
+ * @param int     $popup_id  ID попапа из настроек (0 = не определён).
+ * @return bool
+ */
+function gociss_is_popup_form( $form_post, $popup_id = 0 ) {
+	if ( $popup_id && $form_post->ID === $popup_id ) {
+		return true;
+	}
+	$title_lower = mb_strtolower( $form_post->post_title );
+	if ( mb_strpos( $title_lower, 'попап' ) !== false || strpos( $title_lower, 'popup' ) !== false ) {
+		return true;
+	}
+	return false;
+}
+
+/**
+ * Определить дизайн-вариант формы по ID формы CF7
+ *
+ * Сопоставляет ID с шорткодами из настроек "Внешний вид → Формы".
+ *
+ * @param int $form_id ID формы CF7.
+ * @return string Ключ дизайна: consult|callback|vertical|horizontal|default
+ */
+function gociss_detect_form_design( $form_id ) {
+	$form_post = get_post( $form_id );
+	if ( ! $form_post ) {
+		return 'default';
+	}
+
+	$t = mb_strtolower( $form_post->post_title );
+
+	if ( mb_strpos( $t, 'консульт' ) !== false || strpos( $t, 'consult' ) !== false ) {
+		return 'consult';
+	}
+	if ( mb_strpos( $t, 'остались' ) !== false || mb_strpos( $t, 'компактн' ) !== false ) {
+		return 'callback';
+	}
+	if ( mb_strpos( $t, 'вертикальн' ) !== false ) {
+		return 'vertical';
+	}
+	if ( mb_strpos( $t, 'горизонтальн' ) !== false ) {
+		return 'horizontal';
+	}
+
+	return 'default';
+}
+
+/**
+ * Динамическое заполнение select-полей списком CF7-форм (без попапа)
+ *
+ * Для полей «Форма в секции» — первая опция «Без формы».
  */
 function gociss_load_cf7_forms_choices( $field ) {
-	// Первый вариант — «Без формы»
 	$field['choices'] = array(
 		'' => '— Без формы —',
 	);
 
-	// Получаем все формы CF7
+	$popup_id  = gociss_get_popup_form_id();
 	$cf7_forms = get_posts( array(
 		'post_type'      => 'wpcf7_contact_form',
 		'posts_per_page' => -1,
@@ -47,8 +112,10 @@ function gociss_load_cf7_forms_choices( $field ) {
 
 	if ( $cf7_forms ) {
 		foreach ( $cf7_forms as $form ) {
-			$shortcode = sprintf( '[contact-form-7 id="%s" title="%s"]', $form->ID, esc_attr( $form->post_title ) );
-			$field['choices'][ $shortcode ] = $form->post_title;
+			if ( gociss_is_popup_form( $form, $popup_id ) ) {
+				continue;
+			}
+			$field['choices'][ $form->ID ] = $form->post_title;
 		}
 	}
 
@@ -56,6 +123,54 @@ function gociss_load_cf7_forms_choices( $field ) {
 }
 add_filter( 'acf/load_field/key=field_gociss_service_pricing_form_shortcode', 'gociss_load_cf7_forms_choices' );
 add_filter( 'acf/load_field/key=field_gociss_service_cert_form_shortcode', 'gociss_load_cf7_forms_choices' );
+
+/**
+ * Динамическое заполнение «Вариант формы» списком CF7-форм (без попапа)
+ *
+ * Без опции «Без формы» — форма внизу страницы обязательна.
+ */
+function gociss_load_cf7_forms_for_variant( $field ) {
+	$field['choices'] = array();
+
+	$popup_id  = gociss_get_popup_form_id();
+	$cf7_forms = get_posts( array(
+		'post_type'      => 'wpcf7_contact_form',
+		'posts_per_page' => -1,
+		'orderby'        => 'title',
+		'order'          => 'ASC',
+	) );
+
+	if ( $cf7_forms ) {
+		foreach ( $cf7_forms as $form ) {
+			if ( gociss_is_popup_form( $form, $popup_id ) ) {
+				continue;
+			}
+			$field['choices'][ $form->ID ] = $form->post_title;
+		}
+	}
+
+	return $field;
+}
+add_filter( 'acf/load_field/key=field_gociss_form_variant', 'gociss_load_cf7_forms_for_variant' );
+
+/**
+ * Хелпер: получить шорткод CF7 по значению ACF-поля (ID или готовый шорткод)
+ */
+function gociss_get_cf7_shortcode( $value ) {
+	if ( empty( $value ) ) {
+		return '';
+	}
+	$value = (string) $value;
+	// Если это уже шорткод — возвращаем как есть (обратная совместимость)
+	if ( strpos( $value, '[contact-form-7' ) !== false ) {
+		return $value;
+	}
+	// Числовой ID — строим шорткод
+	if ( is_numeric( $value ) ) {
+		return sprintf( '[contact-form-7 id="%d"]', (int) $value );
+	}
+	return '';
+}
 
 /**
  * Регистрация ACF групп полей
@@ -642,95 +757,110 @@ function gociss_register_acf_fields() {
 			'key'                   => 'group_gociss_form',
 			'title'                 => 'Форма обратной связи',
 			'fields'                => array(
-				array(
-					'key'               => 'field_gociss_form_variant',
-					'label'             => 'Вариант формы',
-					'name'              => 'gociss_form_variant',
-					'type'              => 'select',
-					'instructions'      => 'Выберите дизайн формы для этой страницы. По умолчанию — основная форма (как на главной).',
-					'choices'           => array(
-						'default'    => 'По умолчанию (как на главной)',
-						'consult'    => 'Готовы проконсультировать (с фото)',
-						'callback'   => 'Остались вопросы (горизонтальная)',
-						'vertical'   => 'Онлайн заявка (вертикальная карточка)',
-						'horizontal' => 'Онлайн заявка (горизонтальная, синий фон)',
-					),
-					'default_value'     => 'default',
-					'allow_null'        => 0,
-					'return_format'     => 'value',
-				),
-				array(
-					'key'               => 'field_gociss_form_label',
-					'label'             => 'Метка (для основной формы)',
-					'name'              => 'gociss_form_label',
-					'type'              => 'text',
-					'instructions'      => 'Работает только при варианте «По умолчанию». Оставьте пустым для значения по умолчанию.',
-					'default_value'     => '',
-					'placeholder'       => 'Связаться с нами',
-					'conditional_logic' => array(
+			array(
+				'key'               => 'field_gociss_form_variant',
+				'label'             => 'Вариант формы',
+				'name'              => 'gociss_form_variant',
+				'type'              => 'select',
+				'instructions'      => 'Выберите форму CF7. Дизайн определяется автоматически по настройкам из Внешний вид → Формы. Если не выбрано — основная форма (как на главной).',
+				'choices'           => array(),
+				'default_value'     => '',
+				'allow_null'        => 1,
+				'placeholder'       => '— Как на главной (по умолчанию) —',
+				'return_format'     => 'value',
+			),
+			array(
+				'key'               => 'field_gociss_form_shortcode',
+				'label'             => 'Или вставьте шорткод вручную',
+				'name'              => 'gociss_form_shortcode',
+				'type'              => 'text',
+				'instructions'      => 'Если заполнено — этот шорткод используется ВМЕСТО выбранной формы выше. Оставьте пустым, чтобы работал выбор из списка.',
+				'default_value'     => '',
+				'placeholder'       => '[contact-form-7 id="..."] или [gociss_form_consult]',
+			),
+			array(
+				'key'               => 'field_gociss_form_shortcode_notice',
+				'label'             => '',
+				'name'              => '',
+				'type'              => 'message',
+				'message'           => '<div style="background:#fff3cd;border:1px solid #ffc107;border-radius:6px;padding:10px 14px;color:#856404;">⚠️ <strong>Шорткод заполнен</strong> — он используется вместо формы из списка выше. Очистите поле шорткода, чтобы вернуть выбор из списка.</div>',
+				'new_lines'         => '',
+				'esc_html'          => 0,
+				'conditional_logic' => array(
+					array(
 						array(
-							array(
-								'field'    => 'field_gociss_form_variant',
-								'operator' => '==',
-								'value'    => 'default',
-							),
+							'field'    => 'field_gociss_form_shortcode',
+							'operator' => '!=empty',
 						),
 					),
 				),
-				array(
-					'key'               => 'field_gociss_form_title',
-					'label'             => 'Заголовок (для основной формы)',
-					'name'              => 'gociss_form_title',
-					'type'              => 'text',
-					'instructions'      => 'Работает только при варианте «По умолчанию». Оставьте пустым для значения по умолчанию.',
-					'default_value'     => '',
-					'placeholder'       => 'Оставить заявку',
-					'conditional_logic' => array(
+			),
+			array(
+				'key'               => 'field_gociss_form_label',
+				'label'             => 'Метка (для основной формы)',
+				'name'              => 'gociss_form_label',
+				'type'              => 'text',
+				'instructions'      => 'Оставьте пустым для значения по умолчанию.',
+				'default_value'     => '',
+				'placeholder'       => 'Связаться с нами',
+				'conditional_logic' => array(
+					array(
 						array(
-							array(
-								'field'    => 'field_gociss_form_variant',
-								'operator' => '==',
-								'value'    => 'default',
-							),
+							'field'    => 'field_gociss_form_variant',
+							'operator' => '==',
+							'value'    => '',
+						),
+						array(
+							'field'    => 'field_gociss_form_shortcode',
+							'operator' => '==empty',
 						),
 					),
 				),
-				array(
-					'key'               => 'field_gociss_form_description',
-					'label'             => 'Описание (для основной формы)',
-					'name'              => 'gociss_form_description',
-					'type'              => 'textarea',
-					'instructions'      => 'Работает только при варианте «По умолчанию». Оставьте пустым для значения по умолчанию.',
-					'default_value'     => '',
-					'placeholder'       => 'Заполните форму, и наш эксперт свяжется с вами в течение 30 минут',
-					'conditional_logic' => array(
+			),
+			array(
+				'key'               => 'field_gociss_form_title',
+				'label'             => 'Заголовок (для основной формы)',
+				'name'              => 'gociss_form_title',
+				'type'              => 'text',
+				'instructions'      => 'Оставьте пустым для значения по умолчанию.',
+				'default_value'     => '',
+				'placeholder'       => 'Оставить заявку',
+				'conditional_logic' => array(
+					array(
 						array(
-							array(
-								'field'    => 'field_gociss_form_variant',
-								'operator' => '==',
-								'value'    => 'default',
-							),
+							'field'    => 'field_gociss_form_variant',
+							'operator' => '==',
+							'value'    => '',
+						),
+						array(
+							'field'    => 'field_gociss_form_shortcode',
+							'operator' => '==empty',
 						),
 					),
 				),
-				array(
-					'key'               => 'field_gociss_form_shortcode',
-					'label'             => 'Шорткод CF7 (для основной формы)',
-					'name'              => 'gociss_form_shortcode',
-					'type'              => 'text',
-					'instructions'      => 'Работает только при варианте «По умолчанию». Оставьте пустым — будет использован шорткод из Внешний вид → Формы.',
-					'default_value'     => '',
-					'placeholder'       => '[contact-form-7 id="..." title="..."]',
-					'conditional_logic' => array(
+			),
+			array(
+				'key'               => 'field_gociss_form_description',
+				'label'             => 'Описание (для основной формы)',
+				'name'              => 'gociss_form_description',
+				'type'              => 'textarea',
+				'instructions'      => 'Оставьте пустым для значения по умолчанию.',
+				'default_value'     => '',
+				'placeholder'       => 'Заполните форму, и наш эксперт свяжется с вами в течение 30 минут',
+				'conditional_logic' => array(
+					array(
 						array(
-							array(
-								'field'    => 'field_gociss_form_variant',
-								'operator' => '==',
-								'value'    => 'default',
-							),
+							'field'    => 'field_gociss_form_variant',
+							'operator' => '==',
+							'value'    => '',
+						),
+						array(
+							'field'    => 'field_gociss_form_shortcode',
+							'operator' => '==empty',
 						),
 					),
 				),
+			),
 			),
 			'location'              => array(
 				array(
@@ -3160,6 +3290,41 @@ function gociss_register_service_acf_fields() {
 					'instructions'      => 'Краткое описание для карточки категории',
 					'rows'              => 3,
 				),
+				array(
+					'key'           => 'field_gociss_service_cat_nav_icon',
+					'label'         => 'Иконка в навигации (синяя панель)',
+					'name'          => 'gociss_service_cat_nav_icon',
+					'type'          => 'select',
+					'instructions'  => 'Иконка рядом с названием категории в синей панели хедера и мега-меню',
+					'choices'       => array(
+						'icon-iso'  => 'ISO (сертификат)',
+						'icon-grad' => 'Опыт (шапочка)',
+						'icon-pack' => 'Продукция (коробка)',
+						'icon-user' => 'Персонал (человек)',
+						'icon-file' => 'Документ (файл)',
+					),
+					'default_value' => 'icon-file',
+					'allow_null'    => 0,
+				),
+				array(
+					'key'           => 'field_gociss_service_cat_nav_order',
+					'label'         => 'Порядок в навигации',
+					'name'          => 'gociss_service_cat_nav_order',
+					'type'          => 'number',
+					'instructions'  => 'Чем меньше число, тем левее в синей панели. По умолчанию 0.',
+					'default_value' => 0,
+					'min'           => 0,
+					'step'          => 1,
+				),
+				array(
+					'key'           => 'field_gociss_service_cat_show_in_nav',
+					'label'         => 'Показывать в навигации',
+					'name'          => 'gociss_service_cat_show_in_nav',
+					'type'          => 'true_false',
+					'instructions'  => 'Если выключено, категория не будет в синей панели и футере',
+					'default_value' => 1,
+					'ui'            => 1,
+				),
 			),
 			'location'              => array(
 				array(
@@ -4992,5 +5157,50 @@ function gociss_register_accreditation_page_acf_fields() {
 	);
 }
 add_action( 'acf/init', 'gociss_register_accreditation_page_acf_fields' );
+
+// Поля навигации для gociss_service_cat добавлены в существующую группу group_gociss_service_cat (строка ~3269)
+
+/**
+ * ACF-поля для таксономии «Категории курсов» (gociss_course_cat)
+ */
+function gociss_register_course_cat_acf_fields() {
+	if ( ! function_exists( 'acf_add_local_field_group' ) ) {
+		return;
+	}
+
+	acf_add_local_field_group(
+		array(
+			'key'                   => 'group_gociss_course_cat',
+			'title'                 => 'Настройки категории курса',
+			'fields'                => array(
+				array(
+					'key'           => 'field_gociss_course_cat_order',
+					'label'         => 'Порядок сортировки',
+					'name'          => 'gociss_course_cat_order',
+					'type'          => 'number',
+					'instructions'  => 'Чем меньше число, тем раньше отображается категория. По умолчанию 0.',
+					'default_value' => 0,
+					'min'           => 0,
+					'step'          => 1,
+				),
+			),
+			'location'              => array(
+				array(
+					array(
+						'param'    => 'taxonomy',
+						'operator' => '==',
+						'value'    => 'gociss_course_cat',
+					),
+				),
+			),
+			'menu_order'            => 0,
+			'position'              => 'normal',
+			'style'                 => 'default',
+			'label_placement'       => 'top',
+			'instruction_placement' => 'label',
+		)
+	);
+}
+add_action( 'acf/init', 'gociss_register_course_cat_acf_fields' );
 
 // Настройки форм вынесены в inc/forms-options-page.php (работает без ACF Pro)
