@@ -13,7 +13,7 @@ get_header();
 
 // Текущая категория
 $current_term = get_queried_object();
-$cat_icon     = function_exists( 'get_field' ) ? get_field( 'gociss_service_cat_icon', 'gociss_service_cat_' . $current_term->term_id ) : null;
+$cat_icon_url = gociss_resolve_service_cat_icon( $current_term->term_id, 'archive' );
 $cat_desc     = function_exists( 'get_field' ) ? get_field( 'gociss_service_cat_desc', 'gociss_service_cat_' . $current_term->term_id ) : '';
 
 // Получаем подкатегории текущей категории (оптимизированный запрос)
@@ -52,9 +52,9 @@ if ( $current_term->parent > 0 ) {
 
 		<!-- Заголовок категории -->
 		<div class="services-archive__header">
-			<?php if ( $cat_icon && ! empty( $cat_icon['url'] ) ) : ?>
+			<?php if ( $cat_icon_url ) : ?>
 				<div class="services-archive__icon">
-					<img src="<?php echo esc_url( $cat_icon['url'] ); ?>" alt="<?php echo esc_attr( $current_term->name ); ?>">
+					<img src="<?php echo esc_url( $cat_icon_url ); ?>" alt="<?php echo esc_attr( $current_term->name ); ?>">
 				</div>
 			<?php endif; ?>
 			<h1 class="services-archive__title"><?php echo esc_html( $current_term->name ); ?></h1>
@@ -70,13 +70,13 @@ if ( $current_term->parent > 0 ) {
 				<div class="services-archive__grid services-archive__grid--subcategories">
 					<?php foreach ( $child_categories as $subcategory ) : ?>
 						<?php
-						$subcat_icon = function_exists( 'get_field' ) ? get_field( 'gociss_service_cat_icon', 'gociss_service_cat_' . $subcategory->term_id ) : null;
-						$subcat_desc = function_exists( 'get_field' ) ? get_field( 'gociss_service_cat_desc', 'gociss_service_cat_' . $subcategory->term_id ) : '';
+						$subcat_icon_url = gociss_resolve_service_cat_icon( $subcategory->term_id, 'archive' );
+						$subcat_desc     = function_exists( 'get_field' ) ? get_field( 'gociss_service_cat_desc', 'gociss_service_cat_' . $subcategory->term_id ) : '';
 						?>
 						<article class="service-card service-card--subcategory">
 							<div class="service-card__icon">
-								<?php if ( $subcat_icon && ! empty( $subcat_icon['url'] ) ) : ?>
-									<img src="<?php echo esc_url( $subcat_icon['url'] ); ?>" alt="<?php echo esc_attr( $subcategory->name ); ?>">
+								<?php if ( $subcat_icon_url ) : ?>
+									<img src="<?php echo esc_url( $subcat_icon_url ); ?>" alt="<?php echo esc_attr( $subcategory->name ); ?>">
 								<?php else : ?>
 									<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
 										<rect width="48" height="48" rx="8" fill="#F3F4F6"/>

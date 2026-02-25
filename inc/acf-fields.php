@@ -3347,15 +3347,41 @@ function gociss_register_service_acf_fields() {
 			'title'                 => 'Настройки категории',
 			'fields'                => array(
 				array(
+					'key'           => 'field_gociss_service_cat_nav_icon',
+					'label'         => 'Иконка категории',
+					'name'          => 'gociss_service_cat_nav_icon',
+					'type'          => 'select',
+					'instructions'  => 'Используется в синей панели, мега-меню и архиве. Выберите готовую или «Своя иконка» для загрузки из медиа.',
+					'choices'       => array(
+						'icon-iso'    => 'ISO (сертификат)',
+						'icon-grad'   => 'Опыт (шапочка)',
+						'icon-pack'   => 'Продукция (коробка)',
+						'icon-user'   => 'Персонал (человек)',
+						'icon-file'   => 'Документ (файл)',
+						'custom'      => '— Своя иконка (загрузить) —',
+					),
+					'default_value' => 'icon-file',
+					'allow_null'    => 0,
+				),
+				array(
 					'key'               => 'field_gociss_service_cat_icon',
-					'label'             => 'Иконка категории',
+					'label'             => 'Своя иконка',
 					'name'              => 'gociss_service_cat_icon',
 					'type'              => 'image',
-					'instructions'      => 'SVG или PNG иконка для отображения в архиве. Рекомендуемый размер: 64x64px',
+					'instructions'      => 'SVG или PNG. Для навигации — белая на прозрачном фоне, 16x16. Для архива — цветная, 64x64.',
 					'return_format'     => 'array',
 					'preview_size'      => 'thumbnail',
 					'library'           => 'all',
 					'mime_types'        => 'svg,png',
+					'conditional_logic' => array(
+						array(
+							array(
+								'field'    => 'field_gociss_service_cat_nav_icon',
+								'operator' => '==',
+								'value'    => 'custom',
+							),
+						),
+					),
 				),
 				array(
 					'key'               => 'field_gociss_service_cat_desc',
@@ -3364,22 +3390,6 @@ function gociss_register_service_acf_fields() {
 					'type'              => 'textarea',
 					'instructions'      => 'Краткое описание для карточки категории',
 					'rows'              => 3,
-				),
-				array(
-					'key'           => 'field_gociss_service_cat_nav_icon',
-					'label'         => 'Иконка в навигации (синяя панель)',
-					'name'          => 'gociss_service_cat_nav_icon',
-					'type'          => 'select',
-					'instructions'  => 'Иконка рядом с названием категории в синей панели хедера и мега-меню',
-					'choices'       => array(
-						'icon-iso'  => 'ISO (сертификат)',
-						'icon-grad' => 'Опыт (шапочка)',
-						'icon-pack' => 'Продукция (коробка)',
-						'icon-user' => 'Персонал (человек)',
-						'icon-file' => 'Документ (файл)',
-					),
-					'default_value' => 'icon-file',
-					'allow_null'    => 0,
 				),
 				array(
 					'key'           => 'field_gociss_service_cat_nav_order',

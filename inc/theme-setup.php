@@ -428,12 +428,14 @@ function gociss_get_nav_service_categories() {
 			continue;
 		}
 
-		$icon      = function_exists( 'get_field' ) ? get_field( 'gociss_service_cat_nav_icon', $term_acf_id ) : 'icon-file';
+		$icon_key  = function_exists( 'get_field' ) ? get_field( 'gociss_service_cat_nav_icon', $term_acf_id ) : 'icon-file';
 		$nav_order = function_exists( 'get_field' ) ? get_field( 'gociss_service_cat_nav_order', $term_acf_id ) : 0;
 
-		if ( ! $icon ) {
-			$icon = 'icon-file';
+		if ( ! $icon_key ) {
+			$icon_key = 'icon-file';
 		}
+
+		$icon_url = gociss_resolve_service_cat_icon( $term->term_id );
 
 		$url = get_term_link( $term );
 		if ( is_wp_error( $url ) ) {
@@ -444,7 +446,8 @@ function gociss_get_nav_service_categories() {
 			'term'      => $term,
 			'names'     => array( $term->name ),
 			'slugs'     => array( $term->slug ),
-			'icon'      => $icon,
+			'icon'      => $icon_key,
+			'icon_url'  => $icon_url,
 			'label'     => $term->name,
 			'url'       => $url,
 			'nav_order' => (int) $nav_order,
@@ -513,6 +516,7 @@ function gociss_get_services_by_category() {
 			'term'     => $term,
 			'label'    => $cat_data['label'],
 			'icon'     => $cat_data['icon'],
+			'icon_url' => isset( $cat_data['icon_url'] ) ? $cat_data['icon_url'] : '',
 			'url'      => $cat_data['url'],
 			'services' => $services,
 		);
@@ -537,6 +541,42 @@ function gociss_get_icon_map() {
 		'icon-user' => 'ui_user[white].svg',
 		'icon-file' => 'ui_file[white].svg',
 	);
+}
+
+/**
+ * Резолв URL иконки категории услуг по term_id.
+ *
+ * Если выбран пресет — возвращает URL SVG из темы.
+ * Если «custom» — возвращает URL загруженного изображения.
+ *
+ * @param int    $term_id  ID термина.
+ * @param string $size     'nav' (16x16 белая) или 'archive' (64x64 цветная). Пока оба резолвят одинаково.
+ * @return string URL иконки или пустая строка.
+ */
+function gociss_resolve_service_cat_icon( $term_id, $size = 'nav' ) {
+	if ( ! function_exists( 'get_field' ) ) {
+		return '';
+	}
+
+	$acf_prefix = 'gociss_service_cat_' . $term_id;
+	$icon_key   = get_field( 'gociss_service_cat_nav_icon', $acf_prefix );
+
+	if ( ! $icon_key ) {
+		$icon_key = 'icon-file';
+	}
+
+	if ( 'custom' === $icon_key ) {
+		$custom_icon = get_field( 'gociss_service_cat_icon', $acf_prefix );
+		if ( is_array( $custom_icon ) && ! empty( $custom_icon['url'] ) ) {
+			return $custom_icon['url'];
+		}
+		return '';
+	}
+
+	$icon_map   = gociss_get_icon_map();
+	$images_uri = get_template_directory_uri() . '/assets/images/';
+
+	return isset( $icon_map[ $icon_key ] ) ? $images_uri . $icon_map[ $icon_key ] : '';
 }
 
 /**
@@ -583,11 +623,8 @@ function gociss_render_services_nav( $variant = 'desktop' ) {
 						<a href="<?php echo esc_url( $cat_group['url'] ); ?>"
 						   class="header-services__mega-cat<?php echo $first ? ' is-active' : ''; ?>"
 						   data-category="<?php echo esc_attr( $key ); ?>">
-							<?php
-							$icon_file = isset( $icon_map[ $cat_group['icon'] ] ) ? $icon_map[ $cat_group['icon'] ] : '';
-							if ( $icon_file ) :
-							?>
-								<img src="<?php echo esc_url( $images_uri . $icon_file ); ?>" alt="" width="16" height="16">
+							<?php if ( ! empty( $cat_group['icon_url'] ) ) : ?>
+								<img src="<?php echo esc_url( $cat_group['icon_url'] ); ?>" alt="" width="16" height="16">
 							<?php endif; ?>
 							<span><?php echo esc_html( $cat_group['label'] ); ?></span>
 							<svg class="header-services__mega-cat-arrow" width="6" height="10" viewBox="0 0 6 10" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -631,11 +668,10 @@ function gociss_render_services_nav( $variant = 'desktop' ) {
 
 	// Автоматические категории услуг из таксономии
 	foreach ( $categories as $cat ) {
-		$icon_file = isset( $icon_map[ $cat['icon'] ] ) ? $icon_map[ $cat['icon'] ] : '';
 		?>
 		<a href="<?php echo esc_url( $cat['url'] ); ?>" class="<?php echo esc_attr( $link_class ); ?>">
-			<?php if ( $icon_file ) : ?>
-				<img src="<?php echo esc_url( $images_uri . $icon_file ); ?>" alt="" class="<?php echo esc_attr( $icon_class ); ?>" width="16" height="16">
+			<?php if ( ! empty( $cat['icon_url'] ) ) : ?>
+				<img src="<?php echo esc_url( $cat['icon_url'] ); ?>" alt="" class="<?php echo esc_attr( $icon_class ); ?>" width="16" height="16">
 			<?php endif; ?>
 			<?php if ( $text_class ) : ?>
 				<span class="<?php echo esc_attr( $text_class ); ?>"><?php echo esc_html( $cat['label'] ); ?></span>

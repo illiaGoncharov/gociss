@@ -54,14 +54,13 @@ if ( ! empty( $all_categories ) && ! is_wp_error( $all_categories ) ) {
 				<div class="services-archive__grid">
 					<?php foreach ( $parent_categories as $category ) : ?>
 						<?php
-						// Получаем ACF поля категории
-						$cat_icon = function_exists( 'get_field' ) ? get_field( 'gociss_service_cat_icon', 'gociss_service_cat_' . $category->term_id ) : null;
-						$cat_desc = function_exists( 'get_field' ) ? get_field( 'gociss_service_cat_desc', 'gociss_service_cat_' . $category->term_id ) : '';
+						$cat_icon_url = gociss_resolve_service_cat_icon( $category->term_id, 'archive' );
+						$cat_desc     = function_exists( 'get_field' ) ? get_field( 'gociss_service_cat_desc', 'gociss_service_cat_' . $category->term_id ) : '';
 						?>
 						<article class="service-card">
 							<div class="service-card__icon">
-								<?php if ( $cat_icon && ! empty( $cat_icon['url'] ) ) : ?>
-									<img src="<?php echo esc_url( $cat_icon['url'] ); ?>" alt="<?php echo esc_attr( $category->name ); ?>">
+								<?php if ( $cat_icon_url ) : ?>
+									<img src="<?php echo esc_url( $cat_icon_url ); ?>" alt="<?php echo esc_attr( $category->name ); ?>">
 								<?php else : ?>
 									<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
 										<rect width="64" height="64" rx="12" fill="#E8F0FE"/>
@@ -100,16 +99,14 @@ if ( ! empty( $all_categories ) && ! is_wp_error( $all_categories ) ) {
 				<div class="services-archive__grid services-archive__grid--subcategories">
 					<?php foreach ( $child_categories as $subcategory ) : ?>
 						<?php
-						// Получаем ACF поля подкатегории
-						$subcat_icon = function_exists( 'get_field' ) ? get_field( 'gociss_service_cat_icon', 'gociss_service_cat_' . $subcategory->term_id ) : null;
-						$subcat_desc = function_exists( 'get_field' ) ? get_field( 'gociss_service_cat_desc', 'gociss_service_cat_' . $subcategory->term_id ) : '';
-						// Получаем родительскую категорию для отображения
-						$parent_term = get_term( $subcategory->parent, 'gociss_service_cat' );
+						$subcat_icon_url = gociss_resolve_service_cat_icon( $subcategory->term_id, 'archive' );
+						$subcat_desc     = function_exists( 'get_field' ) ? get_field( 'gociss_service_cat_desc', 'gociss_service_cat_' . $subcategory->term_id ) : '';
+						$parent_term     = get_term( $subcategory->parent, 'gociss_service_cat' );
 						?>
 						<article class="service-card service-card--subcategory">
 							<div class="service-card__icon">
-								<?php if ( $subcat_icon && ! empty( $subcat_icon['url'] ) ) : ?>
-									<img src="<?php echo esc_url( $subcat_icon['url'] ); ?>" alt="<?php echo esc_attr( $subcategory->name ); ?>">
+								<?php if ( $subcat_icon_url ) : ?>
+									<img src="<?php echo esc_url( $subcat_icon_url ); ?>" alt="<?php echo esc_attr( $subcategory->name ); ?>">
 								<?php else : ?>
 									<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
 										<rect width="48" height="48" rx="8" fill="#F3F4F6"/>
