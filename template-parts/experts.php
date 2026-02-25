@@ -12,16 +12,24 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 $experts_title    = function_exists( 'get_field' ) ? get_field( 'gociss_experts_title' ) : '';
 $experts_subtitle = function_exists( 'get_field' ) ? get_field( 'gociss_experts_subtitle' ) : '';
-$experts_count    = function_exists( 'get_field' ) ? get_field( 'gociss_experts_count' ) : 5;
+$experts_count    = function_exists( 'get_field' ) ? get_field( 'gociss_experts_count' ) : '';
+
+// Если на текущей странице поле не задано — берём с главной
+if ( ! $experts_count && function_exists( 'get_field' ) ) {
+	$front_page_id = get_option( 'page_on_front' );
+	if ( $front_page_id ) {
+		$experts_count = get_field( 'gociss_experts_count', $front_page_id );
+	}
+}
+if ( ! $experts_count ) {
+	$experts_count = -1;
+}
 
 if ( ! $experts_title ) {
 	$experts_title = 'Наши ведущие эксперты';
 }
 if ( ! $experts_subtitle ) {
 	$experts_subtitle = 'Команда профессионалов с международной аккредитацией и многолетним опытом';
-}
-if ( ! $experts_count ) {
-	$experts_count = 5;
 }
 
 // Получаем экспертов из кастомного типа записи

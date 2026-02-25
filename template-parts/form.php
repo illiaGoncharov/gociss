@@ -18,7 +18,33 @@ if ( ! defined( 'ABSPATH' ) ) {
 $form_shortcode = function_exists( 'get_field' ) ? get_field( 'gociss_form_shortcode' ) : '';
 
 if ( $form_shortcode ) {
-	echo do_shortcode( $form_shortcode );
+	$form_label       = function_exists( 'get_field' ) ? get_field( 'gociss_form_label' ) : '';
+	$form_title       = function_exists( 'get_field' ) ? get_field( 'gociss_form_title' ) : '';
+	$form_description = function_exists( 'get_field' ) ? get_field( 'gociss_form_description' ) : '';
+
+	if ( ! $form_label ) {
+		$form_label = 'Связаться с нами';
+	}
+	if ( ! $form_title ) {
+		$form_title = 'Оставить заявку';
+	}
+	if ( ! $form_description ) {
+		$form_description = 'Заполните форму, и наш эксперт свяжется с вами в течение 30 минут';
+	}
+	?>
+	<section class="contact-form" id="form">
+		<div class="container">
+			<div class="contact-form__header">
+				<span class="contact-form__label"><?php echo esc_html( $form_label ); ?></span>
+				<h2 class="contact-form__title"><?php echo esc_html( $form_title ); ?></h2>
+				<p class="contact-form__description"><?php echo esc_html( $form_description ); ?></p>
+			</div>
+			<div class="contact-form__wrapper">
+				<?php echo do_shortcode( $form_shortcode ); ?>
+			</div>
+		</div>
+	</section>
+	<?php
 	return;
 }
 

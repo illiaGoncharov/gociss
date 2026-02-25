@@ -1091,3 +1091,110 @@ function gociss_create_default_course_categories() {
 add_action( 'after_switch_theme', 'gociss_create_default_course_categories' );
 add_action( 'init', 'gociss_create_default_course_categories', 99 );
 
+/**
+ * Страница drag-and-drop сортировки категорий курсов
+ */
+function gociss_add_course_cat_sort_page() {
+	add_submenu_page(
+		'edit.php?post_type=gociss_course',
+		'Сортировка категорий',
+		'Сортировка',
+		'manage_options',
+		'gociss-course-cat-sort',
+		'gociss_render_course_cat_sort_page'
+	);
+}
+add_action( 'admin_menu', 'gociss_add_course_cat_sort_page' );
+
+function gociss_render_course_cat_sort_page() {
+	$terms = get_terms( array(
+		'taxonomy'   => 'gociss_course_cat',
+		'hide_empty' => false,
+	) );
+
+	if ( ! empty( $terms ) && ! is_wp_error( $terms ) ) {
+		usort( $terms, function ( $a, $b ) {
+			$oa = (int) get_term_meta( $a->term_id, 'gociss_course_cat_order', true );
+			$ob = (int) get_term_meta( $b->term_id, 'gociss_course_cat_order', true );
+			return $oa === $ob ? strcmp( $a->name, $b->name ) : $oa - $ob;
+		} );
+	}
+	?>
+	<div class="wrap">
+		<h1>Сортировка категорий курсов</h1>
+		<p>Перетаскивайте категории для изменения порядка. Порядок сохраняется автоматически.</p>
+
+		<?php if ( ! empty( $terms ) && ! is_wp_error( $terms ) ) : ?>
+			<ul id="gociss-course-cat-sortable" style="max-width:500px;">
+				<?php foreach ( $terms as $term ) : ?>
+					<li data-term-id="<?php echo esc_attr( $term->term_id ); ?>" style="padding:12px 16px;margin:4px 0;background:#fff;border:1px solid #ccd0d4;border-radius:4px;cursor:grab;display:flex;align-items:center;gap:10px;">
+						<span class="dashicons dashicons-menu" style="color:#999;"></span>
+						<strong><?php echo esc_html( $term->name ); ?></strong>
+						<span style="color:#999;margin-left:auto;"><?php echo esc_html( $term->count ); ?> курс(ов)</span>
+					</li>
+				<?php endforeach; ?>
+			</ul>
+			<div id="gociss-sort-status" style="margin-top:12px;"></div>
+		<?php else : ?>
+			<p>Категории курсов не найдены.</p>
+		<?php endif; ?>
+	</div>
+
+	<script>
+	jQuery(function($) {
+		$('#gociss-course-cat-sortable').sortable({
+			placeholder: 'ui-state-highlight',
+			update: function() {
+				var order = [];
+				$(this).children('li').each(function(i) {
+					order.push({ id: $(this).data('term-id'), pos: i });
+				});
+				$('#gociss-sort-status').text('Сохранение...');
+				$.post(ajaxurl, {
+					action: 'gociss_save_course_cat_order',
+					nonce: '<?php echo wp_create_nonce( "gociss_course_cat_sort" ); ?>',
+					order: JSON.stringify(order)
+				}, function(resp) {
+					$('#gociss-sort-status').text(resp.success ? 'Сохранено!' : 'Ошибка сохранения');
+					setTimeout(function() { $('#gociss-sort-status').text(''); }, 2000);
+				});
+			}
+		});
+	});
+	</script>
+	<?php
+}
+
+function gociss_enqueue_sortable( $hook ) {
+	if ( 'gociss_course_page_gociss-course-cat-sort' !== $hook ) {
+		return;
+	}
+	wp_enqueue_script( 'jquery-ui-sortable' );
+}
+add_action( 'admin_enqueue_scripts', 'gociss_enqueue_sortable' );
+
+function gociss_save_course_cat_order() {
+	check_ajax_referer( 'gociss_course_cat_sort', 'nonce' );
+
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_send_json_error();
+	}
+
+	$order = json_decode( stripslashes( $_POST['order'] ), true );
+	if ( ! is_array( $order ) ) {
+		wp_send_json_error();
+	}
+
+	foreach ( $order as $item ) {
+		$term_id = (int) $item['id'];
+		$pos     = (int) $item['pos'];
+		update_term_meta( $term_id, 'gociss_course_cat_order', $pos );
+		if ( function_exists( 'update_field' ) ) {
+			update_field( 'gociss_course_cat_order', $pos, 'gociss_course_cat_' . $term_id );
+		}
+	}
+
+	wp_send_json_success();
+}
+add_action( 'wp_ajax_gociss_save_course_cat_order', 'gociss_save_course_cat_order' );
+

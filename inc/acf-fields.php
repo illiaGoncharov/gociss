@@ -3290,6 +3290,41 @@ function gociss_register_service_acf_fields() {
 					'instructions'      => 'Краткое описание для карточки категории',
 					'rows'              => 3,
 				),
+				array(
+					'key'           => 'field_gociss_service_cat_nav_icon',
+					'label'         => 'Иконка в навигации (синяя панель)',
+					'name'          => 'gociss_service_cat_nav_icon',
+					'type'          => 'select',
+					'instructions'  => 'Иконка рядом с названием категории в синей панели хедера и мега-меню',
+					'choices'       => array(
+						'icon-iso'  => 'ISO (сертификат)',
+						'icon-grad' => 'Опыт (шапочка)',
+						'icon-pack' => 'Продукция (коробка)',
+						'icon-user' => 'Персонал (человек)',
+						'icon-file' => 'Документ (файл)',
+					),
+					'default_value' => 'icon-file',
+					'allow_null'    => 0,
+				),
+				array(
+					'key'           => 'field_gociss_service_cat_nav_order',
+					'label'         => 'Порядок в навигации',
+					'name'          => 'gociss_service_cat_nav_order',
+					'type'          => 'number',
+					'instructions'  => 'Чем меньше число, тем левее в синей панели. По умолчанию 0.',
+					'default_value' => 0,
+					'min'           => 0,
+					'step'          => 1,
+				),
+				array(
+					'key'           => 'field_gociss_service_cat_show_in_nav',
+					'label'         => 'Показывать в навигации',
+					'name'          => 'gociss_service_cat_show_in_nav',
+					'type'          => 'true_false',
+					'instructions'  => 'Если выключено, категория не будет в синей панели и футере',
+					'default_value' => 1,
+					'ui'            => 1,
+				),
 			),
 			'location'              => array(
 				array(
@@ -5122,5 +5157,50 @@ function gociss_register_accreditation_page_acf_fields() {
 	);
 }
 add_action( 'acf/init', 'gociss_register_accreditation_page_acf_fields' );
+
+// Поля навигации для gociss_service_cat добавлены в существующую группу group_gociss_service_cat (строка ~3269)
+
+/**
+ * ACF-поля для таксономии «Категории курсов» (gociss_course_cat)
+ */
+function gociss_register_course_cat_acf_fields() {
+	if ( ! function_exists( 'acf_add_local_field_group' ) ) {
+		return;
+	}
+
+	acf_add_local_field_group(
+		array(
+			'key'                   => 'group_gociss_course_cat',
+			'title'                 => 'Настройки категории курса',
+			'fields'                => array(
+				array(
+					'key'           => 'field_gociss_course_cat_order',
+					'label'         => 'Порядок сортировки',
+					'name'          => 'gociss_course_cat_order',
+					'type'          => 'number',
+					'instructions'  => 'Чем меньше число, тем раньше отображается категория. По умолчанию 0.',
+					'default_value' => 0,
+					'min'           => 0,
+					'step'          => 1,
+				),
+			),
+			'location'              => array(
+				array(
+					array(
+						'param'    => 'taxonomy',
+						'operator' => '==',
+						'value'    => 'gociss_course_cat',
+					),
+				),
+			),
+			'menu_order'            => 0,
+			'position'              => 'normal',
+			'style'                 => 'default',
+			'label_placement'       => 'top',
+			'instruction_placement' => 'label',
+		)
+	);
+}
+add_action( 'acf/init', 'gociss_register_course_cat_acf_fields' );
 
 // Настройки форм вынесены в inc/forms-options-page.php (работает без ACF Pro)

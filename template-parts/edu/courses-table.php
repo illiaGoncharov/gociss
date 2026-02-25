@@ -10,15 +10,28 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-// Получаем все категории курсов
+// Получаем все категории курсов с кастомной сортировкой по ACF-полю
 $categories = get_terms(
 	array(
 		'taxonomy'   => 'gociss_course_cat',
 		'hide_empty' => true,
-		'orderby'    => 'name',
+		'orderby'    => 'meta_value_num',
+		'meta_key'   => 'gociss_course_cat_order',
 		'order'      => 'ASC',
 	)
 );
+
+// Fallback: категории без мета-поля (новые) сортируются по имени в конце
+if ( ! empty( $categories ) && ! is_wp_error( $categories ) ) {
+	usort( $categories, function ( $a, $b ) {
+		$order_a = (int) get_field( 'gociss_course_cat_order', 'gociss_course_cat_' . $a->term_id );
+		$order_b = (int) get_field( 'gociss_course_cat_order', 'gociss_course_cat_' . $b->term_id );
+		if ( $order_a === $order_b ) {
+			return strcmp( $a->name, $b->name );
+		}
+		return $order_a - $order_b;
+	});
+}
 
 // Получаем курсы
 $courses_query = new WP_Query(

@@ -47,35 +47,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 					</div>
 				</div>
 
-				<!-- Колонка 2: Услуги -->
+				<!-- Колонка 2: Услуги (авто-категории + ручные пункты из меню «services») -->
 				<div class="site-footer__column site-footer__column--services">
 					<h3 class="site-footer__column-title">Услуги</h3>
-					<?php
-					wp_nav_menu(
-						array(
-							'theme_location' => 'footer-services',
-							'menu_id'        => 'footer-services-menu',
-							'container'      => false,
-							'menu_class'     => 'site-footer__menu',
-							'depth'          => 1,
-					'fallback_cb'    => function() {
-						$footer_archive = home_url( '/uslugi/' );
-						$nav_categories = gociss_get_nav_service_categories();
-						?>
-						<ul class="site-footer__menu">
-							<?php foreach ( $nav_categories as $fc ) :
-								$fc_link = gociss_get_service_cat_url( $fc['names'], $fc['slugs'], $fc['slugs'][0] );
-							?>
-								<li><a href="<?php echo esc_url( $fc_link ); ?>"><?php echo esc_html( $fc['label'] ); ?></a></li>
-							<?php endforeach; ?>
-							<li><a href="<?php echo esc_url( home_url( '/edu/' ) ); ?>">Учебный центр</a></li>
-							<li><a href="<?php echo esc_url( $footer_archive ); ?>">Все услуги</a></li>
-						</ul>
-						<?php
-					},
-						)
-					);
-					?>
+					<?php gociss_footer_services_fallback(); ?>
 				</div>
 
 				<!-- Колонка 3: Информация -->
