@@ -1099,7 +1099,7 @@ function gociss_add_course_cat_sort_page() {
 		'edit.php?post_type=gociss_course',
 		'Сортировка категорий',
 		'Сортировка',
-		'manage_options',
+		'manage_categories',
 		'gociss-course-cat-sort',
 		'gociss_render_course_cat_sort_page'
 	);
@@ -1176,7 +1176,7 @@ add_action( 'admin_enqueue_scripts', 'gociss_enqueue_sortable' );
 function gociss_save_course_cat_order() {
 	check_ajax_referer( 'gociss_course_cat_sort', 'nonce' );
 
-	if ( ! current_user_can( 'manage_options' ) ) {
+	if ( ! current_user_can( 'manage_categories' ) ) {
 		wp_send_json_error();
 	}
 

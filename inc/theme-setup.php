@@ -582,29 +582,28 @@ function gociss_resolve_service_cat_icon( $term_id, $size = 'nav' ) {
 /**
  * Динамический рендер меню услуг (десктоп или мобильный вариант)
  *
- * Автоматическая часть: категории из таксономии gociss_service_cat (ACF-поля).
- * Ручная часть: пункты из меню «services», которые не являются gociss_service_cat.
+ * Полностью управляется из «Внешний вид → Меню» (локация «services»).
+ * «Все услуги» с мега-меню рендерится кодом, остальное — из меню.
+ * Для пунктов-категорий (taxonomy gociss_service_cat) иконка берётся из ACF.
+ * Для произвольных ссылок — из мета-поля _gociss_menu_icon.
  *
  * @param string $variant 'desktop' или 'mobile'.
  */
 function gociss_render_services_nav( $variant = 'desktop' ) {
-	$icon_map = gociss_get_icon_map();
+	$icon_map   = gociss_get_icon_map();
+	$images_uri = get_template_directory_uri() . '/assets/images/';
 
 	$is_mobile  = ( 'mobile' === $variant );
 	$link_class = $is_mobile ? 'header-mobile-menu__services-item' : 'header-services__item';
 	$icon_class = $is_mobile ? 'header-mobile-menu__services-icon' : 'header-services__icon';
 	$text_class = $is_mobile ? '' : 'header-services__text';
 
-	$categories = gociss_get_nav_service_categories();
-	$images_uri = get_template_directory_uri() . '/assets/images/';
-
-	// «Все услуги»
-	$all_url     = home_url( '/uslugi/' );
-	$all_extra   = $is_mobile ? '' : ' ' . $link_class . '--all';
-	$ham_icon    = $icon_map['icon-ham'];
+	// «Все услуги» — всегда первым
+	$all_url   = home_url( '/uslugi/' );
+	$all_extra = $is_mobile ? '' : ' ' . $link_class . '--all';
+	$ham_icon  = $icon_map['icon-ham'];
 
 	if ( ! $is_mobile ) {
-		// Десктоп: «Все услуги» с мега-меню dropdown
 		$mega_data = gociss_get_services_by_category();
 		?>
 		<div class="header-services__mega-wrap">
@@ -657,7 +656,6 @@ function gociss_render_services_nav( $variant = 'desktop' ) {
 		</div>
 		<?php
 	} else {
-		// Мобильная версия: простая ссылка «Все услуги»
 		?>
 		<a href="<?php echo esc_url( $all_url ); ?>" class="<?php echo esc_attr( $link_class . $all_extra ); ?>">
 			<img src="<?php echo esc_url( $images_uri . $ham_icon ); ?>" alt="" class="<?php echo esc_attr( $icon_class ); ?>" width="16" height="16">
@@ -666,52 +664,74 @@ function gociss_render_services_nav( $variant = 'desktop' ) {
 		<?php
 	}
 
-	// Автоматические категории услуг из таксономии
-	foreach ( $categories as $cat ) {
-		?>
-		<a href="<?php echo esc_url( $cat['url'] ); ?>" class="<?php echo esc_attr( $link_class ); ?>">
-			<?php if ( ! empty( $cat['icon_url'] ) ) : ?>
-				<img src="<?php echo esc_url( $cat['icon_url'] ); ?>" alt="" class="<?php echo esc_attr( $icon_class ); ?>" width="16" height="16">
-			<?php endif; ?>
-			<?php if ( $text_class ) : ?>
-				<span class="<?php echo esc_attr( $text_class ); ?>"><?php echo esc_html( $cat['label'] ); ?></span>
-			<?php else : ?>
-				<span><?php echo esc_html( $cat['label'] ); ?></span>
-			<?php endif; ?>
-		</a>
-		<?php
-	}
-
-	// Ручные пункты из основного меню «services» (всё, что не gociss_service_cat)
-	gociss_render_manual_nav_items( 'services', $link_class, $icon_class, $text_class, $icon_map, $images_uri );
+	// Все остальные пункты — из WordPress-меню «services»
+	gociss_render_menu_nav_items( 'services', $link_class, $icon_class, $text_class, $icon_map, $images_uri );
 }
 
 /**
- * Рендер ручных (не-таксономических) пунктов из WordPress-меню
+ * Рендер пунктов из WordPress-меню (Внешний вид → Меню)
  *
- * Пропускает пункты, которые являются терминами gociss_service_cat (они рендерятся автоматически).
- * Иконка определяется из meta-поля `_gociss_menu_icon`.
+ * Для категорий gociss_service_cat — иконка из ACF (gociss_resolve_service_cat_icon).
+ * Для произвольных ссылок — иконка из _gociss_menu_icon мета-поля.
+ * Пункт «Все услуги» (/uslugi/) пропускается — он рендерится отдельно.
  *
  * @param string $menu_location Локация меню WordPress.
  * @param string $link_class    CSS-класс ссылки.
  * @param string $icon_class    CSS-класс иконки.
- * @param string $text_class    CSS-класс текста (пустая строка для мобильной версии).
- * @param array  $icon_map      Маппинг CSS-класс → файл иконки.
+ * @param string $text_class    CSS-класс текста.
+ * @param array  $icon_map      Маппинг icon-key → файл иконки.
  * @param string $images_uri    URI папки с изображениями.
  */
-function gociss_render_manual_nav_items( $menu_location, $link_class, $icon_class, $text_class, $icon_map, $images_uri ) {
-	$manual_items = gociss_get_manual_menu_items( $menu_location );
-	if ( empty( $manual_items ) ) {
+function gociss_render_menu_nav_items( $menu_location, $link_class, $icon_class, $text_class, $icon_map, $images_uri ) {
+	$locations = get_nav_menu_locations();
+	if ( empty( $locations[ $menu_location ] ) ) {
 		return;
 	}
 
-	foreach ( $manual_items as $item ) {
-		$icon_key  = get_post_meta( $item->ID, '_gociss_menu_icon', true );
-		$icon_file = isset( $icon_map[ $icon_key ] ) ? $icon_map[ $icon_key ] : '';
+	$items = wp_get_nav_menu_items( $locations[ $menu_location ] );
+	if ( empty( $items ) ) {
+		return;
+	}
+
+	$all_url = trailingslashit( home_url( '/uslugi/' ) );
+
+	// Маппинг URL → term_id для категорий услуг (чтобы резолвить иконки для custom links)
+	$url_to_term = array();
+	$service_terms = get_terms( array( 'taxonomy' => 'gociss_service_cat', 'hide_empty' => false ) );
+	if ( ! empty( $service_terms ) && ! is_wp_error( $service_terms ) ) {
+		foreach ( $service_terms as $st ) {
+			$term_url = get_term_link( $st );
+			if ( ! is_wp_error( $term_url ) ) {
+				$url_to_term[ trailingslashit( $term_url ) ] = $st->term_id;
+			}
+		}
+	}
+
+	foreach ( $items as $item ) {
+		if ( trailingslashit( $item->url ) === $all_url ) {
+			continue;
+		}
+
+		$icon_url  = '';
+		$item_url  = trailingslashit( $item->url );
+
+		if ( 'taxonomy' === $item->type && 'gociss_service_cat' === $item->object ) {
+			// Пункт добавлен как таксономия
+			$icon_url = gociss_resolve_service_cat_icon( (int) $item->object_id );
+		} elseif ( isset( $url_to_term[ $item_url ] ) ) {
+			// Произвольная ссылка, URL совпадает с категорией услуг
+			$icon_url = gociss_resolve_service_cat_icon( $url_to_term[ $item_url ] );
+		} else {
+			// Произвольная ссылка — иконка из мета-поля
+			$icon_key = get_post_meta( $item->ID, '_gociss_menu_icon', true );
+			if ( $icon_key && isset( $icon_map[ $icon_key ] ) ) {
+				$icon_url = $images_uri . $icon_map[ $icon_key ];
+			}
+		}
 		?>
 		<a href="<?php echo esc_url( $item->url ); ?>" class="<?php echo esc_attr( $link_class ); ?>">
-			<?php if ( $icon_file ) : ?>
-				<img src="<?php echo esc_url( $images_uri . $icon_file ); ?>" alt="" class="<?php echo esc_attr( $icon_class ); ?>" width="16" height="16">
+			<?php if ( $icon_url ) : ?>
+				<img src="<?php echo esc_url( $icon_url ); ?>" alt="" class="<?php echo esc_attr( $icon_class ); ?>" width="16" height="16">
 			<?php endif; ?>
 			<?php if ( $text_class ) : ?>
 				<span class="<?php echo esc_attr( $text_class ); ?>"><?php echo esc_html( $item->title ); ?></span>
@@ -743,19 +763,18 @@ function gociss_services_menu_fallback_mobile() {
  * Автоматические категории из таксономии + ручные пункты из меню «services».
  */
 function gociss_footer_services_fallback() {
-	$nav_categories = gociss_get_nav_service_categories();
-
-	// Ручные пункты из основного меню «services» (не-таксономические)
-	$manual_items = gociss_get_manual_menu_items( 'services' );
+	$locations = get_nav_menu_locations();
+	$items     = array();
+	if ( ! empty( $locations['services'] ) ) {
+		$items = wp_get_nav_menu_items( $locations['services'] );
+	}
 	?>
 	<ul class="site-footer__menu">
-		<?php foreach ( $nav_categories as $fc ) : ?>
-			<li><a href="<?php echo esc_url( $fc['url'] ); ?>"><?php echo esc_html( $fc['label'] ); ?></a></li>
-		<?php endforeach; ?>
-		<?php foreach ( $manual_items as $item ) : ?>
-			<li><a href="<?php echo esc_url( $item->url ); ?>"><?php echo esc_html( $item->title ); ?></a></li>
-		<?php endforeach; ?>
-		<li><a href="<?php echo esc_url( home_url( '/uslugi/' ) ); ?>">Все услуги</a></li>
+		<?php if ( ! empty( $items ) ) : ?>
+			<?php foreach ( $items as $item ) : ?>
+				<li><a href="<?php echo esc_url( $item->url ); ?>"><?php echo esc_html( $item->title ); ?></a></li>
+			<?php endforeach; ?>
+		<?php endif; ?>
 	</ul>
 	<?php
 }
@@ -927,3 +946,24 @@ function gociss_get_manual_menu_items( $menu_location ) {
 
 	return $manual;
 }
+
+/**
+ * Расширение прав роли «Редактор»
+ *
+ * Добавляет edit_theme_options — доступ к Внешний вид → Меню.
+ * Capability сохраняется в БД, поэтому добавляем один раз.
+ */
+function gociss_editor_capabilities() {
+	$version = 1;
+	if ( (int) get_option( 'gociss_editor_caps_version' ) >= $version ) {
+		return;
+	}
+
+	$editor = get_role( 'editor' );
+	if ( $editor ) {
+		$editor->add_cap( 'edit_theme_options' );
+	}
+
+	update_option( 'gociss_editor_caps_version', $version );
+}
+add_action( 'after_setup_theme', 'gociss_editor_capabilities' );
