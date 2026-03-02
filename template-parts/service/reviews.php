@@ -1,6 +1,7 @@
 <?php
 /**
  * Секция отзывов клиентов
+ * Данные берутся из CPT gociss_review через WP_Query
  *
  * @package Gociss
  */
@@ -9,29 +10,38 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-// Получаем данные из ACF
-$reviews_title    = function_exists( 'get_field' ) ? get_field( 'gociss_service_reviews_title' ) : '';
-$reviews_subtitle = function_exists( 'get_field' ) ? get_field( 'gociss_service_reviews_subtitle' ) : '';
+// Получаем отзывы из CPT, сортируем по menu_order, затем по дате
+$reviews_query = new WP_Query(
+	array(
+		'post_type'      => 'gociss_review',
+		'post_status'    => 'publish',
+		'posts_per_page' => -1,
+		'orderby'        => array(
+			'menu_order' => 'ASC',
+			'date'       => 'DESC',
+		),
+	)
+);
 
-// Собираем отзывы из отдельных group полей (от 0 до 6)
 $reviews_items = array();
-for ( $i = 1; $i <= 6; $i++ ) {
-	$review = function_exists( 'get_field' ) ? get_field( 'gociss_service_review_' . $i ) : null;
-	// Проверяем что заполнен хотя бы текст отзыва или автор
-	if ( $review && ( ! empty( $review['text'] ) || ! empty( $review['author'] ) ) ) {
-		$reviews_items[] = $review;
+
+if ( $reviews_query->have_posts() && function_exists( 'get_field' ) ) {
+	while ( $reviews_query->have_posts() ) {
+		$reviews_query->the_post();
+
+		$reviews_items[] = array(
+			'company'  => get_field( 'gociss_review_company' ),
+			'author'   => get_field( 'gociss_review_author' ),
+			'position' => get_field( 'gociss_review_position' ),
+			'text'     => get_field( 'gociss_review_text' ),
+			'rating'   => get_field( 'gociss_review_rating' ),
+			'image'    => get_field( 'gociss_review_image' ),
+		);
 	}
+	wp_reset_postdata();
 }
 
-// Заглушки для заголовков
-if ( ! $reviews_title ) {
-	$reviews_title = 'Отзывы клиентов';
-}
-if ( ! $reviews_subtitle ) {
-	$reviews_subtitle = 'Что говорят наши клиенты о нашей работе';
-}
-
-// Дефолтные отзывы если ничего не заполнено
+// Fallback — дефолтные отзывы если CPT пустой
 if ( empty( $reviews_items ) ) {
 	$reviews_items = array(
 		array(
@@ -60,19 +70,12 @@ if ( empty( $reviews_items ) ) {
 		),
 	);
 }
-
-$reviews_to_show = $reviews_items;
 ?>
 
 <section class="service-reviews" id="reviews">
 	<div class="container">
-		<?php if ( $reviews_title ) : ?>
-			<h2 class="service-reviews__title"><?php echo esc_html( $reviews_title ); ?></h2>
-		<?php endif; ?>
-
-		<?php if ( $reviews_subtitle ) : ?>
-			<p class="service-reviews__subtitle"><?php echo esc_html( $reviews_subtitle ); ?></p>
-		<?php endif; ?>
+		<h2 class="service-reviews__title">Отзывы клиентов</h2>
+		<p class="service-reviews__subtitle">Что говорят наши клиенты о нашей работе</p>
 
 		<div class="service-reviews__slider">
 			<button class="service-reviews__nav service-reviews__nav--prev" aria-label="Предыдущий отзыв">
@@ -83,25 +86,22 @@ $reviews_to_show = $reviews_items;
 
 			<div class="service-reviews__track">
 				<div class="service-reviews__grid">
-					<?php foreach ( $reviews_to_show as $review ) : ?>
+					<?php foreach ( $reviews_items as $review ) : ?>
 						<div class="service-reviews__card">
-							<!-- Рейтинг -->
 							<?php if ( ! empty( $review['rating'] ) ) : ?>
 								<div class="service-reviews__rating">
 									<?php for ( $i = 1; $i <= 5; $i++ ) : ?>
-										<svg width="20" height="20" viewBox="0 0 20 20" fill="<?php echo $i <= $review['rating'] ? '#F59E0B' : '#E5E7EB'; ?>" xmlns="http://www.w3.org/2000/svg">
+										<svg width="20" height="20" viewBox="0 0 20 20" fill="<?php echo $i <= intval( $review['rating'] ) ? '#F59E0B' : '#E5E7EB'; ?>" xmlns="http://www.w3.org/2000/svg">
 											<path d="M10 1L12.39 6.26L18 7.27L14 11.14L14.76 17L10 14.27L5.24 17L6 11.14L2 7.27L7.61 6.26L10 1Z"/>
 										</svg>
 									<?php endfor; ?>
 								</div>
 							<?php endif; ?>
 
-							<!-- Текст отзыва -->
 							<?php if ( ! empty( $review['text'] ) ) : ?>
 								<p class="service-reviews__text"><?php echo esc_html( $review['text'] ); ?></p>
 							<?php endif; ?>
 
-							<!-- Автор -->
 							<div class="service-reviews__author">
 								<?php if ( ! empty( $review['image'] ) && ! empty( $review['image']['ID'] ) ) : ?>
 									<div class="service-reviews__author-photo">

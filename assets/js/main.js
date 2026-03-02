@@ -15,6 +15,7 @@
         initForm();
         initHeroSlider();
         initExpertsSlider();
+        initReviewsSlider();
         initPartnersSlider();
         initNewsSlider();
         initLettersSlider();
@@ -410,6 +411,87 @@
         });
 
         // Инициализация
+        updateButtons();
+    }
+
+    /**
+     * Инициализация слайдера отзывов клиентов
+     */
+    function initReviewsSlider() {
+        var slider = document.querySelector('.service-reviews__slider');
+
+        if (!slider) {
+            return;
+        }
+
+        var prevBtn = slider.querySelector('.service-reviews__nav--prev');
+        var nextBtn = slider.querySelector('.service-reviews__nav--next');
+        var grid = slider.querySelector('.service-reviews__grid');
+        var track = slider.querySelector('.service-reviews__track');
+
+        if (!prevBtn || !nextBtn || !grid || !track) {
+            return;
+        }
+
+        var currentIndex = 0;
+        var items = grid.querySelectorAll('.service-reviews__card');
+        var totalItems = items.length;
+
+        function getItemsPerView() {
+            if (window.innerWidth <= 576) return 1;
+            if (window.innerWidth <= 1024) return 2;
+            return 3;
+        }
+
+        function getItemWidth() {
+            if (items.length === 0) return 0;
+            var gap = 24;
+            return items[0].offsetWidth + gap;
+        }
+
+        function updateSlider() {
+            var itemWidth = getItemWidth();
+            var translateX = -currentIndex * itemWidth;
+            grid.style.transform = 'translateX(' + translateX + 'px)';
+            updateButtons();
+        }
+
+        function updateButtons() {
+            var itemsPerView = getItemsPerView();
+            var maxIndex = Math.max(0, totalItems - itemsPerView);
+            prevBtn.disabled = currentIndex <= 0;
+            nextBtn.disabled = currentIndex >= maxIndex;
+        }
+
+        prevBtn.addEventListener('click', function() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateSlider();
+            }
+        });
+
+        nextBtn.addEventListener('click', function() {
+            var itemsPerView = getItemsPerView();
+            var maxIndex = Math.max(0, totalItems - itemsPerView);
+            if (currentIndex < maxIndex) {
+                currentIndex++;
+                updateSlider();
+            }
+        });
+
+        var resizeTimeout;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(function() {
+                var itemsPerView = getItemsPerView();
+                var maxIndex = Math.max(0, totalItems - itemsPerView);
+                if (currentIndex > maxIndex) {
+                    currentIndex = maxIndex;
+                }
+                updateSlider();
+            }, 100);
+        });
+
         updateButtons();
     }
 

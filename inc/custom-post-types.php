@@ -849,6 +849,7 @@ function gociss_flush_rewrite_rules_on_activation() {
 	gociss_add_blog_rewrite_rules();
 	gociss_register_certificate_post_type();
 	gociss_register_certificate_type_taxonomy();
+	gociss_register_review_post_type();
 	flush_rewrite_rules();
 }
 add_action( 'after_switch_theme', 'gociss_flush_rewrite_rules_on_activation' );
@@ -1197,4 +1198,50 @@ function gociss_save_course_cat_order() {
 	wp_send_json_success();
 }
 add_action( 'wp_ajax_gociss_save_course_cat_order', 'gociss_save_course_cat_order' );
+
+/**
+ * Регистрация типа записи "Отзывы"
+ */
+function gociss_register_review_post_type() {
+	$labels = array(
+		'name'               => _x( 'Отзывы', 'Post Type General Name', 'gociss' ),
+		'singular_name'      => _x( 'Отзыв', 'Post Type Singular Name', 'gociss' ),
+		'menu_name'          => __( 'Отзывы', 'gociss' ),
+		'name_admin_bar'     => __( 'Отзыв', 'gociss' ),
+		'all_items'          => __( 'Все отзывы', 'gociss' ),
+		'add_new_item'       => __( 'Добавить отзыв', 'gociss' ),
+		'add_new'            => __( 'Добавить отзыв', 'gociss' ),
+		'new_item'           => __( 'Новый отзыв', 'gociss' ),
+		'edit_item'          => __( 'Редактировать отзыв', 'gociss' ),
+		'update_item'        => __( 'Обновить отзыв', 'gociss' ),
+		'view_item'          => __( 'Просмотреть отзыв', 'gociss' ),
+		'search_items'       => __( 'Искать отзывы', 'gociss' ),
+		'not_found'          => __( 'Отзывы не найдены', 'gociss' ),
+		'not_found_in_trash' => __( 'Не найдено в корзине', 'gociss' ),
+	);
+
+	$args = array(
+		'label'               => __( 'Отзыв', 'gociss' ),
+		'description'         => __( 'Отзывы клиентов компании', 'gociss' ),
+		'labels'              => $labels,
+		'supports'            => array( 'title', 'page-attributes' ),
+		'hierarchical'        => false,
+		'public'              => false,
+		'show_ui'             => true,
+		'show_in_menu'        => true,
+		'menu_position'       => 11,
+		'menu_icon'           => 'dashicons-testimonial',
+		'show_in_admin_bar'   => true,
+		'show_in_nav_menus'   => false,
+		'can_export'          => true,
+		'has_archive'         => false,
+		'exclude_from_search' => true,
+		'publicly_queryable'  => false,
+		'capability_type'     => 'post',
+		'show_in_rest'        => false,
+	);
+
+	register_post_type( 'gociss_review', $args );
+}
+add_action( 'init', 'gociss_register_review_post_type', 0 );
 

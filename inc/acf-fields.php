@@ -2323,346 +2323,6 @@ function gociss_register_acf_fields() {
 		)
 	);
 
-	// Секция отзывов (до 6 отзывов через group поля)
-	acf_add_local_field_group(
-		array(
-			'key'                   => 'group_gociss_service_reviews',
-			'title'                 => 'Услуга: Отзывы клиентов',
-			'fields'                => array(
-				array(
-					'key'               => 'field_gociss_service_reviews_title',
-					'label'             => 'Заголовок',
-					'name'              => 'gociss_service_reviews_title',
-					'type'              => 'text',
-					'default_value'     => 'Отзывы клиентов',
-				),
-				array(
-					'key'               => 'field_gociss_service_reviews_subtitle',
-					'label'             => 'Подзаголовок',
-					'name'              => 'gociss_service_reviews_subtitle',
-					'type'              => 'textarea',
-					'rows'              => 2,
-					'default_value'     => 'Что говорят наши клиенты о нашей работе',
-				),
-				// Отзыв 1
-				array(
-					'key'        => 'field_gociss_service_review_1',
-					'label'      => 'Отзыв 1',
-					'name'       => 'gociss_service_review_1',
-					'type'       => 'group',
-					'layout'     => 'block',
-					'sub_fields' => array(
-						array(
-							'key'   => 'field_gociss_service_review_1_company',
-							'label' => 'Компания',
-							'name'  => 'company',
-							'type'  => 'text',
-						),
-						array(
-							'key'   => 'field_gociss_service_review_1_author',
-							'label' => 'Имя автора',
-							'name'  => 'author',
-							'type'  => 'text',
-						),
-						array(
-							'key'   => 'field_gociss_service_review_1_position',
-							'label' => 'Должность',
-							'name'  => 'position',
-							'type'  => 'text',
-						),
-						array(
-							'key'   => 'field_gociss_service_review_1_text',
-							'label' => 'Текст отзыва',
-							'name'  => 'text',
-							'type'  => 'textarea',
-							'rows'  => 4,
-						),
-						array(
-							'key'           => 'field_gociss_service_review_1_rating',
-							'label'         => 'Рейтинг (1-5)',
-							'name'          => 'rating',
-							'type'          => 'number',
-							'min'           => 1,
-							'max'           => 5,
-							'default_value' => 5,
-						),
-						array(
-							'key'           => 'field_gociss_service_review_1_image',
-							'label'         => 'Фото автора',
-							'name'          => 'image',
-							'type'          => 'image',
-							'return_format' => 'array',
-						),
-					),
-				),
-				// Отзыв 2
-				array(
-					'key'        => 'field_gociss_service_review_2',
-					'label'      => 'Отзыв 2',
-					'name'       => 'gociss_service_review_2',
-					'type'       => 'group',
-					'layout'     => 'block',
-					'sub_fields' => array(
-						array(
-							'key'   => 'field_gociss_service_review_2_company',
-							'label' => 'Компания',
-							'name'  => 'company',
-							'type'  => 'text',
-						),
-						array(
-							'key'   => 'field_gociss_service_review_2_author',
-							'label' => 'Имя автора',
-							'name'  => 'author',
-							'type'  => 'text',
-						),
-						array(
-							'key'   => 'field_gociss_service_review_2_position',
-							'label' => 'Должность',
-							'name'  => 'position',
-							'type'  => 'text',
-						),
-						array(
-							'key'   => 'field_gociss_service_review_2_text',
-							'label' => 'Текст отзыва',
-							'name'  => 'text',
-							'type'  => 'textarea',
-							'rows'  => 4,
-						),
-						array(
-							'key'           => 'field_gociss_service_review_2_rating',
-							'label'         => 'Рейтинг (1-5)',
-							'name'          => 'rating',
-							'type'          => 'number',
-							'min'           => 1,
-							'max'           => 5,
-							'default_value' => 5,
-						),
-						array(
-							'key'           => 'field_gociss_service_review_2_image',
-							'label'         => 'Фото автора',
-							'name'          => 'image',
-							'type'          => 'image',
-							'return_format' => 'array',
-						),
-					),
-				),
-				// Отзыв 3
-				array(
-					'key'        => 'field_gociss_service_review_3',
-					'label'      => 'Отзыв 3',
-					'name'       => 'gociss_service_review_3',
-					'type'       => 'group',
-					'layout'     => 'block',
-					'sub_fields' => array(
-						array(
-							'key'   => 'field_gociss_service_review_3_company',
-							'label' => 'Компания',
-							'name'  => 'company',
-							'type'  => 'text',
-						),
-						array(
-							'key'   => 'field_gociss_service_review_3_author',
-							'label' => 'Имя автора',
-							'name'  => 'author',
-							'type'  => 'text',
-						),
-						array(
-							'key'   => 'field_gociss_service_review_3_position',
-							'label' => 'Должность',
-							'name'  => 'position',
-							'type'  => 'text',
-						),
-						array(
-							'key'   => 'field_gociss_service_review_3_text',
-							'label' => 'Текст отзыва',
-							'name'  => 'text',
-							'type'  => 'textarea',
-							'rows'  => 4,
-						),
-						array(
-							'key'           => 'field_gociss_service_review_3_rating',
-							'label'         => 'Рейтинг (1-5)',
-							'name'          => 'rating',
-							'type'          => 'number',
-							'min'           => 1,
-							'max'           => 5,
-							'default_value' => 5,
-						),
-						array(
-							'key'           => 'field_gociss_service_review_3_image',
-							'label'         => 'Фото автора',
-							'name'          => 'image',
-							'type'          => 'image',
-							'return_format' => 'array',
-						),
-					),
-				),
-				// Отзыв 4
-				array(
-					'key'        => 'field_gociss_service_review_4',
-					'label'      => 'Отзыв 4',
-					'name'       => 'gociss_service_review_4',
-					'type'       => 'group',
-					'layout'     => 'block',
-					'sub_fields' => array(
-						array(
-							'key'   => 'field_gociss_service_review_4_company',
-							'label' => 'Компания',
-							'name'  => 'company',
-							'type'  => 'text',
-						),
-						array(
-							'key'   => 'field_gociss_service_review_4_author',
-							'label' => 'Имя автора',
-							'name'  => 'author',
-							'type'  => 'text',
-						),
-						array(
-							'key'   => 'field_gociss_service_review_4_position',
-							'label' => 'Должность',
-							'name'  => 'position',
-							'type'  => 'text',
-						),
-						array(
-							'key'   => 'field_gociss_service_review_4_text',
-							'label' => 'Текст отзыва',
-							'name'  => 'text',
-							'type'  => 'textarea',
-							'rows'  => 4,
-						),
-						array(
-							'key'           => 'field_gociss_service_review_4_rating',
-							'label'         => 'Рейтинг (1-5)',
-							'name'          => 'rating',
-							'type'          => 'number',
-							'min'           => 1,
-							'max'           => 5,
-							'default_value' => 5,
-						),
-						array(
-							'key'           => 'field_gociss_service_review_4_image',
-							'label'         => 'Фото автора',
-							'name'          => 'image',
-							'type'          => 'image',
-							'return_format' => 'array',
-						),
-					),
-				),
-				// Отзыв 5
-				array(
-					'key'        => 'field_gociss_service_review_5',
-					'label'      => 'Отзыв 5',
-					'name'       => 'gociss_service_review_5',
-					'type'       => 'group',
-					'layout'     => 'block',
-					'sub_fields' => array(
-						array(
-							'key'   => 'field_gociss_service_review_5_company',
-							'label' => 'Компания',
-							'name'  => 'company',
-							'type'  => 'text',
-						),
-						array(
-							'key'   => 'field_gociss_service_review_5_author',
-							'label' => 'Имя автора',
-							'name'  => 'author',
-							'type'  => 'text',
-						),
-						array(
-							'key'   => 'field_gociss_service_review_5_position',
-							'label' => 'Должность',
-							'name'  => 'position',
-							'type'  => 'text',
-						),
-						array(
-							'key'   => 'field_gociss_service_review_5_text',
-							'label' => 'Текст отзыва',
-							'name'  => 'text',
-							'type'  => 'textarea',
-							'rows'  => 4,
-						),
-						array(
-							'key'           => 'field_gociss_service_review_5_rating',
-							'label'         => 'Рейтинг (1-5)',
-							'name'          => 'rating',
-							'type'          => 'number',
-							'min'           => 1,
-							'max'           => 5,
-							'default_value' => 5,
-						),
-						array(
-							'key'           => 'field_gociss_service_review_5_image',
-							'label'         => 'Фото автора',
-							'name'          => 'image',
-							'type'          => 'image',
-							'return_format' => 'array',
-						),
-					),
-				),
-				// Отзыв 6
-				array(
-					'key'        => 'field_gociss_service_review_6',
-					'label'      => 'Отзыв 6',
-					'name'       => 'gociss_service_review_6',
-					'type'       => 'group',
-					'layout'     => 'block',
-					'sub_fields' => array(
-						array(
-							'key'   => 'field_gociss_service_review_6_company',
-							'label' => 'Компания',
-							'name'  => 'company',
-							'type'  => 'text',
-						),
-						array(
-							'key'   => 'field_gociss_service_review_6_author',
-							'label' => 'Имя автора',
-							'name'  => 'author',
-							'type'  => 'text',
-						),
-						array(
-							'key'   => 'field_gociss_service_review_6_position',
-							'label' => 'Должность',
-							'name'  => 'position',
-							'type'  => 'text',
-						),
-						array(
-							'key'   => 'field_gociss_service_review_6_text',
-							'label' => 'Текст отзыва',
-							'name'  => 'text',
-							'type'  => 'textarea',
-							'rows'  => 4,
-						),
-						array(
-							'key'           => 'field_gociss_service_review_6_rating',
-							'label'         => 'Рейтинг (1-5)',
-							'name'          => 'rating',
-							'type'          => 'number',
-							'min'           => 1,
-							'max'           => 5,
-							'default_value' => 5,
-						),
-						array(
-							'key'           => 'field_gociss_service_review_6_image',
-							'label'         => 'Фото автора',
-							'name'          => 'image',
-							'type'          => 'image',
-							'return_format' => 'array',
-						),
-					),
-				),
-			),
-			'location'              => array(
-				array(
-					array(
-						'param'    => 'page_template',
-						'operator' => '==',
-						'value'    => 'page-service.php',
-					),
-				),
-			),
-			'menu_order'            => 4,
-		)
-	);
 
 	// Секция CTA для страницы услуги (переиспользуем поля с главной)
 	acf_add_local_field_group(
@@ -5287,5 +4947,86 @@ function gociss_register_course_cat_acf_fields() {
 	);
 }
 add_action( 'acf/init', 'gociss_register_course_cat_acf_fields' );
+
+/**
+ * ACF поля для CPT "Отзывы"
+ */
+function gociss_register_review_acf_fields() {
+	if ( ! function_exists( 'acf_add_local_field_group' ) ) {
+		return;
+	}
+
+	acf_add_local_field_group(
+		array(
+			'key'                   => 'group_gociss_review',
+			'title'                 => 'Данные отзыва',
+			'fields'                => array(
+				array(
+					'key'           => 'field_gociss_review_company',
+					'label'         => 'Компания',
+					'name'          => 'gociss_review_company',
+					'type'          => 'text',
+					'instructions'  => 'Название компании клиента',
+					'required'      => 1,
+				),
+				array(
+					'key'           => 'field_gociss_review_author',
+					'label'         => 'ФИО автора',
+					'name'          => 'gociss_review_author',
+					'type'          => 'text',
+					'instructions'  => 'Имя и фамилия автора отзыва',
+				),
+				array(
+					'key'           => 'field_gociss_review_position',
+					'label'         => 'Должность',
+					'name'          => 'gociss_review_position',
+					'type'          => 'text',
+					'instructions'  => 'Должность автора в компании',
+				),
+				array(
+					'key'           => 'field_gociss_review_text',
+					'label'         => 'Текст отзыва',
+					'name'          => 'gociss_review_text',
+					'type'          => 'textarea',
+					'rows'          => 5,
+					'required'      => 1,
+				),
+				array(
+					'key'           => 'field_gociss_review_rating',
+					'label'         => 'Рейтинг (1-5)',
+					'name'          => 'gociss_review_rating',
+					'type'          => 'number',
+					'min'           => 1,
+					'max'           => 5,
+					'default_value' => 5,
+					'instructions'  => 'Оценка от 1 до 5 звёзд',
+				),
+				array(
+					'key'           => 'field_gociss_review_image',
+					'label'         => 'Фото автора',
+					'name'          => 'gociss_review_image',
+					'type'          => 'image',
+					'return_format' => 'array',
+					'instructions'  => 'Фото автора отзыва (необязательно)',
+				),
+			),
+			'location'              => array(
+				array(
+					array(
+						'param'    => 'post_type',
+						'operator' => '==',
+						'value'    => 'gociss_review',
+					),
+				),
+			),
+			'menu_order'            => 0,
+			'position'              => 'normal',
+			'style'                 => 'default',
+			'label_placement'       => 'top',
+			'instruction_placement' => 'label',
+		)
+	);
+}
+add_action( 'acf/init', 'gociss_register_review_acf_fields' );
 
 // Настройки форм вынесены в inc/forms-options-page.php (работает без ACF Pro)

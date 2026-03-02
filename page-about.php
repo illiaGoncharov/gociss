@@ -32,7 +32,7 @@ get_template_part( 'template-parts/about/accreditation' );
 get_template_part( 'template-parts/about/goals' );
 get_template_part( 'template-parts/geography' );
 get_template_part( 'template-parts/about/partners' );
-get_template_part( 'template-parts/about/reviews' );
+get_template_part( 'template-parts/service/reviews' );
 get_template_part( 'template-parts/about/documents' );
 get_template_part( 'template-parts/about/letters' );
 get_template_part( 'template-parts/form' );
